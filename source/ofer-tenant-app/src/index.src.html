@@ -1381,7 +1381,8 @@ const PWA=(()=>{const framed=(()=>{try{return window.top!==window.self}catch(e){
   const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   let deferred=null;
-  if(ok){navigator.serviceWorker.register('sw.js').catch(()=>{});
+  if(ok){const had=!!navigator.serviceWorker.controller;let reloaded=false;navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{});
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{if(had&&!reloaded){reloaded=true;location.reload()}});
     addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;banner()});
     addEventListener('appinstalled',()=>{deferred=null;$('#install')?.remove();toast('האפליקציה הותקנה במסך הבית')})}
   const dismissed=()=>{try{return +localStorage.getItem('pwa-dismiss')>Date.now()}catch(e){return false}};
