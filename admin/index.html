@@ -704,7 +704,7 @@ VIEWS.overview=()=>{
   <a class="tile" href="#${tasks[0]?.h||'overview'}"><span class="k">ממתינים לטיפול</span><span class="v num">${tasks.length}</span><span class="s">${canApproveRem()?'תזכורות תשלום לאישור':'בקשות, שינויים, ליקויים והודעות'}</span></a>
   <a class="tile" href="#residents"><span class="k">דיירים באפליקציה</span><span class="v num">${ST.residents.length}</span><span class="s">פיילוט · פיתוח על הים</span></a>
   <a class="tile" href="#payments"><span class="k">תשלומים ב-4 החודשים הקרובים</span><span class="v num">${soon.length}</span><span class="s num">${nis(soon.reduce((a,x)=>a+x.p.total,0))} כולל הצמדה</span></a>
-  <a class="tile" href="#construction"><span class="k">שלב הבנייה · ${ST.stage+1}/${ST.milestones.length}</span><span class="v" style="font-size:1.5em;padding:6px 0 4px">${esc(ST.milestones[ST.stage].t)}</span><div class="bar" aria-hidden="true">${ST.milestones.map((m,i)=>`<i class="${i<=ST.stage?'on':''}"></i>`).join('')}</div></a>
+  <a class="tile" href="#construction"><span class="k">שלב הבנייה הנוכחי</span><span class="v" style="font-size:1.5em;padding:6px 0 4px">${esc(ST.milestones[ST.stage].t)}</span></a>
  </div>
  <div class="cols">
   <section class="panel" aria-labelledby="h-t"><div class="ph2"><h2 id="h-t">דורש טיפול</h2></div>
