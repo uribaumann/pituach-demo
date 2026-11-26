@@ -97,7 +97,7 @@
 "חתימה": "Signature",
 "ניקוי": "Clear",
 "שליחה": "Send",
-"פרסום": "Publish",
+"פרסום": "Post",
 "הורדה": "Download",
 "חיוג": "Call",
 "הסרה": "Remove",
@@ -204,7 +204,15 @@
 "סיור מלווה, בתיאום מראש ולפי הוראות הבטיחות": "A guided tour, booked ahead and under site safety rules",
 "הבקשה נשלחה. נתאם מול הספק ונאשר לך את המועד. שדרוגים מעבר למפרט נסגרים ישירות מול הספק.": "Request sent. We'll arrange it with the supplier and confirm the time. Upgrades beyond the spec are agreed directly with the supplier.",
 "מוקד החירום של חברת הניהול": "The management company's emergency line",
-"חזרה": "Back"
+"חזרה": "Back",
+"דורש אישור משפטי לפני העלייה לאוויר": "Needs legal approval before launch",
+"הצגת שנים משוערות": "Showing estimated years",
+"לוח הבניין": "Building board",
+"כתבו הודעה לשכנים": "Write to your neighbours",
+"הודעה לשכנים": "Message to neighbours",
+"ההודעה פורסמה בלוח הבניין": "Posted to the building board",
+"מוקד חירום 24/7": "24/7 emergency line",
+"בגרסה המלאה: חיוג למוקד החירום, 24/7": "In the full version: call the 24/7 emergency line"
 },
 "f": {
 "בוקר טוב, ": "Good morning, ",

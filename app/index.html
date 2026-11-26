@@ -149,6 +149,7 @@ canvas.sign{width:100%;height:150px;background:var(--paper);border:1px dashed #2
 .toast{position:absolute;top:14px;left:16px;right:16px;background:var(--navy);color:#fff;padding:14px 18px;border-radius:var(--r);font-size:13.5px;z-index:40;box-shadow:0 14px 40px #0003;transform:translateY(calc(-100% - 60px));transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .toast.on{transform:none}
 .phone:not(.demo) .demo-strip{display:none!important}
+.ltag{display:inline-block;font-size:11px;line-height:1.4;padding:2px 8px;border:1px dashed #A0702A;color:#8A5A12;background:#FBF0DC;border-radius:10px;margin:4px 0;font-weight:400;letter-spacing:0}
 .phone:not(.demo)[data-scope=pilot] nav.tabs [data-tab=more]{display:none}
 .legal h4{font-size:15px;font-weight:500;margin:16px 0 4px}.legal p{font-size:14.5px;line-height:1.65;color:var(--ink)}
 button.link{color:var(--gold-d);text-decoration:underline;font-size:14px}
@@ -745,7 +746,7 @@ const EN={
 "חתימה": "Signature",
 "ניקוי": "Clear",
 "שליחה": "Send",
-"פרסום": "Publish",
+"פרסום": "Post",
 "הורדה": "Download",
 "חיוג": "Call",
 "הסרה": "Remove",
@@ -852,7 +853,15 @@ const EN={
 "סיור מלווה, בתיאום מראש ולפי הוראות הבטיחות": "A guided tour, booked ahead and under site safety rules",
 "הבקשה נשלחה. נתאם מול הספק ונאשר לך את המועד. שדרוגים מעבר למפרט נסגרים ישירות מול הספק.": "Request sent. We'll arrange it with the supplier and confirm the time. Upgrades beyond the spec are agreed directly with the supplier.",
 "מוקד החירום של חברת הניהול": "The management company's emergency line",
-"חזרה": "Back"
+"חזרה": "Back",
+"דורש אישור משפטי לפני העלייה לאוויר": "Needs legal approval before launch",
+"הצגת שנים משוערות": "Showing estimated years",
+"לוח הבניין": "Building board",
+"כתבו הודעה לשכנים": "Write to your neighbours",
+"הודעה לשכנים": "Message to neighbours",
+"ההודעה פורסמה בלוח הבניין": "Posted to the building board",
+"מוקד חירום 24/7": "24/7 emergency line",
+"בגרסה המלאה: חיוג למוקד החירום, 24/7": "In the full version: call the 24/7 emergency line"
 },
 "f": {
 "בוקר טוב, ": "Good morning, ",
@@ -1505,11 +1514,11 @@ const msBar=()=>`<div class="ms">${MILESTONES.map((m,i)=>`<i class="${i<S.proj.s
 const stageOf=()=>`שלב ${S.proj.stage+1} מתוך ${MILESTONES.length}`;
 const MILESTONES=[
   {t:'חפירה ודיפון',d:'בביצוע'},
-  {t:'יסודות ומרתפים',d:'בהמשך'},
-  {t:'שלד הבניין',d:'בהמשך'},
-  {t:'מעטפת וחזיתות',d:'בהמשך'},
-  {t:'גמרים, מטבחים ומערכות',d:'בהמשך'},
-  {t:'פיתוח, לובי ומסירה',d:'בהמשך'},
+  {t:'יסודות ומרתפים',d:'צפוי · 2027'},
+  {t:'שלד הבניין',d:'צפוי · 2027'},
+  {t:'מעטפת וחזיתות',d:'צפוי · 2028'},
+  {t:'גמרים, מטבחים ומערכות',d:'צפוי · 2028'},
+  {t:'פיתוח, לובי ומסירה',d:'צפוי · 2029'},
 ];
 const PHOTOS=[
   {cap:'עבודות החפירה והדיפון, מבט מלמעלה',date:'אוגוסט 2026',img:'site'},
@@ -1635,7 +1644,7 @@ function renderProgress(){
     <div class="hscroll">${[...S.news.filter(x=>x.kind==='construction').map(x=>({cap:x.t,date:'עכשיו',src:x.img,nophoto:!x.img})),...PHOTOS].map(p=>`<div>${p.src||p.img?`<div class="upd ph"><img src="${p.src||A[p.img]}" alt="${esc(p.cap)}"></div>`:`<div class="upd"><img src="${A.bird}" alt=""></div>`}<b style="font-size:14.5px">${esc(p.cap)}</b><div class="small mut">${p.date}${p.src||p.img?' · צילום מהאתר':p.nophoto?'':' · כאן יופיעו תמונות ווידאו מהאתר'}</div></div>`).join('')}</div>
     <h3 class="sub">אבני דרך</h3>
     <div class="tl">${MILESTONES.map((m,i)=>`<div class="tl-item ${i===S.proj.stage?'now':i<S.proj.stage?'done':''}"><b>${m.t}</b><div class="small mut">${i===S.proj.stage?'בביצוע':i<S.proj.stage?'הושלם':m.d}</div></div>`).join('')}</div>
-    <p class="small mut" style="margin-top:10px">שלבי הבנייה מוצגים לצורך מעקב בלבד. מועד המסירה המחייב הוא המועד שבחוזה.</p>
+    <p class="small mut" style="margin-top:10px">שלבי הבנייה מוצגים לצורך מעקב בלבד. מועד המסירה המחייב הוא המועד שבחוזה.</p><div><span class="ltag">דורש אישור משפטי לפני העלייה לאוויר</span> <span class="small mut">הצגת שנים משוערות</span></div>
     <p class="small mut" style="margin-top:22px">מועדים עתידיים הם הערכה בלבד. מועד המסירה המחייב הוא זה שבחוזה.</p>`;
 }
 function renderChanges(){
@@ -1746,7 +1755,7 @@ function renderService(){
     ${st==='build'?'':`<h3 class="sub">ליקויים ובדק</h3>
     <p class="small mut" style="margin-bottom:10px">מדווחים כאן, הקבלן מטפל, ואנחנו עוקבים עד שהליקוי נסגר.</p>
     <button class="btn block" data-open="ticket" style="margin-bottom:10px">דיווח על ליקוי</button>
-    <p class="small mut" style="margin-bottom:16px">דחוף? הצפה, חשמל או דלת שלא נפתחת: <button style="color:var(--gold-d);font-weight:500;text-decoration:underline" data-toast="בגרסה המלאה: חיוג למוקד החירום של חברת הניהול">מוקד החירום של חברת הניהול</button></p>
+    <p class="small mut" style="margin-bottom:16px">דחוף? הצפה, חשמל או דלת שלא נפתחת: <button style="color:var(--gold-d);font-weight:500;text-decoration:underline" data-toast="בגרסה המלאה: חיוג למוקד החירום, 24/7">מוקד חירום 24/7</button><br><span class="ltag">דורש אישור משפטי לפני העלייה לאוויר</span></p>
     ${open.length?open.map(tk).join(''):'<div class="empty">אין קריאות פתוחות</div>'}
     ${closed.length?`<h3 class="sub">טופלו</h3>${closed.map(tk).join('')}`:''}`}`;
 }
@@ -1761,7 +1770,11 @@ function renderMore(){
     <div class="card">${[['שינויים שאושרו',ch.length?ch.map(c=>esc(c.title)).join(' · '):'אין עדיין'],['חומרים וגמרים','ריצוף, חיפויים, מטבח וכלים סניטריים, לפי המפרט'],['מערכות ואחריות','מיזוג, מים חמים, אלומיניום וממ״ד, עם תעודות האחריות'],['פרוטוקול המסירה',S.protocolSigned?'נחתם ונשמר':'יתווסף במסירה']].map(x=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${x[0]}</b><div class="small mut">${x[1]}</div></div></div>`).join('')}</div>
     <button class="btn block" data-toast="בגרסה המלאה: שיתוף התיק עם קונה, בהרשאה שלך">העברת התיק לבעלים הבאים</button>
     <h3 class="sub">שנה ראשונה מלווה</h3>
-    <div class="card">${WARRANTY.map(w=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${w.t}</b><div class="small mut">בתוקף עד ${fmtDate(w.end)} · נזכיר לך חודש לפני</div></div></div>`).join('')}</div>`;
+    <div class="card">${WARRANTY.map(w=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${w.t}</b><div class="small mut">בתוקף עד ${fmtDate(w.end)} · נזכיר לך חודש לפני</div></div></div>`).join('')}</div>
+    <h3 class="sub">לוח הבניין</h3><div style="margin:-6px 0 8px"><span class="ltag">דורש אישור משפטי לפני העלייה לאוויר</span></div>
+    <div class="card"><textarea class="input" id="postText" placeholder="כתבו הודעה לשכנים" aria-label="הודעה לשכנים" style="min-height:64px"></textarea><button class="btn block" style="margin-top:8px" id="postBtn">פרסום</button></div>
+    ${S.posts.map(p=>`<div class="card"><div class="row between"><b>${esc(p.who)}</b><span class="small mut">${esc(p.time)}</span></div><p style="margin-top:6px;font-size:14.5px;line-height:1.5">${esc(p.text)}</p></div>`).join('')}`;
+  $('#postBtn').onclick=()=>{const t=$('#postText').value.trim();if(!t)return;S.posts.unshift({who:cur().name+', דירה '+cur().unit,text:t,time:'עכשיו'});save();renderMore();toast('ההודעה פורסמה בלוח הבניין')};
 }
 
 /* ---------- developer view ---------- */
