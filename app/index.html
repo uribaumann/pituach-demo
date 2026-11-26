@@ -917,7 +917,10 @@ const EN={
 "מסמך, פגישה או כל שאלה על הדירה והפרויקט": "A document, a meeting, or any question about your home and the project",
 "שלב הבנייה הנוכחי": "Current construction stage",
 "השלב הנוכחי": "Current stage",
-"שלב הבנייה": "Construction stage"
+"שלב הבנייה": "Construction stage",
+"תיק הדירה": "Home file",
+"תיק הדירה הדיגיטלי": "Digital home file",
+"כל השינויים, החומרים והאחריות, ועובר לבעלים הבאים": "All changes, materials and warranties, passed on to the next owners"
 },
 "f": {
 "בוקר טוב, ": "Good morning, ",
@@ -1447,8 +1450,8 @@ const EN={
 "בביצוע": "In progress",
 "סיור מלווה בשלב החפירה": "Guided tour during excavation",
 " בדצמבר": " December",
-"ספר הבית הדיגיטלי": "Digital home book",
-"ספר הבית": "Home book",
+"תיק הדירה הדיגיטלי": "Digital home file",
+"תיק הדירה": "Home file",
 "כל מה שצריך לדעת על הבית, במקום אחד": "Everything about your home, in one place",
 "השינויים, החומרים והאחריות. כשמוכרים, התיק עובר לבעלים הבאים.": "Changes, materials and warranties. When you sell, the file passes to the next owner.",
 "שינויים שאושרו": "Approved changes",
@@ -1463,13 +1466,13 @@ const EN={
 "בגרסה המלאה: שיתוף התיק עם קונה, בהרשאה שלך": "In the full version: share the file with a buyer, with your permission",
 "שנה ראשונה מלווה": "A guided first year",
 " · נזכיר לך חודש לפני": " · we’ll remind you a month before",
-"חדש בספר הבית: תעודות האחריות של המטבח": "New in your home book: kitchen warranty certificates",
+"חדש בתיק הדירה: תעודות האחריות של המטבח": "New in your home file: kitchen warranty certificates",
 "שינויים, חומרים ואחריות": "Changes, materials and warranties",
 "זימון למסירה, פרוטוקול לפי חדרים ותיעוד במקום אחד": "Handover scheduling, a room-by-room protocol and records in one place",
 "מערכות, ספקים, תעודות אחריות ותזכורות בדק": "Systems, suppliers, warranty certificates and defects-period reminders",
 "חברת הניהול באפליקציה": "The management company in the app",
 "היכרות לפני האכלוס: אנשי קשר, נהלים ומתקני הבניין": "Meet them before move-in: contacts, rules and building amenities",
-"תיק הדירה המלא: שינויים, חומרים ואחריות, עובר לבעלים הבאים": "The full apartment file: changes, materials and warranties, passed to the next owner",
+"כל השינויים, החומרים והאחריות, ועובר לבעלים הבאים": "The full apartment file: changes, materials and warranties, passed to the next owner",
 "תזכורת לפני שכל תקופת בדק נגמרת": "A reminder before each defects period ends",
 "עדכונים כלליים": "General updates",
 "אירועים והודעות מהקבוצה": "Events and group announcements",
@@ -1635,7 +1638,7 @@ const NOTIFS=()=>{
     {id:'n1',kind:'critical',t:'תזכורת: התשלום הבא ב-1 במרץ',d:'לפני שעה'},
     {id:'n2',kind:'construction',t:'עדכון מהאתר: התקדמות עבודות החפירה',d:'לפני 4 ימים'},
     {id:'n3',kind:'community',t:'אסיפת דיירים ביום ראשון',d:'לפני יומיים'},
-    {id:'n4',kind:'marketing',t:'חדש בספר הבית: תעודות האחריות של המטבח',d:'לפני שבוע'},
+    {id:'n4',kind:'marketing',t:'חדש בתיק הדירה: תעודות האחריות של המטבח',d:'לפני שבוע'},
   ];
   return n.filter(x=>S.prefs[x.kind]!==false||x.kind==='critical');
 };
@@ -1825,12 +1828,12 @@ function renderService(){
 }
 
 /* ---------- render: more (club/community) ---------- */
-const ROAD=[['sea_sunset','מסירה דיגיטלית','זימון למסירה, פרוטוקול לפי חדרים ותיעוד במקום אחד','שלב 2'],['lobby_desk','מדריך הדירה','מערכות, ספקים, תעודות אחריות ותזכורות בדק','שלב 2'],['pool_in','חברת הניהול באפליקציה','היכרות לפני האכלוס: אנשי קשר, נהלים ומתקני הבניין','שלב 2'],['stone','ספר הבית הדיגיטלי','תיק הדירה המלא: שינויים, חומרים ואחריות, עובר לבעלים הבאים','שלב 3'],['garden','שנה ראשונה מלווה','תזכורת לפני שכל תקופת בדק נגמרת','שלב 3']];
+const ROAD=[['sea_sunset','מסירה דיגיטלית','זימון למסירה, פרוטוקול לפי חדרים ותיעוד במקום אחד','שלב 2'],['lobby_desk','מדריך הדירה','מערכות, ספקים, תעודות אחריות ותזכורות בדק','שלב 2'],['pool_in','חברת הניהול באפליקציה','היכרות לפני האכלוס: אנשי קשר, נהלים ומתקני הבניין','שלב 2'],['stone','תיק הדירה הדיגיטלי','כל השינויים, החומרים והאחריות, ועובר לבעלים הבאים','שלב 3'],['garden','שנה ראשונה מלווה','תזכורת לפני שכל תקופת בדק נגמרת','שלב 3']];
 function renderMore(){
   if(S.scope==='pilot'){$('#s-more').innerHTML=`<h2 class="title" data-k="ROADMAP">בהמשך</h2><p class="mut" style="text-align:center;margin:-10px 0 20px">הפיילוט מתמקד בשלב הבנייה. אלה היכולות שיתווספו בשלבים הבאים.</p>${ROAD.map(x=>`<div class="card img"><img src="${A[x[0]]}" alt=""><div class="in"><div class="row between"><b>${x[1]}</b><span class="chip">${x[3]}</span></div><p class="small mut" style="margin-top:6px">${x[2]}</p></div></div>`).join('')}<button class="btn gold block" data-scope="full">להצגת החזון המלא</button>`;return}
   const r=cur(),o=S;const ch=S.changes.filter(c=>c.status==='approved');
-  $('#s-more').innerHTML=`<h2 class="title" data-k="HOME BOOK">ספר הבית</h2>
-    <div class="card hero" style="background-image:url(${A.stone});min-height:240px"><div class="in"><div class="kicker">ספר הבית הדיגיטלי</div><div class="big" style="margin:6px 0;font-size:26px">כל מה שצריך לדעת על הבית, במקום אחד</div><p class="mut" style="font-size:14.5px">השינויים, החומרים והאחריות. כשמוכרים, התיק עובר לבעלים הבאים.</p></div></div>
+  $('#s-more').innerHTML=`<h2 class="title" data-k="HOME BOOK">תיק הדירה</h2>
+    <div class="card hero" style="background-image:url(${A.stone});min-height:240px"><div class="in"><div class="kicker">תיק הדירה הדיגיטלי</div><div class="big" style="margin:6px 0;font-size:26px">כל מה שצריך לדעת על הבית, במקום אחד</div><p class="mut" style="font-size:14.5px">השינויים, החומרים והאחריות. כשמוכרים, התיק עובר לבעלים הבאים.</p></div></div>
     <div class="card">${[['שינויים שאושרו',ch.length?ch.map(c=>esc(c.title)).join(' · '):'אין עדיין'],['חומרים וגמרים','ריצוף, חיפויים, מטבח וכלים סניטריים, לפי המפרט'],['מערכות ואחריות','מיזוג, מים חמים, אלומיניום וממ״ד, עם תעודות האחריות'],['פרוטוקול המסירה',S.protocolSigned?'נחתם ונשמר':'יתווסף במסירה']].map(x=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${x[0]}</b><div class="small mut">${x[1]}</div></div></div>`).join('')}</div>
     <button class="btn block" data-toast="בגרסה המלאה: שיתוף התיק עם קונה, בהרשאה שלך">העברת התיק לבעלים הבאים</button>
     <h3 class="sub">שנה ראשונה מלווה</h3>
@@ -1964,7 +1967,7 @@ function devAct(a){
   else if(act==='delnews'){S.news=S.news.filter(n=>String(n.id)!==id);keep()}
   else if(act==='broadcast'){openSheet(`<h3>הודעה לכל הדיירים</h3><textarea class="input" id="bc" placeholder="למשל: ביום חמישי ייערך סיור דיירים באתר"></textarea><button class="btn gold block" style="margin-top:14px" id="bcSend">שליחה ל-${RES.length} דיירים</button>`,sh=>{$('#bcSend',sh).onclick=()=>{const t=$('#bc',sh).value.trim();if(!t){$('#bc',sh).focus();return}RES.forEach(x=>sendMsg(x.id,t));closeSheet();toast('ההודעה נשלחה לכל הדיירים')}})}
 }
-function applyScope(){const pl=S.scope==='pilot';$('#phone').dataset.scope=S.scope;$('#scopeBtn').textContent=pl?'החזון המלא':'תצוגת פיילוט';$('#moreLbl').textContent=pl?'בהמשך':'ספר הבית';if(pl&&(pane==='handover'||pane==='guide'))pane='progress'}
+function applyScope(){const pl=S.scope==='pilot';$('#phone').dataset.scope=S.scope;$('#scopeBtn').textContent=pl?'החזון המלא':'תצוגת פיילוט';$('#moreLbl').textContent=pl?'בהמשך':'תיק הדירה';if(pl&&(pane==='handover'||pane==='guide'))pane='progress'}
 function applyRole(){$('#phone').dataset.role=S.role;$('#roleBtn').textContent=S.role==='dev'?'חזרה לתצוגת הדייר':'תצוגת יזם';$('#main').scrollTop=0}
 
 /* ---------- sheets ---------- */
