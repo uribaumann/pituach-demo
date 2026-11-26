@@ -214,7 +214,12 @@
 "מוקד חירום 24/7": "24/7 emergency line",
 "בגרסה המלאה: חיוג למוקד החירום, 24/7": "In the full version: call the 24/7 emergency line",
 "התמונה הקודמת": "Previous photo",
-"התמונה הבאה": "Next photo"
+"התמונה הבאה": "Next photo",
+"מה השאלה?": "What's your question?",
+"במה נוכל לעזור?": "How can we help?",
+"למשל: מה גובה התקרה בסלון, ואיזה ריצוף מגיע במרפסת?": "e.g. How high is the living room ceiling, and which tiles go on the balcony?",
+"למשל: עותק של נספח התשלומים, או פגישה לגבי שינוי בתוכנית הדירה": "e.g. A copy of the payment appendix, or a meeting about a change to the floor plan",
+"מסמך, פגישה או כל שאלה על הדירה והפרויקט": "A document, a meeting, or any question about your home and the project"
 },
 "f": {
 "בוקר טוב, ": "Good morning, ",
