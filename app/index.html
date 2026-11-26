@@ -149,6 +149,7 @@ canvas.sign{width:100%;height:150px;background:var(--paper);border:1px dashed #2
 .toast{position:absolute;top:14px;left:16px;right:16px;background:var(--navy);color:#fff;padding:14px 18px;border-radius:var(--r);font-size:13.5px;z-index:40;box-shadow:0 14px 40px #0003;transform:translateY(calc(-100% - 60px));transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .toast.on{transform:none}
 .phone:not(.demo) .demo-strip{display:none!important}
+.side-me,.side-help{display:none}
 button.switch{align-self:center;flex:none;height:26px}
 .ltag{display:inline-block;font-size:11px;line-height:1.4;padding:2px 8px;border:1px dashed #A0702A;color:#8A5A12;background:#FBF0DC;border-radius:10px;margin:4px 0;font-weight:400;letter-spacing:0}
 .phone:not(.demo)[data-scope=pilot] nav.tabs [data-tab=more]{display:none}
@@ -463,16 +464,24 @@ table.tbl{width:100%;border-collapse:collapse;background:var(--paper);border-rad
   .phone .sheet{max-width:600px;border-radius:24px;max-height:86%}
   .phone .toast{max-width:460px;margin-inline:auto}
   .phone .install{display:none!important}
-  /* residents on the web: menu as a bar under the logo instead of a side column */
-  .phone[data-role=res]{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr)}
-  .phone[data-role=res] .top{border-bottom:0}
-  .phone[data-role=res] nav.tabs:not(.devnav){grid-column:1;grid-row:2;flex-direction:row;justify-content:center;gap:8px;padding:6px 24px 14px;border-inline-end:0;border-bottom:1px solid var(--line)}
-  .phone[data-role=res] nav.tabs:not(.devnav) button{padding:10px 22px;border-radius:999px;font-size:15.5px;color:var(--mut)}
+  /* residents on the web: a roomy side menu with who you are on top and a direct line to your contact below */
+  .phone[data-role=res]{grid-template-columns:272px minmax(0,1fr)}
+  .phone[data-role=res] nav.tabs:not(.devnav){padding:24px 18px;gap:6px}
+  .phone[data-role=res] nav.tabs:not(.devnav) button{padding:14px 18px;font-size:16px;border-radius:14px;color:var(--mut);gap:14px}
+  .phone[data-role=res] nav.tabs:not(.devnav) button svg{width:21px;height:21px}
   .phone[data-role=res] nav.tabs:not(.devnav) button:hover{background:var(--sand2);color:var(--ink)}
   .phone[data-role=res] nav.tabs:not(.devnav) button.on{background:var(--ink);color:#fff;font-weight:500}
-  .phone[data-role=res] nav.tabs:not(.devnav) button svg{width:19px;height:19px}
-  .phone[data-role=res] nav.tabs:not(.devnav) button.on svg,.phone[data-role=res] nav.tabs:not(.devnav) button.on svg *{color:#fff;stroke:#fff}
-  .phone[data-role=res] main{grid-column:1;grid-row:3}
+  .phone[data-role=res] nav.tabs:not(.devnav) button.on svg,.phone[data-role=res] nav.tabs:not(.devnav) button.on svg *{stroke:#fff}
+  .side-me,.side-help{display:block}
+  .side-me{padding:4px 8px 18px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+  .side-me .k{font-size:10px;letter-spacing:2px;color:var(--mut)}
+  .side-me b{display:block;font-family:var(--serif);font-weight:400;font-size:22px;margin-top:4px}
+  .side-me .lat{display:block;font-family:var(--lat);font-size:13px;letter-spacing:1.6px;color:var(--mut);direction:ltr;text-align:right;margin-top:2px}
+  .side-help{margin-top:auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+  .side-help .row{display:flex;align-items:center;gap:12px}
+  .side-help .av{width:40px;height:40px;border-radius:50%;background:var(--sand2);display:grid;place-items:center;color:var(--gold-d);font-weight:500;flex:none}
+  .side-help button.go{margin-top:12px;width:100%;justify-content:center;background:var(--sand2);color:var(--ink);padding:10px;border-radius:12px;font-size:14px}
+  .side-help button.go:hover{background:var(--gold)}
   .phone .a11y-fab{top:auto;bottom:28px}
 }
 /* ---- developer view on a wide screen ---- */
@@ -594,11 +603,13 @@ table.tbl{width:100%;border-collapse:collapse;background:var(--paper);border-rad
 
     
     <nav class="tabs" aria-label="ניווט ראשי">
+      <div class="side-me" id="sideMe"></div>
       <button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21H3z"/><path d="M9 21v-6h6v6"/></svg>בית</button>
       <button data-tab="apt"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2"/></svg>הדירה</button>
       <button data-tab="money"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>תשלומים</button>
       <button data-tab="service"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h18M5 18a7 7 0 0 1 14 0M12 8V6M10 6h4"/></svg>שירות</button>
       <button data-tab="more"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg><span id="moreLbl">מועדון</span></button>
+      <div class="side-help" id="sideHelp"></div>
     </nav>
     <nav class="tabs devnav" aria-label="ניווט יזם">
       <button data-dvtab="over"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.500"/><rect x="13" y="3" width="8" height="5" rx="1.500"/><rect x="13" y="11" width="8" height="10" rx="1.500"/><rect x="3" y="14" width="8" height="7" rx="1.500"/></svg>סקירה</button>
@@ -903,7 +914,10 @@ const EN={
 "במה נוכל לעזור?": "How can we help?",
 "למשל: מה גובה התקרה בסלון, ואיזה ריצוף מגיע במרפסת?": "e.g. How high is the living room ceiling, and which tiles go on the balcony?",
 "למשל: עותק של נספח התשלומים, או פגישה לגבי שינוי בתוכנית הדירה": "e.g. A copy of the payment appendix, or a meeting about a change to the floor plan",
-"מסמך, פגישה או כל שאלה על הדירה והפרויקט": "A document, a meeting, or any question about your home and the project"
+"מסמך, פגישה או כל שאלה על הדירה והפרויקט": "A document, a meeting, or any question about your home and the project",
+"שלב הבנייה הנוכחי": "Current construction stage",
+"השלב הנוכחי": "Current stage",
+"שלב הבנייה": "Construction stage"
 },
 "f": {
 "בוקר טוב, ": "Good morning, ",
@@ -1525,7 +1539,8 @@ const EN={
 "גוללים ובוחרים": "Scroll and choose",
 "\"הוסף למסך הבית\"": "\"Add to Home Screen\"",
 "\"הוסף\"": "\"Add\"",
-"למעלה": "at the top"
+"למעלה": "at the top",
+"עכשיו: ": "Now: "
 }
 };
 const EX=EN.x||{}, FR=Object.assign({},...Object.entries(EX).filter(e=>e[0].length>=8).map(e=>({[e[0]]:e[1]})),EN.f||{});
@@ -1665,7 +1680,7 @@ setInterval(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches||docum
 function renderHome(){
   const r=cur(), np=nextPayment(), st=S.stage, quote=S.changes.find(c=>c.status==='quote'), openT=S.tickets.filter(t=>t.step<3).length;
   const msg={build:'הבית שלך נבנה, על קו הים של הרצליה פיתוח.',handover:S.appt?`פגישת המסירה שלך: ${esc(S.appt)}`:'הבית מוכן. נשאר רק לבחור מתי לקבל את המפתח.',after:'ברוכים הבאים הביתה.'}[st];
-  const stat=st==='build'?`<div style="margin-top:16px"><div class="stagenum">${stageOf()} · שלבי הבנייה</div><div class="stagebig">${NOW_STAGE}</div></div>`:'';
+  const stat=st==='build'?`<div style="margin-top:16px"><div class="stagenum">שלב הבנייה הנוכחי</div><div class="stagebig">${NOW_STAGE}</div></div>`:'';
   let next;
   if(st==='build'&&quote)next=['הצעת מחיר ממתינה לאישורך',esc(quote.title)+' · '+nis(quote.price),'לאישור',`data-sign="${quote.id}"`];
   else if(st==='build'&&np)next=['התשלום הבא',fmtDate(np.due)+' · '+nis(np.total),'לתשלום','data-goto="money"'];
@@ -1687,7 +1702,7 @@ function renderHome(){
 /* ---------- render: apartment ---------- */
 function renderProgress(){
   $('#p-progress').innerHTML=`
-    <div class="row between" style="align-items:flex-end"><div><div class="kicker">${stageOf()} · השלב הנוכחי</div><div class="stagebig" style="font-size:38px;margin-top:6px">${NOW_STAGE}</div></div><span class="chip ok">לפי לוח הזמנים</span></div>
+    <div class="row between" style="align-items:flex-end"><div><div class="kicker">השלב הנוכחי</div><div class="stagebig" style="font-size:38px;margin-top:6px">${NOW_STAGE}</div></div><span class="chip ok">לפי לוח הזמנים</span></div>
     ${msBar()}
     <h3 class="sub">עדכונים מהאתר</h3>
     <div class="hscroll">${[...S.news.filter(x=>x.kind==='construction').map(x=>({cap:x.t,date:'עכשיו',src:x.img,nophoto:!x.img})),...PHOTOS].map(p=>`<div>${p.src||p.img?`<div class="upd ph"><img src="${p.src||A[p.img]}" alt="${esc(p.cap)}"></div>`:`<div class="upd"><img src="${A.bird}" alt=""></div>`}<b style="font-size:14.5px">${esc(p.cap)}</b><div class="small mut">${p.date}${p.src||p.img?' · צילום מהאתר':p.nophoto?'':' · כאן יופיעו תמונות ווידאו מהאתר'}</div></div>`).join('')}</div>
@@ -1855,7 +1870,7 @@ function renderDev(){
       <button data-dvtab="inbox"><div class="big">${tasks.length}</div><div class="kicker">ממתינים לטיפול</div></button>
       <button data-dvtab="people"><div class="big">${RES.length}</div><div class="kicker">דיירים</div></button>
       <button data-dvtab="money"><div class="big">₪${(tot.paid/1e6).toFixed(1)}M</div><div class="kicker">נגבה עד היום</div></button>
-      <button data-dvtab="proj"><div class="big" style="font-size:30px;line-height:1.25;padding:6px 0">${NOW_STAGE}</div><div class="kicker">שלב הבנייה · ${S.proj.stage+1}/${MILESTONES.length}</div></button>
+      <button data-dvtab="proj"><div class="big" style="font-size:30px;line-height:1.25;padding:6px 0">${NOW_STAGE}</div><div class="kicker">שלב הבנייה</div></button>
     </div>
     <h3 class="sub">דורש טיפול</h3>
     ${tasks.length?`<div class="dcols">${tasks.slice(0,3).map(taskCard).join('')}</div>`+(tasks.length>3?`<button class="btn block" data-dvtab="inbox">לכל ${tasks.length} הפניות</button>`:''):'<div class="card empty">אין פניות פתוחות. הכול מטופל.</div>'}
@@ -1885,7 +1900,7 @@ function renderDev(){
   }
   if(tab==='proj'){
     h=`<h2 class="title" data-k="PROJECT">הפרויקט</h2>
-    <div class="card"><div class="row between"><b>אבני הדרך של הבנייה</b><span class="small mut">${stageOf()}</span></div>
+    <div class="card"><div class="row between"><b>אבני הדרך של הבנייה</b><span class="small mut">עכשיו: ${NOW_STAGE}</span></div>
       ${msBar()}
       <label class="f" style="margin-top:8px">השלב הנוכחי</label><div class="opt-row">${MILESTONES.map((m,i)=>`<button class="opt ${i===S.proj.stage?'on':''}" data-dv="pstage:${i}">${m.t}</button>`).join('')}</div>
       <p class="small mut" style="margin-top:12px">בחירת שלב מעדכנת מיד את מסך הבית ואת אבני הדרך אצל כל הדיירים.</p></div>
@@ -2167,7 +2182,7 @@ function setStage(st){
   pane=defaultPane();renderAll();go(S.tab==='apt'?'apt':S.tab);
 }
 function applyAcc(){const a=S.a11y||(S.a11y={z:0}),r=document.documentElement;r.style.setProperty('--z',1+(a.z||0)*.1);r.dataset.contrast=a.contrast?'high':'';r.dataset.gray=a.gray?'1':'';r.dataset.links=a.links?'1':'';r.dataset.motion=a.motion?'1':''}
-function renderAll(){syncProj();renderDev();renderHome();renderApt();renderMoney();renderDocs();renderService();renderMore();setPane(pane);
+function renderAll(){syncProj();sideInfo();renderDev();renderHome();renderApt();renderMoney();renderDocs();renderService();renderMore();setPane(pane);
   $('#notifDot').style.display=NOTIFS().some(n=>!S.readNotifs.includes(n.id))?'':'none'}
 
 /* ---------- global clicks ---------- */
@@ -2267,6 +2282,9 @@ const PWA=(()=>{const framed=(()=>{try{return window.top!==window.self}catch(e){
   return{can,install,banner,standalone}})();
 setTimeout(()=>PWA.banner(),3200);
 
+function sideInfo(){const me=$('#sideMe'),h=$('#sideHelp');if(!me)return;const r=cur();
+  me.innerHTML=`<div class="k">MY HOME</div><b>${esc(r.name)}</b><span class="lat">${esc(r.apt)}</span><span class="small mut">${floorTxt(r)} · ${r.sqm} מ״ר</span>`;
+  h.innerHTML=`<div class="row"><span class="av">${HOST.name[0]}</span><div><b style="font-size:14.5px">${HOST.name}</b><div class="small mut">${HOST.role}</div></div></div><button class="go" data-open="chat">הודעה ל${HOST.name}</button>`}
 /* ---------- boot ---------- */
 $$('[data-a]').forEach(i=>i.src=A[i.dataset.a]);
 let noSplash=false;try{noSplash=sessionStorage.getItem('nosplash')==='1';sessionStorage.removeItem('nosplash')}catch(e){}
