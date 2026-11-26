@@ -12,6 +12,9 @@ assert "/*__ASSETS__*/" in src
 pf = root / ("people.private.json" if "--names" in sys.argv and (root / "people.private.json").exists() else "people.public.json")
 assert "/*__PEOPLE__*/[]" in src
 src = src.replace("/*__PEOPLE__*/[]", pf.read_text(encoding="utf-8").strip())
+cf = root / ("config.private.json" if "private" in pf.name else "config.public.json")
+assert "/*__CFG__*/{}" in src
+src = src.replace("/*__CFG__*/{}", cf.read_text(encoding="utf-8").strip())
 out = src.replace("/*__ASSETS__*/", boot)
 (root / "admin.html").write_text(out, encoding="utf-8")
 art = re.sub(r'<!doctype html>|</?html[^>]*>|</?head>|</?body[^>]*>|<meta charset[^>]*>|<meta name="viewport"[^>]*>', "", out)
