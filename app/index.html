@@ -499,10 +499,6 @@ table.tbl{width:100%;border-collapse:collapse;background:var(--paper);border-rad
 .hs-lines button:hover i{background:#ffffffb3;height:4px}
 .hs-lines button i{display:block;width:100%;height:3px;border-radius:3px;background:#ffffff66;transition:background .3s,height .2s}
 .hs-lines button.on i{background:#fff;height:4px}
-.hs-nav{position:absolute;top:50%;z-index:3;width:46px;height:46px;margin-top:-23px;border-radius:50%;background:#ffffffd9;color:var(--ink);display:none;place-items:center;box-shadow:0 6px 20px #0003;cursor:pointer;transition:opacity .2s,transform .2s}
-.hs-nav:hover{background:#fff;transform:scale(1.06)}.hs-nav svg{width:20px;height:20px}
-.hs-nav.prev{inset-inline-start:18px}.hs-nav.next{inset-inline-end:18px}
-@media (hover:hover) and (pointer:fine){.hs-nav{display:grid;opacity:.0}.hero-full.hs:hover .hs-nav,.hs-nav:focus-visible{opacity:1}}
 .hs-track.drag{cursor:grabbing;scroll-snap-type:none;scroll-behavior:auto}
 @media (hover:hover) and (pointer:fine){.hs-track{cursor:grab}}
 .hs-cap{position:absolute;top:18px;left:0;right:0;z-index:2;text-align:center;font-size:10px;letter-spacing:2.2px;color:#ffffffd9;text-shadow:0 1px 6px #0006;pointer-events:none}
@@ -1635,9 +1631,7 @@ function personCard(){return `<div class="card"><div class="person"><div class="
 const HERO_MORE=['sea_sunset','tower_sunset','aerial','lobby_desk','pool_in','terrace'];
 function heroSlides(r,st){const ks=[r.hero[st],...HERO_MORE.filter(k=>k!==r.hero[st])].slice(0,5);const cap=k=>(GALLERY.find(g=>g[0]===k)||[0,''])[1];
   return `<div class="hs-track" aria-label="תמונות הפרויקט, החליקו לתמונה הבאה" tabindex="0">${ks.map((k,i)=>`<div class="hs-s" role="img" aria-label="${cap(k)}" data-cap="${i?cap(k):''}" style="background-image:url(${A[k]})"></div>`).join('')}</div>
-  <div class="hs-lines" role="tablist">${ks.map((k,i)=>`<button role="tab" data-hs="${i}" class="${i?'':'on'}" aria-label="תמונה ${i+1} מתוך ${ks.length}" aria-selected="${!i}"><i></i></button>`).join('')}</div><div class="hs-cap"></div>
-  <button class="hs-nav prev" data-hsnav="-1" aria-label="התמונה הקודמת"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
-  <button class="hs-nav next" data-hsnav="1" aria-label="התמונה הבאה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>`}
+  <div class="hs-lines" role="tablist">${ks.map((k,i)=>`<button role="tab" data-hs="${i}" class="${i?'':'on'}" aria-label="תמונה ${i+1} מתוך ${ks.length}" aria-selected="${!i}"><i></i></button>`).join('')}</div><div class="hs-cap"></div>`}
 function hsSync(t){const w=t.clientWidth||1,i=Math.round(Math.abs(t.scrollLeft)/w),h=t.parentNode;
   h.querySelectorAll('.hs-lines button').forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-selected',j===i)});
   const s=t.children[i];h.querySelector('.hs-cap').textContent=s?s.dataset.cap:''}
