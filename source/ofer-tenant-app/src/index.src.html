@@ -1272,8 +1272,8 @@ const SHEETS={
 /* ---------- documents: contract, plan, downloads ---------- */
 let DL=null;try{window.claude&&window.claude.use&&window.claude.use('downloads').then(x=>{DL=x}).catch(()=>{})}catch(e){}
 const inArtifact=()=>{try{return window.top!==window.self}catch(e){return true}};
-async function saveFile(name,key){
-  let blob;try{blob=await (await fetch(A[key])).blob()}catch(e){toast('הקובץ לא זמין כרגע');return}
+async function saveFile(name,key,given){
+  let blob=given;if(!blob)try{blob=await (await fetch(A[key])).blob()}catch(e){toast('הקובץ לא זמין כרגע');return}
   if(DL){try{const r=await DL.save({filename:name,data:blob});if(r&&r.status==='saved')toast('הקובץ נשמר: '+name)}catch(e){const c=e&&e.code;if(c==='declined')return;if(c==='rate_limited'){toast('רגע, יש כבר שמירה פתוחה');return}if(c==='host_unavailable'){toast('כדי לשמור את הקובץ, פתחו את האפליקציה בדפדפן או במחשב');return}toast('לא ניתן לשמור את הקובץ כאן')}return}
   if(inArtifact()&&!(window.claude)){toast('ההורדה זמינה כשפותחים את האפליקציה בדפדפן');return}
   const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);toast('הקובץ ירד: '+name);
@@ -1292,6 +1292,51 @@ function contractHTML(id){
   <h5>6. בדק ואחריות</h5><p>תקופות הבדק והאחריות לפי חוק המכר (דירות), התשל״ג–1973.</p>
   <div class="sig"><div>החברה<br>נחתם דיגיטלית</div><div>הקונה<br>נחתם דיגיטלית</div></div>`;
 }
+/* ---------- sample documents (realistic content, clearly marked as samples) ---------- */
+const STAMP='<div class="stamp">מסמך לדוגמה לצורכי הדגמה בלבד</div>';
+function sampleDoc(name){const r=cur(),rows=payRows(),p2=rows[1],p3=rows[2],full=r.name+(r.co?' ו'+r.co:'');
+ const head=(t,sub)=>`<h4>${t}</h4>${STAMP}<p class="small" style="text-align:center;margin:-6px 0 12px;color:#777">${sub}</p>`;
+ const kv=a=>`<table>${a.map(x=>`<tr><td style="width:42%;color:#666">${x[0]}</td><td>${x[1]}</td></tr>`).join('')}</table>`;
+ const D={
+ 'מפרט טכני מלא':()=>head('מפרט טכני','נספח ב׳ לחוזה המכר · '+r.apt)+
+  `<p>המפרט מתאר את הדירה כפי שתימסר. כל שינוי מהמפרט נעשה רק בהצעת מחיר ובאישור בכתב.</p>
+  <h5>1. פרטי הדירה</h5>${kv([['בניין','SEA HOUSE, פיתוח על הים, הרצליה פיתוח'],['דירה',`${r.apt} · דירה ${r.unit}`],['קומה',floorTxt(r)],['שטח',`${r.sqm} מ״ר`],['שטח חוץ',r.out],['חדרים',r.beds],['כיוונים',r.dir]])}
+  <h5>2. גמרים</h5>${kv([['ריצוף חדרי מגורים','אריחי פורצלן 120×120 ס״מ, לבחירה מתוך 3 גוונים'],['ריצוף חדרי רחצה','אריחי פורצלן 60×120 ס״מ, חיפוי קירות עד התקרה'],['ריצוף מרפסת','אריחי פורצלן מחוספס, מתאים לחוץ'],['גובה תקרה','כ-2.85 מ׳ בחדרי המגורים, תקרה מונמכת בפרוזדור ובחדרי הרחצה'],['דלתות פנים','דלתות לבודות בגמר צבע, ידיות נירוסטה']])}
+  <h5>3. מטבח</h5>${kv([['ארונות','ארונות עליונים ותחתונים, טריקה שקטה · [ספק מטבחים]'],['משטח','אבן קוורץ בעובי 2 ס״מ, לבחירה מתוך 3 גוונים'],['כיור וברז','כיור אינטגרלי, ברז נשלף'],['הכנות','נקודות למדיח, לתנור בנוי ולכיריים']])}
+  <h5>4. חדרי רחצה</h5>${kv([['כלים סניטריים','אסלה תלויה, ארון אמבטיה עם כיור משולב · [ספק כלים סניטריים]'],['מקלחת','מקלחון זכוכית, ניקוז קווי'],['ברזים','ברזי פרח מערבלים, גמר כרום']])}
+  <h5>5. מערכות</h5>${kv([['מיזוג אוויר','מיני מרכזי, יחידה לכל אזור · [ספק מיזוג]'],['מים חמים','דוד שמש 150 ליטר עם גיבוי חשמלי'],['חשמל','לוח חשמל תלת פאזי, נקודות לפי תוכנית החשמל'],['תריסים','תריסי אלומיניום חשמליים בחדרי השינה'],['ממ״ד','דלת הדף, חלון ומערכת סינון לפי תקן פיקוד העורף']])}
+  <p class="small" style="color:#777;margin-top:12px">שמות הספקים בסוגריים יעודכנו לפי הסכמי הספקים של הפרויקט.</p>`,
+ 'ערבות חוק מכר · תשלום 2':()=>head('ערבות לפי חוק המכר (דירות)','חוק המכר (דירות) (הבטחת השקעות של רוכשי דירות), התשל״ה–1975')+
+  kv([['מספר ערבות','[מספר הערבות]'],['הבנק הערב','[הבנק המלווה של הפרויקט]'],['המוטב',full],['הדירה',`${r.apt} · דירה ${r.unit} · ${floorTxt(r)}`],['התשלום',`${p2.name} · ${p2.pct}% מהתמורה`],['סכום הקרן',nis(p2.base)],['הצמדה','למדד תשומות הבנייה, מדד בסיס '+BASE_INDEX],['תאריך הוצאה','1 בספטמבר 2026'],['תוקף','עד רישום הדירה על שם הקונה, או עד מסירתה, לפי המוקדם']])+
+  `<p style="margin-top:12px">הערבות מבטיחה את החזר הסכום ששולם, בתוספת הפרשי הצמדה, אם החברה לא תוכל למסור את הדירה כמפורט בחוק. הערבות המקורית נשלחת בדואר.</p>`,
+ 'קבלה · תשלום 2':()=>head('קבלה','מספר קבלה: [מספר] · תאריך: 1 בספטמבר 2026')+
+  kv([['התקבל מאת',full],['עבור',`${r.apt} · דירה ${r.unit} · ${p2.name}`],['אמצעי תשלום','העברה בנקאית'],['סכום הקרן',nis(p2.base)],['הפרשי הצמדה',nis(p2.link)],['סה״כ התקבל',`<b>${nis(p2.total)}</b>`]])+
+  `<p style="margin-top:12px">הסכום כולל מע״מ. תודה,<br>מחלקת הכספים</p>`,
+ 'דוח הצמדה למדד · רבעון 3':()=>head('דוח הצמדה למדד','רבעון 3 · יולי–ספטמבר 2026')+
+  `<p>מדד תשומות הבנייה למגורים, כפי שפורסם בידי הלשכה המרכזית לסטטיסטיקה. מדד הבסיס בחוזה: <b>${BASE_INDEX}</b>.</p>
+  <table><tr><th>חודש</th><th>מדד</th><th>שינוי מהבסיס</th></tr>${[['יולי 2026',107.4],['אוגוסט 2026',107.9],['ספטמבר 2026',CUR_INDEX]].map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td>+${((x[1]/BASE_INDEX-1)*100).toFixed(2)}%</td></tr>`).join('')}</table>
+  <h5>ההשפעה על התשלום הבא</h5>${kv([['תשלום',p3.name],['מועד',fmtDate(p3.due)],['קרן',nis(p3.base)],['הצמדה לפי המדד האחרון',nis(p3.link)],['סה״כ משוער',`<b>${nis(p3.total)}</b>`]])}
+  <p class="small" style="color:#777">הסכום הסופי מחושב לפי המדד הידוע ביום התשלום.</p>`,
+ 'הצעת מחיר · ריצוף מקלחת':()=>head('הצעת מחיר לשינוי דיירים','מספר הצעה: [מספר] · 20 באוקטובר 2026')+
+  kv([['לכבוד',full],['דירה',`${r.apt} · דירה ${r.unit}`],['השינוי','החלפת ריצוף וחיפוי במקלחת הראשית לאריחי שיש מהדר']])+
+  `<table><tr><th>פריט</th><th>כמות</th><th>סכום</th></tr><tr><td>הפרש מחיר אריחים</td><td>8 מ״ר</td><td>${nis(2600)}</td></tr><tr><td>עבודת הנחה ופוגות</td><td>8 מ״ר</td><td>${nis(950)}</td></tr><tr><td>זיכוי על אריחי המפרט</td><td>8 מ״ר</td><td>-${nis(320)}</td></tr><tr><td>טיפול ותיאום</td><td></td><td>${nis(670)}</td></tr><tr><td><b>סה״כ כולל מע״מ</b></td><td></td><td><b>${nis(3900)}</b></td></tr></table>
+  <p>ההצעה בתוקף 30 יום. הביצוע בשלב הגמרים, בכפוף לאישור ההנדסה. אישור ההצעה בחתימה דיגיטלית באפליקציה.</p>`,
+ 'אישור שינוי · נקודת חשמל':()=>head('אישור שינוי דיירים','מספר שינוי: [מספר] · 2 ביוני 2026')+
+  kv([['דייר',full],['דירה',`${r.apt} · דירה ${r.unit}`],['השינוי','הזזת נקודת חשמל בקיר הסלון 80 ס״מ שמאלה, לפי השרטוט המצורף'],['מחיר',nis(1450)+' כולל מע״מ'],['מועד ביצוע','בשלב עבודות החשמל'],['סטטוס','<b>אושר</b> · נחתם דיגיטלית']])+
+  `<div class="sig"><div>ההנדסה<br>אושר</div><div>הדייר<br>נחתם דיגיטלית</div></div>`,
+ 'מדריך הדירה':()=>head('מדריך הדירה','מה יש בדירה ואיך שומרים עליה')+
+  GUIDE.map(g=>`<h5>${g.t}</h5><p>${g.s} · ${g.sup} · אחריות ${g.w}</p><p style="color:#555">${g.tip}</p>`).join('')+
+  `<h5>מים וחשמל</h5><p>הברז הראשי של הדירה בארון השירות. לוח החשמל ליד דלת הכניסה, עם שילוט לכל מעגל.</p>`,
+ 'תעודות אחריות ספקים':()=>head('תעודות אחריות ספקים','ריכוז לפי מערכת · יתעדכן במסירה')+
+  `<table><tr><th>מערכת</th><th>ספק</th><th>אחריות</th></tr>${GUIDE.map(g=>`<tr><td>${g.t}</td><td>${g.sup}</td><td>${g.w}</td></tr>`).join('')}</table>
+  <h5>תקופות בדק ואחריות</h5><table>${WARRANTY.map(w=>`<tr><td>${w.t}</td><td>עד ${fmtDate(w.end)}</td></tr>`).join('')}</table>
+  <p class="small" style="color:#777">כל תעודה מקורית תצורף כקובץ נפרד ביום המסירה.</p>`};
+ return D[name]?D[name]():null}
+function openSampleDoc(name){const html=sampleDoc(name);if(!html)return false;const r=cur();
+ openSheet(`<h3>${esc(name)}</h3><p class="small mut" style="margin:-8px 0 12px">${r.apt} · ${floorTxt(r)}</p><div class="doc">${html}</div>
+  <div class="dlrow"><button class="btn gold" id="docDl">הורדת המסמך</button></div><p class="dlnote">מסמך לדוגמה. בגרסה המלאה יוצג כאן המסמך עצמו.</p>`,sh=>{
+  $('#docDl',sh).onclick=()=>{const page=`<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>${name}</title><style>body{font-family:Heebo,Arial,sans-serif;max-width:720px;margin:40px auto;padding:0 24px;line-height:1.7;color:#2b2b2b}h4{font-size:24px;text-align:center;margin:0}h5{font-size:15px;margin:18px 0 4px}table{width:100%;border-collapse:collapse;margin:8px 0}td,th{border-bottom:1px solid #e3e3e3;padding:6px 4px;text-align:right}.stamp{text-align:center;color:#8a5a36;font-size:12px;letter-spacing:1px;margin:4px 0 14px}.sig{display:flex;gap:40px;margin-top:36px}.sig div{flex:1;border-top:1px solid #888;padding-top:8px;text-align:center}.brand{letter-spacing:4px;font-size:12px;color:#555;text-align:center;margin-bottom:18px}</style></head><body><div class="brand">PITUACH BY THE SEA</div>${html}</body></html>`;
+   const slug=r.apt.toLowerCase().replace(/^the /,'').replace(/\s+/g,'-');const en={'מפרט טכני מלא':'technical-spec','ערבות חוק מכר · תשלום 2':'sale-law-guarantee-2','קבלה · תשלום 2':'receipt-2','דוח הצמדה למדד · רבעון 3':'index-report-q3','הצעת מחיר · ריצוף מקלחת':'quote-shower-tiles','אישור שינוי · נקודת חשמל':'change-approval-outlet','מדריך הדירה':'home-guide','תעודות אחריות ספקים':'warranties'}[name]||'document';saveFile(`${slug}-${en}-sample.html`,null,new Blob([page],{type:'text/html'}))}});return true}
 function openContract(){
   const r=cur();
   openSheet(`<h3>חוזה מכר חתום</h3><p class="small mut" style="margin:-8px 0 12px">${r.apt} · ${floorTxt(r)}</p><div class="doc">${contractHTML(r.id)}</div>
@@ -1378,6 +1423,7 @@ document.addEventListener('click',e=>{
   else if(d.rate){const k=S.tickets.find(x=>x.id===d.rate);k.rating=+d.n;save();renderService()}
   else if(d.doc==='תוכנית הדירה'){closeSheet();go('apt','plan')}
   else if(d.doc==='חוזה מכר חתום')openContract();
+  else if(d.doc&&openSampleDoc(d.doc)){}
   else if(d.doc)openSheet(`<h3>${esc(d.doc)}</h3><div class="card" style="aspect-ratio:3/4;display:flex;flex-direction:column;gap:10px;padding:22px">${[90,70,85,60,95,40,80,75,50].map(w=>`<div style="height:9px;width:${w}%;background:var(--sand2);border-radius:9px"></div>`).join('')}<div style="flex:1"></div><p class="small mut" style="text-align:center">תצוגה מקדימה לדוגמה</p></div><button class="btn block" data-toast="בגרסה המלאה: הורדת PDF">הורדה</button>`);
   else if(d.coupon){const b=BENEFITS[+d.coupon];openSheet(`<h3>${b.t}</h3><div class="card" style="text-align:center"><svg width="180" height="70" viewBox="0 0 180 70" aria-label="ברקוד לדוגמה">${[...Array(40)].map((_,i)=>`<rect x="${i*4.5}" y="0" width="${(i*7)%3+1}" height="70" fill="#33322E"/>`).join('')}</svg><div class="big" style="font-size:22px;margin-top:8px;letter-spacing:3px">DEMO-${4200+ +d.coupon}</div><p class="small mut" style="margin-top:6px">${b.p}</p></div>`)}
 });
