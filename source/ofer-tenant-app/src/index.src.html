@@ -1440,11 +1440,11 @@ function sideInfo(){const me=$('#sideMe'),h=$('#sideHelp');if(!me)return;const r
 $$('[data-a]').forEach(i=>i.src=A[i.dataset.a]);
 let noSplash=false;try{noSplash=sessionStorage.getItem('nosplash')==='1';sessionStorage.removeItem('nosplash')}catch(e){}
 if(noSplash)$('#splash').style.display='none';
-setTimeout(()=>$('#splash').classList.add('off'),1400);applyDemo();$('#splash').onclick=()=>$('#splash').classList.add('off');
+setTimeout(()=>$('#splash').classList.add('off'),2000);applyDemo();$('#splash').onclick=()=>$('#splash').classList.add('off');
 applyAcc();
 if(S.scope==='pilot')S.stage='build';applyScope();
 setStage(S.stage);applyRole();
-go(S.tab||'home');
+go(S.role==='dev'?(S.tab||'home'):'home');
 </script>
 </body>
 </html>
