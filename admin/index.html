@@ -157,12 +157,12 @@ input[aria-invalid=true]{border-color:var(--bad)}
 .cols.even{grid-template-columns:repeat(2,minmax(0,1fr))}
 .cols.msgcols{grid-template-columns:minmax(0,300px) minmax(0,1fr)}
 @media (max-width:1100px){.cols,.cols.even,.cols.msgcols{grid-template-columns:1fr}}
-.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 @media (max-width:1100px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;display:flex;flex-direction:column;gap:4px;text-align:right;color:var(--ink);text-decoration:none}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;display:flex;flex-direction:column;gap:4px;text-align:right;color:var(--ink);text-decoration:none}
 a.tile:hover{border-color:var(--accent)}
 .tile .k{font-size:.82em;color:var(--mut)}
-.tile .v{font-family:var(--serif);font-size:2em;line-height:1.15}
+.tile .v{font-family:var(--serif);font-size:1.6em;line-height:1.15}
 .tile .s{font-size:.82em;color:var(--mut)}
 .tbl-wrap{position:relative;overflow-x:auto;margin:0 -22px;padding:0 22px}
 table{width:100%;border-collapse:collapse;font-size:.93em}
@@ -258,6 +258,8 @@ dialog form,dialog .dlg{display:flex;flex-direction:column;max-height:calc(100dv
 .bellb{position:relative}.bellb .dot{position:absolute;top:2px;left:2px;min-width:18px;height:18px;border-radius:9px;background:var(--bad);color:#fff;font-size:.68em;font-weight:600;display:grid;place-items:center;padding:0 4px}
 .asnote{display:flex;align-items:center;gap:12px;background:var(--warn-bg);color:var(--ink);border-radius:10px;padding:10px 14px;font-size:.92em;flex-wrap:wrap}.asnote svg{width:18px;height:18px;color:var(--warn)}
 @media (max-width:980px){.asbox label{display:none}.assel{max-width:120px}}
+.bellpop{position:fixed;z-index:70;width:min(360px,calc(100vw - 24px));max-height:70vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 20px 50px #0003;padding:14px}
+.bellpop .li{padding:10px 4px}.bellpop .li:hover{background:var(--hover);border-radius:8px}
 .confirm-bar{display:flex;gap:8px;align-items:center;background:var(--bad-bg);color:var(--bad);border-radius:8px;padding:6px 10px;font-size:.88em;flex-wrap:wrap}
 .log td{font-size:.92em}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
@@ -343,7 +345,8 @@ const RES0=[
  {id:'maya',name:'מאיה אברהם',co:'',phone:'054-3456789',email:'',apt:'THE NORTH WEST SEA VIEW PENTHOUSE',type:'פנטהאוז',floor:11,sqm:239,out:'מרפסות 108 מ״ר',beds:'3 + ממ״ד',dir:'צפון־מערב, לים',plan:'a:plan_ph',price:24500000,unit:44,stage:'build',paid:{},signed:'2026-03-02'},
  {id:'daniel',name:'דניאל פרץ',co:'רוני פרץ',phone:'053-4567890',email:'',apt:'THE NORTH EAST MINI PENTHOUSE',type:'מיני פנטהאוז',floor:10,sqm:156,out:'מרפסת 42 מ״ר',beds:'3 + ממ״ד',dir:'צפון־מזרח',plan:'a:plan_mini',price:12800000,unit:41,stage:'build',paid:{},signed:'2026-03-10'},
  {id:'tamar',name:'תמר מזרחי',co:'',phone:'058-5678901',email:'',apt:'THE SOUTH EAST GARDEN APT',type:'דירת גן',floor:0,sqm:116,out:'גינה 48 מ״ר',beds:'2 + ממ״ד',dir:'דרום־מזרח, לגינה',plan:'a:plan_garden',price:8200000,unit:2,stage:'build',paid:{},signed:'2026-04-01'}];
-const DOC_CATS=['חוזה ורכישה','תוכניות','תשלומים','שינויי דיירים','מסירה ואחריות','תיק הדירה','כללי לפרויקט'];
+const DOC_CATS=['חוזה ונספחים','תוכניות ומפרט','ערבויות חוק מכר','תשלומים וקבלות','שינויי דיירים','מסירה ואחריות','עדכונים לכל הפרויקט'];
+const CAT_OLD={'חוזה ורכישה':'חוזה ונספחים','תוכניות':'תוכניות ומפרט','תשלומים':'תשלומים וקבלות','תיק הדירה':'מסירה ואחריות','כללי לפרויקט':'עדכונים לכל הפרויקט'};
 const GCAT={sea:'הים והנוף',bld:'הבניינים',common:'לובי ובריכה',in:'פנים הדירה'};
 const GAL0=[['sea_welcome','הים, מהמרפסות של SEA HOUSE','sea'],['sea_sunset','שקיעה מול חוף אכדיה','sea'],['aerial','הרצליה פיתוח, מבט מהאוויר','sea'],['sail','הים','sea'],['tower','המגדל והבניינים','bld'],['tower_sunset','המגדל מול הים','bld'],['tower_hero','SEA HOUSE','bld'],['ph_day','קומות הפנטהאוז','bld'],['street','מבט מהרחוב','bld'],['garden','הגן והשבילים','bld'],['exterior','הבניינים והגן','bld'],['tree_welcome','TREE HOUSE','bld'],['tree_facade','המרפסות של TREE HOUSE','bld'],['lobby_desk','לובי הכניסה','common'],['lobby_lounge','פינת הישיבה בלובי','common'],['pool_in','הבריכה','common'],['tree_lobby','הלובי של TREE HOUSE','common'],['lobby','הגינה הפנימית','common'],['sofa','הים, מכל חדר','in'],['dining','פינת האוכל מול הים','in'],['walk','הסלון והמטבח','in'],['terrace','המרפסת, בשעת ערב','in'],['dusk','הסלון בשקיעה','in'],['stone','אי המטבח','in'],['kitchen','המטבח','in'],['pool','ליד הבריכה','in'],['green','פינת ישיבה בגינה','in']];
 const HERO0=['tower_hero','sea_sunset','tower_sunset','aerial','lobby_desk'];
@@ -356,9 +359,9 @@ const LEGALRX=/מסיר|מועד|תאריך|אכלוס|טופס 4|דחייה|ע�
 function seed(){
  const d=(o)=>({id:uid('d'),date:today(),visible:true,...o});
  const docs=[];
- RES0.forEach(r=>{docs.push(d({res:r.id,cat:'חוזה ורכישה',title:'חוזה מכר חתום',file:'contract-'+r.id+'.pdf',type:'pdf',size:A0['contract_'+r.id]?Math.round(A0['contract_'+r.id][1].length*.75):0,src:'a:contract_'+r.id,date:r.signed}));
-  const pk=r.plan.slice(2);docs.push(d({res:r.id,cat:'תוכניות',title:'תוכנית הדירה',file:'plan-'+r.id+'.pdf',type:'pdf',size:Math.round(A0['plandoc_'+pk][1].length*.75),src:'a:plandoc_'+pk,date:r.signed}))});
- docs.push(d({res:null,cat:'כללי לפרויקט',title:'הדמיה: הבניינים והגן',file:'exterior.jpg',type:'jpg',size:Math.round(A0.exterior[1].length*.75),src:'a:exterior',date:'2026-09-01'}));
+ RES0.forEach(r=>{docs.push(d({res:r.id,cat:'חוזה ונספחים',title:'חוזה מכר חתום',file:'contract-'+r.id+'.pdf',type:'pdf',size:A0['contract_'+r.id]?Math.round(A0['contract_'+r.id][1].length*.75):0,src:'a:contract_'+r.id,date:r.signed}));
+  const pk=r.plan.slice(2);docs.push(d({res:r.id,cat:'תוכניות ומפרט',title:'תוכנית הדירה',file:'plan-'+r.id+'.pdf',type:'pdf',size:Math.round(A0['plandoc_'+pk][1].length*.75),src:'a:plandoc_'+pk,date:r.signed}))});
+ docs.push(d({res:null,cat:'עדכונים לכל הפרויקט',title:'הדמיה: הבניינים והגן',file:'exterior.jpg',type:'jpg',size:Math.round(A0.exterior[1].length*.75),src:'a:exterior',date:'2026-09-01'}));
  return{
   v:3,residents:structuredClone(RES0),docs,
   index:{base:104.6,cur:108.3,month:'אוקטובר 2026'},
@@ -611,7 +614,7 @@ function invState(r){const v=r.invite||{st:'none'};if(v.st==='joined'){const n=d
  return v.st==='invited'?{c:'plain',t:'הוזמן, עוד לא הצטרף',k:'invited'}:{c:'bad',t:'לא הוזמן',k:'none'}}
 const CFG={"box":"residents@company.example","me":"name@company.example"};
 const KEY='pituach-admin-v1';
-let ST=LS.get(KEY);if(!ST||ST.v!==3)ST=seed();ST.reminders=ST.reminders||[];ST.remLead=ST.remLead||14;ST.phase2=!!ST.phase2;ST.mail=ST.mail||{box:CFG.box||'',me:CFG.me||''};if(ST.skipLogin===undefined)ST.skipLogin=true;if(ST.host.role==='מנהל קשרי הדיירים שלך')ST.host.role='אחראי קשרי דיירים';ST.residents.forEach(r=>{if(!r.invite)r.invite=structuredClone(INV0[r.id]||{st:'none'})});
+let ST=LS.get(KEY);if(!ST||ST.v!==3)ST=seed();ST.reminders=ST.reminders||[];ST.remLead=ST.remLead||14;ST.phase2=!!ST.phase2;ST.docs.forEach(d=>{if(CAT_OLD[d.cat])d.cat=CAT_OLD[d.cat]});ST.mail=ST.mail||{box:CFG.box||'',me:CFG.me||''};if(ST.skipLogin===undefined)ST.skipLogin=true;if(ST.host.role==='מנהל קשרי הדיירים שלך')ST.host.role='אחראי קשרי דיירים';ST.residents.forEach(r=>{if(!r.invite)r.invite=structuredClone(INV0[r.id]||{st:'none'})});
 const save=()=>LS.set(KEY,ST);
 function log(t){ST.log.unshift({at:new Date().toISOString(),who:CUR().name,t});ST.log=ST.log.slice(0,300);save()}
 const resOf=id=>ST.residents.find(r=>r.id===id);
@@ -713,7 +716,7 @@ function shell(){
    <main class="content" id="content" tabindex="-1"></main>
   </div></div>`;
  $('#menuBtn').onclick=()=>toggleSide();
- $('#bellBtn').onclick=()=>{const n=myAlerts();go(n.route)};
+ $('#bellBtn').onclick=e=>{e.stopPropagation();bellPop()};
  $('#logoutBtn').onclick=()=>{log('יציאה ממרכז הניהול');logout('יצאת ממרכז הניהול.')};
 const _themeToggle=()=>{const r=document.documentElement,cur=r.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.dataset.theme=cur==='dark'?'light':'dark';LS.set('pa-theme',r.dataset.theme)};
  const q=$('#q');q.oninput=()=>searchRun(q.value);q.onkeydown=e=>{if(e.key==='Escape'){q.value='';searchRun('')}if(e.key==='ArrowDown'){const f=$('#sres a');if(f){e.preventDefault();f.focus()}}};
@@ -733,6 +736,15 @@ function searchRun(v){const box=$('#sres'),q=v.trim().toLowerCase();if(!q){box.h
 function go(h){if(location.hash==='#'+h)render();else location.hash=h}
 function myAlerts(){if(canApproveRem())return{n:pendRem().length,route:'reminders',t:'תזכורות תשלום לאישורך'};if(isVP())return{n:pendUpd().length+ST.broadcasts.filter(b=>b.status==='vp').length,route:'construction',t:'עדכונים לאישורך'};
  const n=openReq().length+openChg().length+openTk().length+unreadN();return{n:canSee('requests')?n:0,route:canSee('requests')?'overview':ALL_ROUTES.find(canSee),t:'דברים שמחכים לטיפול'}}
+function bellClose(){const p=$('#bellPop');if(p)p.parentNode.removeChild(p);$('#bellBtn')?.setAttribute('aria-expanded','false')}
+function bellPop(){if($('#bellPop')){bellClose();return}
+ const list=taskList();$('#bellBtn').setAttribute('aria-expanded','true');
+ document.body.insertAdjacentHTML('beforeend',`<div id="bellPop" class="bellpop" role="dialog" aria-label="התראות"><div class="ph2" style="margin:0 0 8px"><b>מה מחכה לך</b><span class="small mut">${list.length||'אין'} פריטים</span></div>
+  ${list.length?`<div class="list">${list.slice(0,8).map(t=>`<a class="li" href="#${t.h}" style="text-decoration:none;color:inherit"><span class="ic">${I(t.ic)}</span><span class="grow"><span class="small mut">${esc(t.k)}${t.res?' · '+esc(rname(t.res)):''}</span><div style="font-size:.95em">${esc(t.t)}</div></span></a>`).join('')}</div>${list.length>8?`<a class="btn sm" href="#overview" style="margin-top:8px">לכל ${list.length} הפריטים</a>`:''}`:'<div class="empty">הכול מטופל</div>'}</div>`);
+ const pop=$('#bellPop'),b=$('#bellBtn').getBoundingClientRect();pop.style.top=(b.bottom+8)+'px';pop.style.left=Math.max(12,Math.min(b.left-280,innerWidth-372))+'px';
+ $$('a',pop).forEach(a=>a.addEventListener('click',bellClose));const fa=pop.querySelector('a');if(fa)fa.focus()}
+document.addEventListener('click',e=>{if($('#bellPop')&&!e.target.closest('#bellPop,#bellBtn'))bellClose()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#bellPop')){bellClose();$('#bellBtn').focus()}});
 function topBar(){const c=CUR(),a=myAlerts();$('#meBox').innerHTML=`<div class="av" aria-hidden="true">${esc(c.name[0])}</div><div class="who"><b>${esc(c.name)}</b><div class="small mut">${esc(c.title)}</div></div>`;
  $('#bellBtn').innerHTML=I('bell')+(a.n?`<span class="dot">${a.n}</span>`:'');$('#bellBtn').setAttribute('aria-label',a.n?`${a.n} ${a.t}`:'אין התראות חדשות');
  document.querySelector('.asnote')?.remove();if(AS!=='uri')$('#content').insertAdjacentHTML('afterbegin',`<div class="asnote" role="status">${I('eye')}<span class="grow">תצוגה לדוגמה: כך תיראה המערכת אצל <b>${esc(c.name)}</b>, ${esc(c.title)}, כשהמשתמש ייפתח.</span><button class="btn sm" data-act="asBack">חזרה לתצוגה שלי</button></div>`)}
@@ -751,16 +763,17 @@ const resLink=id=>id?`<a href="#res-${id}">${esc(rname(id))}</a>`:'<span class="
 
 /* ================= views ================= */
 const VIEWS={};
-VIEWS.overview=()=>{
- const due=ST.residents.map(r=>({r,p:nextPay(r)})).filter(x=>x.p).sort((a,b)=>a.p.due.localeCompare(b.p.due));
- const soon=due.filter(x=>new Date(x.p.due)-new Date()<120*864e5);
- const tasks=[...openReq().map(q=>({k:REQK[q.kind]+(q.opt?' · '+q.opt:''),t:q.detail,res:q.res,h:'requests',ic:'inbox',d:q.date})),
+function taskList(){return [...openReq().map(q=>({k:REQK[q.kind]+(q.opt?' · '+q.opt:''),t:q.detail,res:q.res,h:'requests',ic:'inbox',d:q.date})),
   ...openChg().map(c=>({k:'בקשת שינוי',t:c.title,res:c.res,h:'changes',ic:'pen',d:c.date})),
   ...openTk().map(t=>({k:'ליקוי · '+TSTEPS[t.step],t:t.desc,res:t.res,h:'defects',ic:'tool',d:t.date})),
   ...Object.entries(ST.unread).filter(e=>e[1]).map(([id,n])=>({k:'הודעה חדשה',t:(ST.threads[id]||[]).filter(m=>!m.me).slice(-1)[0]?.t||'',res:id,h:'messages',ic:'chat',d:''})),
   ...pendUpd().map(u=>({k:'עדכון ממתין לאישור '+P('resvp').name,t:u.title,res:null,h:'construction',ic:'crane',d:u.date,vp:1})),
   ...ST.broadcasts.filter(b=>b.status==='vp').map(b=>({k:'הודעה ממתינה לאישור '+P('resvp').name,t:b.title,res:null,h:'broadcast',ic:'mega',d:b.date,vp:1})),
-  ...(canApproveRem()?pendRem().map(x=>{const r=resOf(x.res),p=r&&payRows(r).find(y=>y.id===x.pay);return{k:'תזכורת תשלום לאישורך',t:p?`${p.name} · ${nis(p.total)} · מועד ${fmtD(p.due)}`:'',res:x.res,h:'reminders',ic:'bell',d:x.created}}):[])].filter(t=>canSee(t.h)&&(!t.vp||isVP()||AS==='uri'));
+  ...(canApproveRem()?pendRem().map(x=>{const r=resOf(x.res),p=r&&payRows(r).find(y=>y.id===x.pay);return{k:'תזכורת תשלום לאישורך',t:p?`${p.name} · ${nis(p.total)} · מועד ${fmtD(p.due)}`:'',res:x.res,h:'reminders',ic:'bell',d:x.created}}):[])].filter(t=>canSee(t.h)&&(!t.vp||isVP()||AS==='uri'))}
+VIEWS.overview=()=>{
+ const due=ST.residents.map(r=>({r,p:nextPay(r)})).filter(x=>x.p).sort((a,b)=>a.p.due.localeCompare(b.p.due));
+ const soon=due.filter(x=>new Date(x.p.due)-new Date()<120*864e5);
+ const tasks=taskList();
  const h=new Date().getHours(),gr=h<12?'בוקר טוב':h<17?'צהריים טובים':'ערב טוב';
  return pageHead('OVERVIEW',`${gr}, ${esc(first(CUR().name))}`,`${new Date().toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · ${tasks.length?`${tasks.length} דברים מחכים לך`:'אין משימות פתוחות'}`,
    (canSee('docs')?`<button class="btn" data-act="upload">${I('upload')}העלאת מסמך</button>`:'')+(canSee('construction')?`<button class="btn pri" data-act="newUpdate">${I('crane')}פרסום עדכון</button>`:'')+(canApproveRem()&&pendRem().length?`<a class="btn pri" href="#reminders">${I('bell')}${pendRem().length} תזכורות לאישור</a>`:''))+
@@ -813,7 +826,7 @@ const RTAB={
   return `<div class="ph2"><h2>לוח התשלומים</h2><span class="mut small num">מדד בסיס ${ST.index.base} · מדד נוכחי ${ST.index.cur} · שולם ${nis(paid)} מתוך ${nis(tot)}</span></div><div class="tbl-wrap"><table><thead><tr><th scope="col">תשלום</th><th scope="col">אחוז</th><th scope="col">מועד</th><th scope="col">קרן</th><th scope="col">הצמדה</th><th scope="col">סה״כ</th><th scope="col">סטטוס</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
   ${rows.map(p=>`<tr><td class="t">${esc(p.name)}</td><td class="num">${p.pct}%</td><td class="num">${fmtD(p.due)}</td><td class="num">${nis(p.base)}</td><td class="num">${nis(p.link)}</td><td class="num t">${nis(p.total)}</td><td>${p.paid?chip('שולם','ok'):new Date(p.due)<new Date()?chip('באיחור','bad'):chip('עתידי','plain')}</td>
    <td class="act">${p.fixed?'':p.paid?`<button class="btn sm" data-act="unpay" data-res="${r.id}" data-p="${p.id}">ביטול סימון</button>`:`<button class="btn sm" data-act="remind" data-res="${r.id}" data-p="${p.id}">${I('bell')}תזכורת</button> <button class="btn sm pri" data-act="pay" data-res="${r.id}" data-p="${p.id}">${I('check')}סימון כשולם</button>`}</td></tr>`).join('')}</tbody></table></div>
-  <p class="small mut" style="margin-top:12px">סימון תשלום כשולם מציג לדייר "שולם" באפליקציה. את הקבלה מעלים בלשונית המסמכים, בקטגוריה "תשלומים".</p>`},
+  <p class="small mut" style="margin-top:12px">סימון תשלום כשולם מציג לדייר "שולם" באפליקציה. את הקבלה מעלים בלשונית המסמכים, בקטגוריה "תשלומים וקבלות".</p>`},
  docs:r=>docTable(ST.docs.filter(d=>d.res===r.id),{res:r.id}),
  req:r=>reqTable(ST.requests.filter(q=>q.res===r.id),true),
  chg:r=>chgTable(ST.changes.filter(c=>c.res===r.id),true),
@@ -850,7 +863,7 @@ VIEWS.docs=()=>{const fc=ui.dcat||'',fr=ui.dres??'',fq=(ui.dq||'').toLowerCase()
  </div><span class="mut small">${list.length} מסמכים</span></div>${docTable(list)}</section>`};
 let pending=[],upCat='';
 function openUpload(files,res){pending=[...files].filter(f=>{if(f.size>20*1048576){toast(`${f.name} גדול מ-20 MB ולא נוסף`);return false}return true});if(!pending.length)return;
- const cat=upCat||(pending.every(f=>typeOf(f.name)==='img')?'כללי לפרויקט':'חוזה ורכישה');upCat='';
+ const cat=upCat||(pending.every(f=>typeOf(f.name)==='img')?'עדכונים לכל הפרויקט':'חוזה ונספחים');upCat='';
  dialog(`<form id="upForm" novalidate><div class="dh"><h2>העלאת ${pending.length>1?pending.length+' קבצים':'מסמך'}</h2><button type="button" class="ib" data-close aria-label="סגירה">${I('x')}</button></div><div class="db">
   <div class="qlist">${pending.map((f,i)=>`<div class="q"><span class="fileic" aria-hidden="true">${esc((f.name.split('.').pop()||'').toUpperCase())}</span><div class="grow"><div class="field"><label for="ut${i}">כותרת שהדייר יראה</label><input type="text" id="ut${i}" value="${esc(f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' '))}" required></div></div><span class="small mut num">${kb(f.size)}</span></div>`).join('')}</div>
   <div class="grid2">${fld('u-res','שיוך',res||'','select',{options:[['','כל הפרויקט'],...ST.residents.map(r=>[r.id,r.name+' · דירה '+r.unit])]})}${fld('u-cat','קטגוריה',cat,'select',{options:DOC_CATS})}${fld('u-date','תאריך המסמך',today(),'date')}
@@ -975,7 +988,7 @@ VIEWS.construction=()=>pageHead('CONSTRUCTION','שלבי בנייה ועדכונ
   ${u.status==='vp'?(isVP()?`<button class="btn sm pri" data-act="vpOk" data-u="${u.id}">${I('check')}אישור ופרסום</button>`:chip('ממתין ל'+P('resvp').name,'warn')):u.status==='draft'?`<button class="btn sm pri" data-act="pubUpd" data-u="${u.id}">פרסום</button>`:''}</div>`).join('')}</div></section>`;
 
 /* ---- broadcast ---- */
-const BCAT={critical:'חשוב',payments:'תשלומים',construction:'בנייה',community:'קהילה'};
+const BCAT={critical:'הודעה חשובה',construction:'התקדמות הבנייה',payments:'תשלומים',community:'אירועים ומפגשים'};
 VIEWS.broadcast=()=>pageHead('BROADCAST','הודעה לכל הדיירים','נשלחת לכל דייר כהודעה אישית ומופיעה בהתראות באפליקציה. הדייר יכול לכבות קטגוריות, חוץ מ"חשוב".')+
  `<div class="cols"><section class="panel"><form id="bcForm" novalidate><div class="grid2">${fld('bc-title','כותרת','','text',{req:1,span:1})}${fld('bc-text','תוכן ההודעה','','textarea',{req:1,span:1})}
   ${fld('bc-cat','קטגוריה','construction','select',{options:Object.entries(BCAT)})}${fld('bc-to','נמענים','all','select',{options:[['all','כל הדיירים ('+ST.residents.length+')'],...ST.residents.map(r=>[r.id,r.name])]})}</div>
@@ -996,7 +1009,7 @@ VIEWS.gallery=()=>{const f=ui.gcat||'all';const list=ST.gallery.filter(g=>f==='a
   ${g.src.startsWith('u:')?`<button class="btn sm danger" data-act="galDel" data-g="${g.id}">${I('trash')}הסרה</button>`:''}</div></div>`}).join('')}</div></section>`};
 
 /* ---- home book ---- */
-VIEWS.homebook=()=>pageHead('HOME BOOK','מדריך הדירה ואחריות','התוכן של "מדריך הדירה" ו"תיק הדירה" באפליקציה. נפתח לדיירים לקראת המסירה.',`<button class="btn" data-act="upload" data-cat="תיק הדירה">${I('upload')}העלאת תעודת אחריות</button>`)+
+VIEWS.homebook=()=>pageHead('HOME BOOK','מדריך הדירה ואחריות','התוכן של "מדריך הדירה" ו"תיק הדירה" באפליקציה. נפתח לדיירים לקראת המסירה.',`<button class="btn" data-act="upload" data-cat="מסירה ואחריות">${I('upload')}העלאת תעודת אחריות</button>`)+
  `<section class="panel"><div class="ph2"><h2>מערכות הדירה</h2><button class="btn sm" data-act="guideEdit">${I('plus')}מערכת חדשה</button></div><div class="tbl-wrap"><table><thead><tr><th scope="col">מערכת</th><th scope="col">מפרט</th><th scope="col">ספק</th><th scope="col">אחריות</th><th scope="col">טיפ לדייר</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
  ${ST.guide.map(g=>`<tr><td class="t">${esc(g.t)}</td><td>${esc(g.s)}</td><td>${esc(g.sup)}</td><td>${esc(g.w)}</td><td class="small" style="max-width:300px">${esc(g.tip)}</td><td class="act"><button class="ib" data-act="guideEdit" data-g="${g.id}" aria-label="עריכת ${esc(g.t)}">${I('edit')}</button><button class="ib" data-act="guideDel" data-g="${g.id}" aria-label="הסרת ${esc(g.t)}">${I('trash')}</button></td></tr>`).join('')}</tbody></table></div></section>
  <div class="cols even"><section class="panel"><div class="ph2"><h2>תקופות בדק ואחריות</h2></div><form id="wForm"><div class="list">${ST.warranty.map((w,i)=>`<div class="li"><div class="grow"><label for="wt${i}" class="sr">תחום</label><input type="text" id="wt${i}" value="${esc(w.t)}"></div><div style="width:170px"><label for="we${i}" class="sr">סיום</label><input type="date" id="we${i}" value="${w.end}"></div></div>`).join('')}</div><p class="small mut" style="margin:8px 0 12px">המועדים נספרים מיום המסירה. האפליקציה מזכירה לדייר לפני שכל תקופה נגמרת.</p><button class="btn pri" type="submit">שמירה</button></form></section>
@@ -1137,7 +1150,7 @@ const ACT={
  chgNo:b=>{const c=ST.changes.find(x=>x.id===b.dataset.c);c.status='declined';log('דחיית שינוי: '+c.title);save();toast('הבקשה נדחתה');render()},
  chgYes:b=>{const c=ST.changes.find(x=>x.id===b.dataset.c);c.status='approved';log('הדייר אישר שינוי: '+c.title);save();toast('סומן כמאושר. נשלח להנדסה לביצוע');render()},
  tkNext:b=>{const t=ST.tickets.find(x=>x.id===b.dataset.t);t.step++;log(`ליקוי "${t.desc}" · ${TSTEPS[t.step]}`);save();toast('הסטטוס עודכן והדייר קיבל התראה');render()},
- addTk:()=>formDlg('פתיחת ליקוי',`<div class="grid2">${fld('k-res','דייר','','select',{options:ST.residents.map(r=>[r.id,r.name])})}${fld('k-cat','תחום','אינסטלציה','select',{options:['אינסטלציה','חשמל','דלתות וחלונות','ריצוף וחיפוי','מיזוג','איטום ורטיבות','אחר']})}${fld('k-urg','דחיפות','רגילה','select',{options:['רגילה','דחופה']})}${fld('k-con','מטפל','הקבלן הראשי')}${fld('k-desc','תיאור','','textarea',{req:1,span:1})}</div>`,'פתיחה',()=>{ST.tickets.push({id:uid('t'),res:$('#k-res').value,cat:$('#k-cat').value,urgency:$('#k-urg').value,contractor:$('#k-con').value,desc:$('#k-desc').value.trim(),step:0,date:today()});log('פתיחת ליקוי · '+rname($('#k-res').value));toast('הליקוי נפתח')}),
+ addTk:()=>formDlg('פתיחת ליקוי',`<div class="grid2">${fld('k-res','דייר','','select',{options:ST.residents.map(r=>[r.id,r.name])})}${fld('k-cat','תחום','אינסטלציה','select',{options:['אינסטלציה','חשמל','דלתות וחלונות','ריצוף וחיפוי','מיזוג אוויר','איטום ורטיבות','טיח וצבע','מטבח','אחר']})}${fld('k-urg','דחיפות','רגילה','select',{options:['רגילה','דחופה']})}${fld('k-con','מטפל','הקבלן הראשי')}${fld('k-desc','תיאור','','textarea',{req:1,span:1})}</div>`,'פתיחה',()=>{ST.tickets.push({id:uid('t'),res:$('#k-res').value,cat:$('#k-cat').value,urgency:$('#k-urg').value,contractor:$('#k-con').value,desc:$('#k-desc').value.trim(),step:0,date:today()});log('פתיחת ליקוי · '+rname($('#k-res').value));toast('הליקוי נפתח')}),
  supEdit:b=>{const s=b.dataset.s?ST.suppliers.find(x=>x.id===b.dataset.s):{cat:'',name:'',contact:'',phone:'',address:'',notes:''};
   formDlg(b.dataset.s?'עריכת ספק':'ספק חדש',`<div class="grid2">${fld('s-cat','תחום (מה שהדייר בוחר)',s.cat,'text',{req:1})}${fld('s-name','שם הספק',s.name,'text',{req:1})}${fld('s-contact','איש קשר',s.contact)}${fld('s-phone','טלפון',s.phone,'tel',{ltr:1})}${fld('s-addr','אולם תצוגה',s.address,'text',{span:1})}${fld('s-notes','הערות לתיאום',s.notes,'textarea',{span:1})}</div>`,'שמירה',()=>{
    Object.assign(s,{cat:$('#s-cat').value.trim(),name:$('#s-name').value.trim(),contact:$('#s-contact').value.trim(),phone:$('#s-phone').value.trim(),address:$('#s-addr').value.trim(),notes:$('#s-notes').value.trim()});if(!b.dataset.s){s.id=uid('s');ST.suppliers.push(s)}log('עדכון ספק: '+s.name);toast('הספק נשמר')})},

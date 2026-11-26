@@ -949,7 +949,11 @@ const EN={
 "דוא״ל הבנק המלווה יתווסף אחרי אימות מול הכספים": "The bank's email will be added once finance confirms it",
 "לאימות מול הכספים לפני העלייה לאוויר": "To confirm with finance before launch",
 "הבניין שלך, SEA HOUSE": "Your building, SEA HOUSE",
-"הדירה והתוכנית": "Home and plan"
+"הדירה והתוכנית": "Home and plan",
+"חוזה ונספחים": "Contract and appendices",
+"תוכניות ומפרט": "Plans and specification",
+"ערבויות חוק מכר": "Sale Law guarantees",
+"תשלומים וקבלות": "Payments and receipts"
 },
 "f": {
 "בוקר טוב, ": "Good morning, ",
@@ -1637,8 +1641,10 @@ function stateOf(id){if(id===S.rid){const o={};PER.forEach(k=>o[k]=S[k]);return 
 function switchRes(id){if(id===S.rid)return;S.store[S.rid]=stateOf(S.rid);const n=stateOf(id);delete S.store[id];S.rid=id;Object.assign(S,structuredClone(n));save()}
 const HOST={name:'אורי',role:'אחראי קשרי דיירים'};
 const DOCS=[
-  {cat:'חוזה ורכישה',items:[['חוזה מכר חתום','פברואר 2026'],['מפרט טכני מלא','פברואר 2026'],['תוכנית הדירה','פברואר 2026'],['ערבות חוק מכר · תשלום 2','ספטמבר 2026']]},
-  {cat:'תשלומים',items:[['קבלה · תשלום 2','ספטמבר 2026'],['דוח הצמדה למדד · רבעון 3','אוקטובר 2026']]},
+  {cat:'חוזה ונספחים',items:[['חוזה מכר חתום','פברואר 2026']]},
+  {cat:'תוכניות ומפרט',items:[['תוכנית הדירה','פברואר 2026'],['מפרט טכני מלא','פברואר 2026']]},
+  {cat:'ערבויות חוק מכר',items:[['ערבות חוק מכר · תשלום 2','ספטמבר 2026']]},
+  {cat:'תשלומים וקבלות',items:[['קבלה · תשלום 2','ספטמבר 2026'],['דוח הצמדה למדד · רבעון 3','אוקטובר 2026']]},
   {cat:'שינויי דיירים',items:[['הצעת מחיר · ריצוף מקלחת','אוקטובר 2026'],['אישור שינוי · נקודת חשמל','ספטמבר 2026']]},
   {cat:'מסירה ואחריות',items:[['מדריך הדירה','יעודכן לקראת המסירה'],['תעודות אחריות ספקים','יעודכן לקראת המסירה']]},
 ];
