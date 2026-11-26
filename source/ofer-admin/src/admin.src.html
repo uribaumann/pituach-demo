@@ -310,6 +310,7 @@ const I=(()=>{const p={
  cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
  menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
  edit:'<path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"/>',
+ mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/>',
  bell:'<path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15zM10 20.5a2 2 0 004 0"/>',
  shield:'<path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
  key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/>',
@@ -419,8 +420,13 @@ const canSee=r=>(PERMS[CUR().perm]||PERMS.admin).r.includes(r==='resident'?'resi
 const canApproveRem=()=>AS===REM_APPROVER;
 const isVP=()=>CUR().perm==='res_vp';
 const first=s=>s.split(' ')[0];
+const INV0={noa:{st:'joined',at:'2026-02-15',joined:'2026-02-16',seen:'2026-11-25'},yonatan:{st:'joined',at:'2026-02-20',joined:'2026-02-22',seen:'2026-10-12'},
+ maya:{st:'invited',at:'2026-03-02'},daniel:{st:'joined',at:'2026-03-10',joined:'2026-03-10',seen:'2026-11-20'},tamar:{st:'invited',at:'2026-04-01'}};
+const daysSince=d=>Math.floor((new Date(today())-new Date(d))/864e5);
+function invState(r){const v=r.invite||{st:'none'};if(v.st==='joined'){const n=daysSince(v.seen||v.joined);return n>30?{c:'warn',t:`לא נכנס ${n} ימים`,k:'idle'}:{c:'ok',t:'הצטרף',k:'joined'}}
+ return v.st==='invited'?{c:'plain',t:'הוזמן, עוד לא הצטרף',k:'invited'}:{c:'bad',t:'לא הוזמן',k:'none'}}
 const KEY='pituach-admin-v1';
-let ST=LS.get(KEY);if(!ST||ST.v!==1)ST=seed();ST.reminders=ST.reminders||[];ST.remLead=ST.remLead||14;ST.phase2=!!ST.phase2;
+let ST=LS.get(KEY);if(!ST||ST.v!==1)ST=seed();ST.reminders=ST.reminders||[];ST.remLead=ST.remLead||14;ST.phase2=!!ST.phase2;ST.residents.forEach(r=>{if(!r.invite)r.invite=structuredClone(INV0[r.id]||{st:'none'})});
 const save=()=>LS.set(KEY,ST);
 function log(t){ST.log.unshift({at:new Date().toISOString(),who:CUR().name,t});ST.log=ST.log.slice(0,300);save()}
 const resOf=id=>ST.residents.find(r=>r.id===id);
@@ -567,7 +573,7 @@ VIEWS.overview=()=>{
    (canSee('docs')?`<button class="btn" data-act="upload">${I('upload')}העלאת מסמך</button>`:'')+(canSee('construction')?`<button class="btn pri" data-act="newUpdate">${I('crane')}פרסום עדכון</button>`:'')+(canApproveRem()&&pendRem().length?`<a class="btn pri" href="#reminders">${I('bell')}${pendRem().length} תזכורות לאישור</a>`:''))+
  `<div class="tiles">
   <a class="tile" href="#${tasks[0]?.h||'overview'}"><span class="k">ממתינים לטיפול</span><span class="v num">${tasks.length}</span><span class="s">${canApproveRem()?'תזכורות תשלום לאישור':'בקשות, שינויים, ליקויים והודעות'}</span></a>
-  <a class="tile" href="#residents"><span class="k">דיירים באפליקציה</span><span class="v num">${ST.residents.length}</span><span class="s">פיילוט · פיתוח על הים</span></a>
+  <a class="tile" href="#residents"><span class="k">הצטרפו לאפליקציה</span><span class="v num">${ST.residents.filter(r=>(r.invite||{}).st==='joined').length} מתוך ${ST.residents.length}</span><span class="s">${(()=>{const w=ST.residents.filter(r=>(r.invite||{}).st!=='joined').length,i=ST.residents.filter(r=>invState(r).k==='idle').length;return [w?`${w} עוד לא הצטרפו`:'כולם הצטרפו',i?`${i} לא נכנסו חודש`:''].filter(Boolean).join(' · ')})()}</span></a>
   <a class="tile" href="#payments"><span class="k">תשלומים ב-4 החודשים הקרובים</span><span class="v num">${soon.length}</span><span class="s num">${nis(soon.reduce((a,x)=>a+x.p.total,0))} כולל הצמדה</span></a>
   <a class="tile" href="#construction"><span class="k">שלב הבנייה הנוכחי</span><span class="v" style="font-size:1.5em;padding:6px 0 4px">${esc(ST.milestones[ST.stage].t)}</span></a>
  </div>
@@ -586,9 +592,9 @@ VIEWS.overview=()=>{
 VIEWS.residents=()=>{const f=(ui.rq||'').toLowerCase();const rs=ST.residents.filter(r=>!f||(r.name+r.apt+r.unit+r.co).toLowerCase().includes(f));
  return pageHead('RESIDENTS','דיירים ודירות','כל רוכש מקבל גישה לאפליקציה ביום החתימה. הפרטים כאן הם מה שהדייר רואה בלשונית "הדירה".',`<button class="btn" data-act="exp" data-x="residents">${I('dl')}ייצוא לאקסל</button><button class="btn pri" data-act="addRes">${I('plus')}דייר חדש</button>`)+
  `<section class="panel"><div class="ph2"><div class="filters"><label class="sr" for="rq">סינון דיירים</label><input type="search" id="rq" placeholder="סינון לפי שם, דירה או מספר" value="${esc(ui.rq||'')}"></div><span class="mut small">${rs.length} דיירים</span></div>
- <div class="tbl-wrap"><table><caption class="sr">רשימת הדיירים</caption><thead><tr><th scope="col">דייר</th><th scope="col">דירה</th><th scope="col">קומה</th><th scope="col">שטח</th><th scope="col">מחיר</th><th scope="col">התשלום הבא</th><th scope="col">פתוח</th><th scope="col">שלב באפליקציה</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
+ <div class="tbl-wrap"><table><caption class="sr">רשימת הדיירים</caption><thead><tr><th scope="col">דייר</th><th scope="col">דירה</th><th scope="col">קומה</th><th scope="col">שטח</th><th scope="col">מחיר</th><th scope="col">התשלום הבא</th><th scope="col">פתוח</th><th scope="col">באפליקציה</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
  ${rs.map(r=>{const p=nextPay(r),open=ST.requests.filter(q=>q.res===r.id&&q.status==='new').length+ST.changes.filter(c=>c.res===r.id&&c.status==='review').length+ST.tickets.filter(t=>t.res===r.id&&t.step<3).length+(ST.unread[r.id]||0);
-  return `<tr class="click" data-href="#res-${r.id}"><td><a href="#res-${r.id}" class="t">${esc(r.name)}</a>${r.co?`<div class="small mut">ו${esc(r.co)}</div>`:''}</td><td><span class="lat" dir="ltr">${esc(r.apt)}</span><div class="small mut">דירה ${esc(r.unit)} · ${esc(r.type)}</div></td><td>${floorTxt(r)}</td><td class="num">${r.sqm} מ״ר</td><td class="num">${nis(r.price)}</td><td class="num">${p?`${fmtD(p.due)}<div class="small mut">${nis(p.total)}</div>`:'<span class="mut">שולם במלואו</span>'}</td><td>${open?chip(open+' פתוחים','warn'):chip('אין','ok')}</td><td>${chip(APPSTAGE[r.stage],'plain')}</td><td class="act"><span class="ib">${I('chev')}</span></td></tr>`}).join('')}
+  return `<tr class="click" data-href="#res-${r.id}"><td><a href="#res-${r.id}" class="t">${esc(r.name)}</a>${r.co?`<div class="small mut">ו${esc(r.co)}</div>`:''}</td><td><span class="lat" dir="ltr">${esc(r.apt)}</span><div class="small mut">דירה ${esc(r.unit)} · ${esc(r.type)}</div></td><td>${floorTxt(r)}</td><td class="num">${r.sqm} מ״ר</td><td class="num">${nis(r.price)}</td><td class="num">${p?`${fmtD(p.due)}<div class="small mut">${nis(p.total)}</div>`:'<span class="mut">שולם במלואו</span>'}</td><td>${open?chip(open+' פתוחים','warn'):chip('אין','ok')}</td><td>${(()=>{const v=invState(r);return chip(v.t,v.c)+(v.k!=='joined'?` <button class="btn sm" data-act="reinvite" data-res="${r.id}">${I('mail')}${v.k==='none'?'שליחת הזמנה':'שליחה שוב'}</button>`:'')})()}</td><td class="act"><span class="ib">${I('chev')}</span></td></tr>`}).join('')}
  </tbody></table></div></section>`};
 
 VIEWS.resident=()=>{const r=resOf(sub);if(!r)return pageHead('RESIDENT','הדייר לא נמצא','',`<a class="btn" href="#residents">חזרה לרשימה</a>`);
@@ -597,7 +603,7 @@ VIEWS.resident=()=>{const r=resOf(sub);if(!r)return pageHead('RESIDENT','הדי�
  return `<nav aria-label="פירורי לחם" class="small"><a href="#residents">דיירים ודירות</a> <span class="mut">/ ${esc(r.name)}</span></nav>
  <section class="panel res-head"><div class="plan" style="background-image:url(${imgUrl(r.plan)})" role="img" aria-label="תוכנית הדירה"></div><div class="grow"><h1>${esc(r.name)}${r.co?` <span class="mut" style="font-size:.6em">ו${esc(r.co)}</span>`:''}</h1><div class="apt">${esc(r.apt)}</div>
   <div class="facts"><div>דירה<b class="num">${esc(r.unit)}</b></div><div>קומה<b>${floorTxt(r).replace('קומה ','')}</b></div><div>שטח<b class="num">${r.sqm} מ״ר</b></div><div>בחוץ<b>${esc(r.out)}</b></div><div>חדרים<b>${esc(r.beds)}</b></div><div>מחיר<b class="num">${nis(r.price)}</b></div></div></div>
-  <div class="row"><button class="btn" data-act="upload" data-res="${r.id}">${I('upload')}העלאת מסמך</button><button class="btn" data-act="msgRes" data-res="${r.id}">${I('chat')}הודעה</button></div></section>
+  <div class="row">${(()=>{const v=invState(r),x=r.invite||{};return `<span class="small mut">${chip(v.t,v.c)}${x.st==='joined'?` · כניסה אחרונה ${fmtD(x.seen||x.joined)}`:x.at?` · הזמנה נשלחה ${fmtD(x.at)}`:''}</span>${v.k!=='joined'?`<button class="btn" data-act="reinvite" data-res="${r.id}">${I('mail')}${v.k==='none'?'שליחת הזמנה':'שליחת ההזמנה שוב'}</button>`:''}`})()}<button class="btn" data-act="upload" data-res="${r.id}">${I('upload')}העלאת מסמך</button><button class="btn" data-act="msgRes" data-res="${r.id}">${I('chat')}הודעה</button></div></section>
  <div class="tabs" role="tablist" aria-label="אזורי הדייר">${tabs.map(([k,t])=>`<button role="tab" id="tab-${k}" aria-selected="${tab===k}" aria-controls="rpanel" data-rtab="${k}">${t}${cnt[k]&&k!=='docs'?`<span class="badge">${cnt[k]}</span>`:''}</button>`).join('')}</div>
  <section class="panel" id="rpanel" role="tabpanel" aria-labelledby="tab-${tab}">${RTAB[tab](r)}</section>`};
 const fld=(id,label,val,type='text',opt={})=>`<div class="field ${opt.span?'span2':''}"><label for="${id}">${label}${opt.req?' <span aria-hidden="true" style="color:var(--bad)">*</span>':''}</label>${type==='select'?`<select id="${id}" ${opt.req?'required':''}>${opt.options.map(o=>{const[v,t]=Array.isArray(o)?o:[o,o];return `<option value="${esc(v)}" ${String(v)===String(val)?'selected':''}>${esc(t)}</option>`}).join('')}</select>`:type==='textarea'?`<textarea id="${id}" ${opt.req?'required':''}>${esc(val)}</textarea>`:`<input type="${type}" id="${id}" value="${esc(val)}" ${opt.req?'required':''} ${opt.ltr?'dir="ltr"':''} ${opt.attrs||''}>`}${opt.hint?`<span class="hint">${opt.hint}</span>`:''}</div>`;
@@ -625,8 +631,8 @@ const RTAB={
 function csvSave(name,rows){const q=v=>{v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
  const data='\ufeff'+rows.map(r=>r.map(q).join(',')).join('\r\n');download(null,name,new Blob([data],{type:'text/csv;charset=utf-8'}))}
 const EXP={
- residents:()=>csvSave('pituach-residents.csv',[['שם','רוכש נוסף','טלפון','דוא״ל','דירה','מספר דירה','קומה','שטח מ״ר','מחיר','התשלום הבא','מועד','סכום כולל הצמדה'],
-  ...[...ST.residents].sort((a,b)=>a.name.localeCompare(b.name,'he')).map(r=>{const p=nextPay(r);return [r.name,r.co,r.phone,r.email,r.apt,r.unit,floorTxt(r),r.sqm,Math.round(r.price),p?p.name:'שולם במלואו',p?p.due:'',p?Math.round(p.total):'']})]),
+ residents:()=>csvSave('pituach-residents.csv',[['שם','רוכש נוסף','טלפון','דוא״ל','דירה','מספר דירה','קומה','שטח מ״ר','מחיר','התשלום הבא','מועד','סכום כולל הצמדה','באפליקציה'],
+  ...[...ST.residents].sort((a,b)=>a.name.localeCompare(b.name,'he')).map(r=>{const p=nextPay(r);return [r.name,r.co,r.phone,r.email,r.apt,r.unit,floorTxt(r),r.sqm,Math.round(r.price),p?p.name:'שולם במלואו',p?p.due:'',p?Math.round(p.total):'',invState(r).t]})]),
  payments:()=>csvSave('pituach-open-payments.csv',[['מועד','דייר','דירה','תשלום','אחוז','קרן','הצמדה','סכום כולל הצמדה','תזכורת'],
   ...ST.residents.flatMap(r=>payRows(r).filter(p=>!p.paid).map(p=>{const x=remState(r.id,p.id);return [p.due,r.name,r.unit,p.name,p.pct+'%',Math.round(p.base),Math.round(p.link),Math.round(p.total),x?{pending:'ממתינה לאישור',sched:'מתוזמנת '+x.sendOn,sent:'נשלחה'}[x.status]:'']})).sort((a,b)=>a[0].localeCompare(b[0]))])};
 /* ---- documents ---- */
@@ -849,7 +855,7 @@ const ACT={
  delDocYes:async b=>{const d=ST.docs.find(x=>x.id===b.dataset.doc);ST.docs=ST.docs.filter(x=>x!==d);if(d.src.startsWith('u:'))await FS.del(d.src.slice(2));log('מחיקת מסמך: '+d.title+' · '+rname(d.res));save();toast('המסמך נמחק');render()},
  addRes:()=>{const r={name:'',co:'',phone:'',email:'',apt:'',type:'דירת מגורים',unit:'',floor:'',sqm:'',out:'',beds:'',dir:'',price:'',signed:today(),stage:'build'};
   formDlg('דייר חדש',`<div class="grid2">${RES_FIELDS(r).map(f=>fld(...f)).join('')}</div><label class="check"><input type="checkbox" id="f-inv" checked>לשלוח לדייר הזמנה להצטרף לאפליקציה</label>`,'הוספת הדייר',()=>{const v=readRes();let id=(v.email.split('@')[0]||'r').toLowerCase().replace(/[^a-z0-9]/g,'')||'r';while(resOf(id))id+=Math.floor(Math.random()*9);
-   ST.residents.push({id,...v,plan:'',paid:{}});ST.threads[id]=[];log('הוספת דייר: '+v.name+' · דירה '+v.unit);toast(v.name+' נוסף/ה'+($('#f-inv').checked?' והזמנה נשלחה':''));setTimeout(()=>go('res-'+id))},'wide')},
+   ST.residents.push({id,...v,plan:'',paid:{},invite:$('#f-inv').checked?{st:'invited',at:today()}:{st:'none'}});ST.threads[id]=[];log('הוספת דייר: '+v.name+' · דירה '+v.unit);toast(v.name+' נוסף/ה'+($('#f-inv').checked?' והזמנה נשלחה':''));setTimeout(()=>go('res-'+id))},'wide')},
  delRes:b=>{$('#delBox').innerHTML=`<div class="confirm-bar" role="alert" style="margin-top:14px"><span class="grow">להסיר את ${esc(resOf(b.dataset.res).name)}? הגישה שלו לאפליקציה תיחסם. המסמכים נשמרים.</span><button class="btn sm danger" type="button" data-act="delResYes" data-res="${b.dataset.res}">הסרה</button><button class="btn sm" type="button" onclick="this.closest('.confirm-bar').remove()">ביטול</button></div>`;$('#delBox .btn').focus()},
  delResYes:b=>{const r=resOf(b.dataset.res);ST.residents=ST.residents.filter(x=>x!==r);log('הסרת דייר: '+r.name);save();toast(r.name+' הוסר/ה');go('residents')},
  planUp:b=>pickFiles(null,'image/*',async f=>{const r=resOf(b.dataset.res),id=uid('pl');await FS.put(id,f);r.plan='u:'+id;await urlOf(r.plan);log('החלפת תמונת תוכנית: '+r.name);save();toast('התוכנית הוחלפה');render()}),
@@ -861,6 +867,7 @@ const ACT={
   ST.reminders.push({id:uid('rm'),res:r.id,pay:p.id,status:'pending',created:today(),by:CUR().name,text:'',sendOn:today()});log(`בקשת תזכורת תשלום: ${p.name} · ${r.name} · נשלחה לאישור ${P(REM_APPROVER).name}`);save();toast(`נשלח ל${P(REM_APPROVER).name} לאישור. היא תקבל התראה`);render()},
  goRem:()=>{closeDlg();ui.ptab='rem';go('payments')},
  exp:b=>EXP[b.dataset.x](),
+ reinvite:b=>{const r=resOf(b.dataset.res);r.invite=r.invite||{};if(r.invite.st!=='joined')r.invite.st='invited';r.invite.at=today();log(`הזמנה לאפליקציה נשלחה${b.textContent.includes('שוב')?' שוב':''} · ${r.name}`);save();toast(`ההזמנה נשלחה ל${r.name}${r.email?' · '+r.email:''}`);render()},
  asBack:()=>switchAs('uri'),
  asUser:b=>switchAs(b.dataset.u),
  remOk:b=>approveRem([b.dataset.r]),
@@ -897,7 +904,7 @@ const ACT={
   if($('#p-upd').checked)ST.updates.push({id:uid('u'),title:$('#p-cap').value.trim(),text:'צילום חדש מהאתר.',img:src,date:today(),status:'pub'});log('צילום חדש מהאתר: '+$('#p-cap').value.trim());toast('הצילום נוסף')})}),
  newUpdate:()=>{let img=null;formDlg('עדכון חדש לדיירים',`${fld('n-title','כותרת','','text',{req:1})}${fld('n-text','מה קרה באתר','','textarea',{req:1})}<div class="field"><span class="lbl">תמונה</span><div class="row"><button type="button" class="btn sm" id="n-img">${I('image')}בחירת תמונה</button><span class="small mut" id="n-imgn">לא נבחרה</span></div></div><div id="n-warn" class="notice" hidden><b>העדכון מזכיר מועד או מסירה.</b> הוא יישמר כממתין לאישור ${esc(P('resvp').name)}.</div>`,'פרסום',async()=>{
    const t=$('#n-title').value.trim(),x=$('#n-text').value.trim(),needs=ST.vpRule&&LEGALRX.test(t+' '+x);let src=null;if(img){const id=uid('u');await FS.put(id,img);src='u:'+id;urlCache.set(src,URL.createObjectURL(img))}
-   ST.updates.push({id:uid('u'),title:t,text:x,img:src,date:today(),status:needs?'vp':'pub'});log(needs?'עדכון נשמר לאישור סמנכ״ל: '+t:'פרסום עדכון: '+t);toast(needs?'נשמר. '+P('resvp').name+' קיבלה התראה לאישור':'העדכון פורסם לכל הדיירים');if(route!=='construction')setTimeout(()=>go('construction'))});
+   ST.updates.push({id:uid('u'),title:t,text:x,img:src,date:today(),status:needs?'vp':'pub'});log(needs?`עדכון נשמר לאישור ${P('resvp').name}: `+t:'פרסום עדכון: '+t);toast(needs?'נשמר. '+P('resvp').name+' קיבלה התראה לאישור':'העדכון פורסם לכל הדיירים');if(route!=='construction')setTimeout(()=>go('construction'))});
   $('#n-img').onclick=()=>pickFiles(null,'image/*',f=>{img=f;$('#n-imgn').textContent=f.name});
   const chk=()=>{$('#n-warn').hidden=!(ST.vpRule&&LEGALRX.test($('#n-title').value+' '+$('#n-text').value))};$('#n-title').oninput=chk;$('#n-text').oninput=chk},
  vpOk:b=>{const u=ST.updates.find(x=>x.id===b.dataset.u);u.status='pub';u.approvedBy=CUR().name;log('אישור ופרסום עדכון: '+u.title);save();toast('העדכון פורסם');render()},
@@ -955,7 +962,7 @@ document.addEventListener('submit',e=>{const f=e.target;
  if(f.id==='resForm'){e.preventDefault();if(!validate(f))return;Object.assign(resOf(sub),readRes());log('עדכון פרטי דייר: '+resOf(sub).name);save();toast('הפרטים נשמרו ויוצגו לדייר באפליקציה');render()}
  if(f.dataset.thread){e.preventDefault();const id=f.dataset.thread,i=$('input',f),v=i.value.trim();if(!v)return;(ST.threads[id]||(ST.threads[id]=[])).push({me:true,t:v,at:new Date().toISOString()});log('הודעה ל'+rname(id));save();render();const n=$('#mt-'+id);n&&n.focus();const th=$('#thr');th&&(th.scrollTop=th.scrollHeight)}
  if(f.id==='schForm'){e.preventDefault();ST.schedule.forEach((p,i)=>{if(p.fixed)return;p.name=$('#sn'+i).value.trim();p.pct=+$('#sp'+i).value;p.due=$('#sd'+i).value});log('עדכון תבנית לוח התשלומים');save();toast('התבנית נשמרה');render()}
- if(f.id==='bcForm'){e.preventDefault();if(!validate(f))return;const t=$('#bc-title').value.trim(),x=$('#bc-text').value.trim(),needs=ST.vpRule&&LEGALRX.test(t+' '+x);ST.broadcasts.push({id:uid('b'),title:t,text:x,cat:$('#bc-cat').value,to:$('#bc-to').value,date:today(),status:needs?'vp':'sent'});log(needs?'הודעה נשמרה לאישור סמנכ״ל: '+t:'נשלחה הודעה: '+t);save();toast(needs?'נשמרה. '+P('resvp').name+' קיבלה התראה לאישור':'ההודעה נשלחה');render()}
+ if(f.id==='bcForm'){e.preventDefault();if(!validate(f))return;const t=$('#bc-title').value.trim(),x=$('#bc-text').value.trim(),needs=ST.vpRule&&LEGALRX.test(t+' '+x);ST.broadcasts.push({id:uid('b'),title:t,text:x,cat:$('#bc-cat').value,to:$('#bc-to').value,date:today(),status:needs?'vp':'sent'});log(needs?`הודעה נשמרה לאישור ${P('resvp').name}: `+t:'נשלחה הודעה: '+t);save();toast(needs?'נשמרה. '+P('resvp').name+' קיבלה התראה לאישור':'ההודעה נשלחה');render()}
  if(f.id==='wForm'){e.preventDefault();ST.warranty.forEach((w,i)=>{w.t=$('#wt'+i).value.trim();w.end=$('#we'+i).value});log('עדכון תקופות בדק');save();toast('נשמר')}
  if(f.id==='mForm'){e.preventDefault();Object.assign(ST.mgmt,{name:$('#m-name').value.trim(),phone:$('#m-phone').value.trim(),email:$('#m-email').value.trim(),hours:$('#m-hours').value.trim()});log('עדכון פרטי חברת הניהול');save();toast('נשמר')}
  if(f.id==='hostForm'){e.preventDefault();if(!validate(f))return;Object.assign(ST.host,{name:$('#h-name').value.trim(),role:$('#h-role').value.trim(),hours:$('#h-hours').value.trim(),reply:$('#h-reply').value.trim()});log('עדכון איש הקשר באפליקציה');save();toast('נשמר. הדיירים יראו את השינוי באפליקציה')}
