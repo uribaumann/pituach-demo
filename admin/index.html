@@ -350,7 +350,7 @@ const CAT_OLD={'חוזה ורכישה':'חוזה ונספחים','תוכניות
 const GCAT={sea:'הים והנוף',bld:'הבניינים',common:'לובי ובריכה',in:'פנים הדירה'};
 const GAL0=[['sea_welcome','הים, מהמרפסות של SEA HOUSE','sea'],['sea_sunset','שקיעה מול חוף אכדיה','sea'],['aerial','הרצליה פיתוח, מבט מהאוויר','sea'],['sail','הים','sea'],['tower','המגדל והבניינים','bld'],['tower_sunset','המגדל מול הים','bld'],['tower_hero','SEA HOUSE','bld'],['ph_day','קומות הפנטהאוז','bld'],['street','מבט מהרחוב','bld'],['garden','הגן והשבילים','bld'],['exterior','הבניינים והגן','bld'],['tree_welcome','TREE HOUSE','bld'],['tree_facade','המרפסות של TREE HOUSE','bld'],['lobby_desk','לובי הכניסה','common'],['lobby_lounge','פינת הישיבה בלובי','common'],['pool_in','הבריכה','common'],['tree_lobby','הלובי של TREE HOUSE','common'],['lobby','הגינה הפנימית','common'],['sofa','הים, מכל חדר','in'],['dining','פינת האוכל מול הים','in'],['walk','הסלון והמטבח','in'],['terrace','המרפסת, בשעת ערב','in'],['dusk','הסלון בשקיעה','in'],['stone','אי המטבח','in'],['kitchen','המטבח','in'],['pool','ליד הבריכה','in'],['green','פינת ישיבה בגינה','in']];
 const HERO0=['tower_hero','sea_sunset','tower_sunset','aerial','lobby_desk'];
-const REQK={supplier:'פגישה עם ספק',visit:'ביקור באתר',design:'שאלה על המפרט',special:'בקשה אישית',move:'תיאום מעבר',guest:'אורח מגיע',amenity:'הזמנת מתקן'};
+const REQK={msg:'הודעה',supplier:'פגישה עם ספק',visit:'ביקור באתר',design:'שאלה על המפרט',special:'בקשה אישית',move:'תיאום מעבר',guest:'אורח מגיע',amenity:'הזמנת מתקן'};
 const RSTAT={new:['חדשה','warn'],sched:['תואמה','info'],done:['טופלה','ok'],no:['נדחתה','bad']};
 const CSTAT={review:['בבדיקה','warn'],quote:['הצעת מחיר אצל הדייר','info'],approved:['אושר','ok'],declined:['נדחה','bad']};
 const TSTEPS=['התקבל','הועבר לקבלן','בטיפול','טופל'];
@@ -363,7 +363,7 @@ function seed(){
   const pk=r.plan.slice(2);docs.push(d({res:r.id,cat:'תוכניות ומפרט',title:'תוכנית הדירה',file:'plan-'+r.id+'.pdf',type:'pdf',size:Math.round(A0['plandoc_'+pk][1].length*.75),src:'a:plandoc_'+pk,date:r.signed}))});
  docs.push(d({res:null,cat:'עדכונים לכל הפרויקט',title:'הדמיה: הבניינים והגן',file:'exterior.jpg',type:'jpg',size:Math.round(A0.exterior[1].length*.75),src:'a:exterior',date:'2026-09-01'}));
  return{
-  v:3,residents:structuredClone(RES0),docs,
+  v:4,residents:structuredClone(RES0),docs,
   index:{base:104.6,cur:108.3,month:'אוקטובר 2026'},
   schedule:[{id:'p1',name:'מקדמה בחתימה',pct:10,due:'2026-02-15',fixed:true},{id:'p2',name:'תשלום שני',pct:15,due:'2026-09-01',fixed:true},{id:'p3',name:'סיום חפירה ודיפון',pct:15,due:'2027-03-01'},{id:'p4',name:'סיום שלד',pct:20,due:'2027-12-01'},{id:'p5',name:'גמרים ומערכות',pct:20,due:'2028-10-01'},{id:'p6',name:'יתרה במסירה',pct:20,due:'2029-06-01'}],
   milestones:[{t:'חפירה ודיפון',d:'2026'},{t:'יסודות ומרתפים',d:'2027'},{t:'שלד הבניין',d:'2027'},{t:'מעטפת וחזיתות',d:'2028'},{t:'גמרים, מטבחים ומערכות',d:'2028'},{t:'פיתוח, לובי ומסירה',d:'2029'}],stage:0,delivery:'2029',
@@ -383,6 +383,10 @@ function seed(){
    {id:'q6',res:'yonatan',kind:'special',opt:'החוזה והמסמכים',detail:'מתי תירשם הערת האזהרה לטובתנו, ואיפה אפשר לראות אותה?',when:'',time:'',status:'new',date:'2026-11-21'},
    {id:'q11',res:'maya',kind:'special',opt:'החוזה והמסמכים',detail:'אני רוצה להוסיף את בן הזוג שלי כרוכש בחוזה. מה התהליך, ואילו מסמכים צריך?',when:'',time:'',status:'new',date:'2026-11-18'},
    {id:'q12',res:'daniel',kind:'special',opt:'החוזה והמסמכים',detail:'קיבלנו את נספח השינויים לחתימה. אפשר לקבל העתק של החוזה המלא?',when:'',time:'',status:'done',date:'2026-10-05',reply:'החוזה המלא זמין בתיק הדירה, בלשונית המסמכים.'},
+   {id:'m1',res:'noa',kind:'msg',opt:'פגישות וביקורים',detail:'לגבי הפגישה על האלומיניום: אפשר להגיע עם המעצבת שלנו?',when:'',time:'',status:'new',date:'2026-11-24',conv:[{me:false,t:'לגבי הפגישה על האלומיניום: אפשר להגיע עם המעצבת שלנו?',at:'2026-11-24T09:12'}]},
+   {id:'m2',res:'yonatan',kind:'msg',opt:'הדירה והמפרט',detail:'בהמשך לבקשת בר היין: נשמח גם לנקודת מים לבר. זה אפשרי?',when:'',time:'',status:'new',date:'2026-11-07',conv:[{me:true,by:'הנדסה',t:'יונתן, קיבלנו את בקשת בר היין. אנחנו בודקים התאמה לתשתיות, ונחזור אליך עם הצעת מחיר עד סוף החודש.',at:'2026-11-06T11:00'},{me:false,t:'בהמשך לבקשת בר היין: נשמח גם לנקודת מים לבר. זה אפשרי?',at:'2026-11-07T08:30'}]},
+   {id:'m3',res:'daniel',kind:'msg',opt:'תשלומים',detail:'קיבלנו מכתב מהבנק המממן על שינוי בפרטי החשבון. לאן מעבירים את התשלום הבא?',when:'',time:'',status:'new',date:'2026-11-25',conv:[{me:false,t:'קיבלנו מכתב מהבנק המממן על שינוי בפרטי החשבון. לאן מעבירים את התשלום הבא?',at:'2026-11-25T18:40'}]},
+   {id:'m4',res:'tamar',kind:'msg',opt:'פגישות וביקורים',detail:'אפשר לקבוע פגישה עם מנהלת הפרויקט לפני בחירת החומרים?',when:'',time:'',status:'done',date:'2026-11-14',reply:'בטח. קבענו לך פגישה ביום שלישי ב-10:00 במשרדי החברה.',conv:[{me:false,t:'אפשר לקבוע פגישה עם מנהלת הפרויקט לפני בחירת החומרים?',at:'2026-11-14T09:00'},{me:true,by:'אורי',t:'בטח. קבענו לך פגישה ביום שלישי ב-10:00 במשרדי החברה.',at:'2026-11-14T12:00'}]},
    {id:'q13',res:'tamar',kind:'special',opt:'אחר',detail:'עברנו דירה. איך מעדכנים את כתובת הדואר למשלוח מסמכים?',when:'',time:'',status:'done',date:'2026-10-12',reply:'עדכנו את הכתובת. מעכשיו המסמכים יישלחו לכתובת החדשה.'}],
   changes:[
    {id:'c1',res:'noa',title:'הזזת נקודת חשמל בקיר הסלון',price:1450,status:'approved',date:'2026-06-02'},
@@ -394,13 +398,8 @@ function seed(){
   tickets:[
    {id:'t1',res:'noa',cat:'אינסטלציה',desc:'טפטוף קל מתחת לכיור במטבח',urgency:'רגילה',step:3,date:'2026-10-28',contractor:'הקבלן הראשי'},
    {id:'t2',res:'noa',cat:'דלתות וחלונות',desc:'תריס בחדר השינה נתקע באמצע',urgency:'רגילה',step:1,date:'2026-11-10',contractor:'הקבלן הראשי'}],
-  threads:{
-   noa:[{me:false,t:'היי אורי, לגבי הפגישה על האלומיניום: אפשר להגיע עם המעצבת שלנו?',at:'2026-11-24T09:12'}],
-   yonatan:[{me:true,t:'יונתן, קיבלנו את בקשת בר היין. ההנדסה בודקת התאמה לתשתיות, ונחזור אליך עם הצעת מחיר עד סוף החודש.',at:'2026-11-06T11:00'},{me:false,t:'תודה. אם אפשר, נשמח גם לנקודת מים לבר.',at:'2026-11-07T08:30'}],
-   maya:[{me:true,t:'מאיה, הסיור באתר יתואם אחרי אישור מנהל העבודה. נעדכן מועד בהקדם.',at:'2026-11-21T10:15'}],
-   daniel:[{me:false,t:'שלחתי דרך האפליקציה שאלה על נקודות התאורה בסלון. אשמח לתשובה לפני הפגישה עם החשמלאי.',at:'2026-11-22T18:40'}],
-   tamar:[{me:true,t:'תמר, דרישת התשלום לסיום החפירה תישלח בתחילת פברואר, יחד עם חישוב ההצמדה.',at:'2026-11-15T12:00'}]},
-  unread:{noa:1,daniel:1,yonatan:1},
+  threads:{noa:[],yonatan:[],maya:[],daniel:[],tamar:[]},
+  unread:{},
   broadcasts:[{id:'b2',title:'נפתחו הפגישות באולמות התצוגה',text:'אפשר לתאם פגישה עם ספקי המטבחים, הכלים הסניטריים והריצוף דרך האפליקציה, בלשונית השירות.',cat:'construction',to:'all',date:'2026-10-15',status:'sent'},{id:'b1',title:'עדכון חודשי מהאתר · נובמבר',text:'השלמנו את קירות הדיפון בצד המערבי. עבודות החפירה בצד הצפוני נמשכות לפי התוכנית.',cat:'construction',to:'all',date:'2026-11-01',status:'sent'}],
   gallery:GAL0.map(([k,c,g])=>({id:k,src:'a:'+k,cap:c,cat:g})),hero:HERO0.slice(),
   suppliers:[
@@ -614,7 +613,7 @@ function invState(r){const v=r.invite||{st:'none'};if(v.st==='joined'){const n=d
  return v.st==='invited'?{c:'plain',t:'הוזמן, עוד לא הצטרף',k:'invited'}:{c:'bad',t:'לא הוזמן',k:'none'}}
 const CFG={"box":"residents@company.example","me":"name@company.example"};
 const KEY='pituach-admin-v1';
-let ST=LS.get(KEY);if(!ST||ST.v!==3)ST=seed();ST.reminders=ST.reminders||[];ST.remLead=ST.remLead||14;ST.phase2=!!ST.phase2;ST.docs.forEach(d=>{if(CAT_OLD[d.cat])d.cat=CAT_OLD[d.cat]});ST.mail=ST.mail||{box:CFG.box||'',me:CFG.me||''};if(ST.skipLogin===undefined)ST.skipLogin=true;if(ST.host.role==='מנהל קשרי הדיירים שלך')ST.host.role='אחראי קשרי דיירים';ST.residents.forEach(r=>{if(!r.invite)r.invite=structuredClone(INV0[r.id]||{st:'none'})});
+let ST=LS.get(KEY);if(!ST||ST.v!==4)ST=seed();ST.reminders=ST.reminders||[];ST.remLead=ST.remLead||14;ST.phase2=!!ST.phase2;ST.docs.forEach(d=>{if(CAT_OLD[d.cat])d.cat=CAT_OLD[d.cat]});ST.mail=ST.mail||{box:CFG.box||'',me:CFG.me||''};if(ST.skipLogin===undefined)ST.skipLogin=true;if(ST.host.role==='מנהל קשרי הדיירים שלך')ST.host.role='אחראי קשרי דיירים';ST.residents.forEach(r=>{if(!r.invite)r.invite=structuredClone(INV0[r.id]||{st:'none'})});
 const save=()=>LS.set(KEY,ST);
 function log(t){ST.log.unshift({at:new Date().toISOString(),who:CUR().name,t});ST.log=ST.log.slice(0,300);save()}
 const resOf=id=>ST.residents.find(r=>r.id===id);
@@ -624,15 +623,17 @@ function payRows(r){return ST.schedule.map(p=>{const base=r.price*p.pct/100,link
 const nextPay=r=>payRows(r).find(p=>!p.paid);
 /* who handles what: every inquiry belongs to one department, and each person sees their department's inquiries */
 const DEPTS={res:'מגורים',eng:'הנדסה',fin:'כספים',legal:'משפטית'};
-const TOPIC={'הדירה והמפרט':'eng','תשלומים':'fin','החוזה והמסמכים':'legal','אחר':'res'};
-const deptOfReq=q=>q.dept||(q.kind==='design'?'eng':q.kind==='special'?(TOPIC[q.opt]||'res'):'res');
+const TOPIC={'הדירה והמפרט':'eng','תשלומים':'fin','החוזה והמסמכים':'legal','פגישות וביקורים':'res','אחר':'res'};
+const deptOfReq=q=>q.dept||(q.kind==='design'?'eng':(q.kind==='special'||q.kind==='msg')?(TOPIC[q.opt]||'res'):'res');
 const myDepts=()=>({res_pm:['res'],eng_vp:['eng'],eng:['eng'],inspector:['eng'],fin_vp:['fin'],fin:['fin'],fin_ops:['fin'],legal:['legal']}[CUR().perm]||Object.keys(DEPTS));
 const seesAll=()=>myDepts().length>1;
+const deskDepts=()=>CUR().perm==='admin'?['res']:myDepts();
 const sees=d=>myDepts().includes(d)&&(!ui.rd||ui.rd==='all'||ui.rd===d||!seesAll());
 const visReq=()=>ST.requests.filter(q=>myDepts().includes(deptOfReq(q)));
-const openReq=()=>visReq().filter(q=>q.status==='new');
-const openChg=()=>myDepts().includes('eng')?ST.changes.filter(c=>c.status==='review'):[];
-const openTk=()=>myDepts().includes('eng')?ST.tickets.filter(t=>t.step<3):[];
+const openReq=()=>ST.requests.filter(q=>q.status==='new'&&deskDepts().includes(deptOfReq(q)));
+const openReqAll=()=>visReq().filter(q=>q.status==='new');
+const openChg=()=>deskDepts().includes('eng')?ST.changes.filter(c=>c.status==='review'):[];
+const openTk=()=>deskDepts().includes('eng')?ST.tickets.filter(t=>t.step<3):[];
 const unreadN=()=>Object.values(ST.unread).reduce((a,b)=>a+b,0);
 const pendUpd=()=>ST.updates.filter(u=>u.status==='vp');
 const pendRem=()=>ST.reminders.filter(x=>x.status==='pending');
@@ -699,7 +700,7 @@ const NAV=[
 const BADGE={payments:()=>canApproveRem()?pendRem().length:0,requests:()=>openReq().length+openChg().length+openTk().length,changes:()=>openChg().length,defects:()=>openTk().length,messages:unreadN,construction:()=>pendUpd().length};
 const VIEW_T={};NAV.forEach(g=>g[2].forEach(n=>VIEW_T[n[0]]=n[2]));VIEW_T.reminders='תזכורות תשלום';
 let route='overview',sub='',ui={};
-function parseHash(){let h=location.hash.slice(1);if(h==='changes'||h==='defects'){ui.rk=h==='changes'?'chg':'tk';h='requests'}if(h==='reminders'){ui.ptab='rem';h='payments'}const m=h.match(/^res-([a-z0-9]+)$/);if(m){route='resident';sub=m[1]}else{route=VIEW_T[h]?h:'overview';sub=''}if(!canSee(route)){route=ALL_ROUTES.find(canSee)||'overview';sub=''}}
+function parseHash(){let h=location.hash.slice(1);if(h==='changes'||h==='defects'){ui.rk=h==='changes'?'chg':'tk';h='requests'}if(h==='reminders'){ui.ptab='rem';h='payments'}if(h==='messages'){ui.rk='msg';h='requests'}const m=h.match(/^res-([a-z0-9]+)$/);if(m){route='resident';sub=m[1]}else{route=VIEW_T[h]?h:'overview';sub=''}if(!canSee(route)){route=ALL_ROUTES.find(canSee)||'overview';sub=''}}
 function shell(){
  $('#app').innerHTML=`<div class="shell">
   <nav class="side" id="side" aria-label="ניווט ראשי">
@@ -725,7 +726,7 @@ const _themeToggle=()=>{const r=document.documentElement,cur=r.dataset.theme||(m
 }
 function toggleSide(open){const s=$('#side'),o=open??!s.classList.contains('open');s.classList.toggle('open',o);$('#menuBtn').setAttribute('aria-expanded',o);
  let sc=$('.scrim');if(o&&!sc){sc=document.createElement('div');sc.className='scrim';sc.onclick=()=>toggleSide(false);document.body.append(sc)}if(!o&&sc)sc.remove()}
-function navHTML(){return NAV.map(g=>{const hide=['changes','defects','reminders','suppliers',...(ST.phase2?[]:['homebook']),'broadcast','activity'];const items=g[2].filter(n=>canSee(n[0])&&!hide.includes(n[0]));if(!items.length)return '';return `${items.map(([id,ic,t])=>{const b=BADGE[id]?BADGE[id]():0;
+function navHTML(){return NAV.map(g=>{const hide=['changes','defects','reminders','suppliers','messages',...(ST.phase2?[]:['homebook']),'broadcast','activity'];const items=g[2].filter(n=>canSee(n[0])&&!hide.includes(n[0]));if(!items.length)return '';return `${items.map(([id,ic,t])=>{const b=BADGE[id]?BADGE[id]():0;
  return `<a href="#${id}" ${route===id||(route==='resident'&&id==='residents')?'aria-current="page"':''}>${I(ic)}<span>${t}</span>${b?`<span class="badge" aria-label="${b} ממתינים">${b}</span>`:''}</a>`}).join('')}`}).join('')}
 function searchRun(v){const box=$('#sres'),q=v.trim().toLowerCase();if(!q){box.hidden=true;$('#q').setAttribute('aria-expanded','false');return}
  const hits=[...ST.residents.filter(r=>(r.name+r.co+r.apt+r.phone+r.email+' '+r.unit).toLowerCase().includes(q)).map(r=>[`#res-${r.id}`,'users',r.name,r.apt+' · דירה '+r.unit]),
@@ -804,7 +805,7 @@ VIEWS.residents=()=>{const f=(ui.rq||'').toLowerCase();const rs=ST.residents.fil
  </tbody></table></div></section>`};
 
 VIEWS.resident=()=>{const r=resOf(sub);if(!r)return pageHead('RESIDENT','הדייר לא נמצא','',`<a class="btn" href="#residents">חזרה לרשימה</a>`);
- const tab=ui.rtab||'info';const tabs=[['info','פרטי הדייר והדירה'],['pay','תשלומים'],['docs','מסמכים'],['req','בקשות ופגישות'],['chg','שינויים'],['tk','ליקויים'],['msg','הודעות']];
+ const tab=ui.rtab||'info';const tabs=[['info','פרטי הדייר והדירה'],['pay','תשלומים'],['docs','מסמכים'],['req','פניות'],['chg','שינויים'],['tk','ליקויים']];
  const cnt={docs:ST.docs.filter(d=>d.res===r.id).length,req:ST.requests.filter(q=>q.res===r.id&&q.status==='new').length,chg:ST.changes.filter(c=>c.res===r.id&&c.status==='review').length,tk:ST.tickets.filter(t=>t.res===r.id&&t.step<3).length,msg:ST.unread[r.id]||0};
  return `<nav aria-label="פירורי לחם" class="small"><a href="#residents">דיירים ודירות</a> <span class="mut">/ ${esc(r.name)}</span></nav>
  <section class="panel res-head"><div class="plan" style="background-image:url(${imgUrl(r.plan)})" role="img" aria-label="תוכנית הדירה"></div><div class="grow"><h1>${esc(r.name)}${r.co?` <span class="mut" style="font-size:.6em">ו${esc(r.co)}</span>`:''}</h1><div class="apt">${esc(r.apt)}</div>
@@ -929,8 +930,8 @@ VIEWS.reminders=()=>{ui.ptab='rem';return VIEWS.payments()};
 /* ---- requests ---- */
 function reqTable(list,inRes){return list.length?`<div class="tbl-wrap"><table><thead><tr><th scope="col">סוג</th>${inRes?'':'<th scope="col">דייר</th>'}<th scope="col">פרטים</th><th scope="col">מועד מבוקש</th><th scope="col">התקבלה</th><th scope="col">סטטוס</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
  ${list.map(q=>`<tr><td class="t">${REQK[q.kind]||q.kind}${q.opt?`<div class="small mut">${esc(q.opt)}</div>`:''}<div style="margin-top:4px">${chip(DEPTS[deptOfReq(q)],'info')}</div></td>${inRes?'':`<td>${resLink(q.res)}</td>`}<td style="max-width:320px">${esc(q.detail)}${q.reply?`<div class="small mut">תשובה: ${esc(q.reply)}</div>`:''}</td><td class="num">${q.when?fmtD(q.when):'—'}${q.time?` · ${esc(q.time)}`:''}</td><td class="num">${fmtD(q.date)}</td><td>${chip(...RSTAT[q.status])}</td>
- <td class="act"><button class="btn sm ghost" data-act="mailReq" data-q="${q.id}" title="תשובה לדייר או העברה למחלקה">${I('mail')}שיתוף</button> ${q.status==='new'?`<button class="btn sm pri" data-act="reqOk" data-q="${q.id}">${q.kind==='design'||q.kind==='special'?'מענה':'אישור ותיאום'}</button> <button class="btn sm" data-act="reqNo" data-q="${q.id}">דחייה</button>${seesAll()?` <button class="btn sm ghost" data-act="reqMove" data-q="${q.id}">העברה למחלקה</button>`:''}`:q.status==='sched'?`<button class="btn sm" data-act="reqDone" data-q="${q.id}">${I('check')}התקיימה</button>`:''}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">אין בקשות.</div>'}
-VIEWS.requests=()=>{if((ui.rk==='chg'||ui.rk==='tk')&&!(myDepts().includes('eng')&&sees('eng')))ui.rk='all';const f=ui.rk||'all',fs=ui.rs||'open';
+ <td class="act"><button class="btn sm ghost" data-act="mailReq" data-q="${q.id}" title="תשובה לדייר או העברה למחלקה">${I('mail')}שיתוף</button> ${q.kind==='msg'?`<button class="btn sm ${q.status==='new'?'pri':''}" data-act="conv" data-q="${q.id}">${q.status==='new'?'מענה':'לשיחה'}</button>`:''}${q.kind!=='msg'&&q.status==='new'?`<button class="btn sm pri" data-act="reqOk" data-q="${q.id}">${q.kind==='design'||q.kind==='special'?'מענה':'אישור ותיאום'}</button> <button class="btn sm" data-act="reqNo" data-q="${q.id}">דחייה</button>${seesAll()?` <button class="btn sm ghost" data-act="reqMove" data-q="${q.id}">העברה למחלקה</button>`:''}`:q.kind!=='msg'&&q.status==='sched'?`<button class="btn sm" data-act="reqDone" data-q="${q.id}">${I('check')}התקיימה</button>`:''}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">אין בקשות.</div>'}
+VIEWS.requests=()=>{if(ui.rd===undefined)ui.rd=CUR().perm==='admin'?'res':'all';if((ui.rk==='chg'||ui.rk==='tk')&&!(myDepts().includes('eng')&&sees('eng')))ui.rk='all';const f=ui.rk||'all',fs=ui.rs||'open';
  if(f==='chg'||f==='tk')return inboxHead(f)+`<section class="panel">${f==='chg'?chgTable([...ST.changes].sort((a,b)=>b.date.localeCompare(a.date))):tkTable([...ST.tickets].sort((a,b)=>a.step-b.step||b.date.localeCompare(a.date)))}</section>`;
  const list=ST.requests.filter(q=>sees(deptOfReq(q))&&(f==='all'||q.kind===f)&&(fs==='all'||(fs==='open'?['new','sched'].includes(q.status):q.status===fs))).sort((a,b)=>(a.status==='new'?0:1)-(b.status==='new'?0:1)||b.date.localeCompare(a.date));
  return inboxHead(f)+
@@ -939,12 +940,12 @@ VIEWS.requests=()=>{if((ui.rk==='chg'||ui.rk==='tk')&&!(myDepts().includes('eng'
 
 function inboxHead(f){const eng=myDepts().includes('eng')&&sees('eng');const vis=visReq().filter(q=>sees(deptOfReq(q)));
  const kinds=['all',...Object.keys(REQK).filter(k=>vis.some(q=>q.kind===k)),...(eng?['chg']:[]),...(eng&&(ST.phase2||ST.tickets.some(t=>t.step<3))?['tk']:[])];
- const lab=k=>k==='all'?'כל הפניות':k==='chg'?'שינויי דיירים':k==='tk'?'ליקויים':REQK[k];
+ const lab=k=>k==='all'?'כל הפניות':k==='msg'?'הודעות':k==='chg'?'שינויי דיירים':k==='tk'?'ליקויים':REQK[k];
  const cnt=k=>k==='chg'?openChg().length:k==='tk'?openTk().length:k==='all'?vis.filter(q=>q.status==='new').length:vis.filter(q=>q.kind===k&&q.status==='new').length;
- const dn=d=>(d==='all'?visReq():visReq().filter(q=>deptOfReq(q)===d)).filter(q=>q.status==='new').length+(d==='all'||d==='eng'?openChg().length+openTk().length:0);
- const md=myDepts(),sub=seesAll()?'כל פנייה מגיעה למחלקה שמטפלת בה. אפשר לסנן לפי מחלקה, ולהעביר פנייה למחלקה אחרת.':`הפניות של ${md.map(d=>DEPTS[d]).join(', ')}: רק מה שבאחריות המחלקה שלך.`;
+ const dn=d=>(d==='all'?visReq():visReq().filter(q=>deptOfReq(q)===d)).filter(q=>q.status==='new').length+(d==='all'||d==='eng'?ST.changes.filter(c=>c.status==='review').length+ST.tickets.filter(t=>t.step<3).length:0);
+ const md=myDepts(),sub=seesAll()?(CUR().perm==='admin'?'כל פנייה מגיעה ישר למחלקה שמטפלת בה, לפי הנושא שהדייר בחר. כאן מוצגות הפניות של מגורים, ואפשר לראות גם את של שאר המחלקות.':'כל פנייה מגיעה ישר למחלקה שמטפלת בה, לפי הנושא שהדייר בחר.'):`הפניות של ${md.map(d=>DEPTS[d]).join(', ')}: רק מה שבאחריות המחלקה שלך.`;
  const act=f==='chg'?'':f==='tk'?`<button class="btn" data-act="addTk">${I('plus')}פתיחת ליקוי</button>`:`<button class="btn" data-act="addReq">${I('plus')}בקשה ידנית</button>`;
- return pageHead('INBOX',seesAll()?'פניות דיירים':'פניות · '+md.map(d=>DEPTS[d]).join(', '),sub,act)+
+ return pageHead('INBOX',seesAll()?'פניות דיירים':'פניות · '+md.map(d=>DEPTS[d]).join(', '),sub,act+(canSee('broadcast')?`<a class="btn ghost sm" href="#broadcast">${I('mega')}הודעה לכל הדיירים</a>`:''))+
  (seesAll()?`<div class="seg" role="group" aria-label="מחלקה" style="align-self:flex-start">${['all',...Object.keys(DEPTS)].map(d=>{const n=dn(d);return `<button aria-pressed="${(ui.rd||'all')===d}" data-rd="${d}">${d==='all'?'כל המחלקות':DEPTS[d]}${n?` · ${n}`:''}</button>`}).join('')}</div>`:'')+
  `<div class="seg" role="group" aria-label="סוג פנייה" style="align-self:flex-start">${kinds.map(k=>{const n=cnt(k);return `<button aria-pressed="${f===k}" data-rk="${k}">${lab(k)}${n?` · ${n}`:''}</button>`}).join('')}</div>`}
 /* ---- changes ---- */
@@ -1103,7 +1104,7 @@ const ACT={
  delRes:b=>{$('#delBox').innerHTML=`<div class="confirm-bar" role="alert" style="margin-top:14px"><span class="grow">להסיר את ${esc(resOf(b.dataset.res).name)}? הגישה שלו לאפליקציה תיחסם. המסמכים נשמרים.</span><button class="btn sm danger" type="button" data-act="delResYes" data-res="${b.dataset.res}">הסרה</button><button class="btn sm" type="button" onclick="this.closest('.confirm-bar').remove()">ביטול</button></div>`;$('#delBox .btn').focus()},
  delResYes:b=>{const r=resOf(b.dataset.res);ST.residents=ST.residents.filter(x=>x!==r);log('הסרת דייר: '+r.name);save();toast(r.name+' הוסר/ה');go('residents')},
  planUp:b=>pickFiles(null,'image/*',async f=>{const r=resOf(b.dataset.res),id=uid('pl');await FS.put(id,f);r.plan='u:'+id;await urlOf(r.plan);log('החלפת תמונת תוכנית: '+r.name);save();toast('התוכנית הוחלפה');render()}),
- msgRes:b=>{ui.mres=b.dataset.res;go('messages')},
+ msgRes:b=>{ui.rk='msg';go('requests')},
  pay:b=>{const r=resOf(b.dataset.res),p=ST.schedule.find(x=>x.id===b.dataset.p);r.paid[p.id]=true;log(`סימון תשלום כשולם: ${p.name} · ${r.name}`);save();toast(`${p.name} של ${r.name} סומן כשולם`);render()},
  unpay:b=>{const r=resOf(b.dataset.res);delete r.paid[b.dataset.p];log('ביטול סימון תשלום · '+r.name);save();render()},
  remind:b=>{const r=resOf(b.dataset.res),p=ST.schedule.find(x=>x.id===b.dataset.p),ex=ST.reminders.find(x=>x.res===r.id&&x.pay===p.id&&['pending','sched'].includes(x.status));
@@ -1111,6 +1112,14 @@ const ACT={
   ST.reminders.push({id:uid('rm'),res:r.id,pay:p.id,status:'pending',created:today(),by:CUR().name,text:'',sendOn:today()});log(`בקשת תזכורת תשלום: ${p.name} · ${r.name} · נשלחה לאישור ${P(REM_APPROVER).name}`);save();toast(`נשלח ל${P(REM_APPROVER).name} לאישור. היא תקבל התראה`);render()},
  goRem:()=>{closeDlg();ui.ptab='rem';go('payments')},
  exp:b=>EXP[b.dataset.x](),
+ conv:b=>{const q=ST.requests.find(x=>x.id===b.dataset.q),r=resOf(q.res);q.conv=q.conv||[{me:false,t:q.detail,at:q.date}];
+  dialog(`<div class="dlg"><div class="dh"><div><h2>${esc(r?.name||'')}</h2><div class="small mut">${esc(q.opt||'')} · ${esc(DEPTS[deptOfReq(q)])}</div></div><button class="ib" data-close aria-label="סגירה">${I('x')}</button></div>
+   <div class="db"><div class="thread" style="max-height:46vh">${q.conv.map(m=>`<div class="bub ${m.me?'me':''}"><div>${esc(m.t)}</div><div class="tm">${m.me?esc(m.by||ST.host.name):esc(r?.name||'')} · ${fmtD(m.at)}</div></div>`).join('')}</div>
+   <div class="field"><label for="cv-t">תשובה</label><textarea id="cv-t" placeholder="התשובה תגיע לדייר באפליקציה"></textarea></div></div>
+   <div class="df"><button class="btn pri" id="cv-send">שליחה וסימון כטופל</button><button class="btn" id="cv-wa">${I('mail')}גם בוואטסאפ</button><button class="btn ghost" data-close>סגירה</button></div></div>`,'wide');
+  const send=()=>{const t=$('#cv-t').value.trim();if(!t){$('#cv-t').focus();return null}q.conv.push({me:true,t,at:new Date().toISOString(),by:CUR().name});q.status='done';q.reply=t;log(`מענה להודעה · ${r?.name}`);save();return t};
+  $('#cv-send').onclick=()=>{if(send()){closeDlg();toast('התשובה נשלחה לדייר');render()}};
+  $('#cv-wa').onclick=()=>{const t=send();if(t){closeDlg();render();shareDlg({res:q.res,text:hiTxt(q.res)+t+signTxt()})}}},
  mailReq:b=>{const q=ST.requests.find(x=>x.id===b.dataset.q),r=resOf(q.res),d=DEPTS[deptOfReq(q)],t=REQK[q.kind]+(q.opt?' · '+q.opt:'');
   dialog(`<div class="dlg"><div class="dh"><h2>תשובה או העברה</h2><button class="ib" data-close aria-label="סגירה">${I('x')}</button></div><div class="db"><div class="notice"><b>${esc(r?.name||'')}</b> · ${esc(q.detail)}</div>
    <div class="list"><button class="li" style="border:0;background:none;text-align:right;width:100%" id="mq-res"><span class="ic">${I('users')}</span><span class="grow"><b style="font-weight:500">תשובה לדייר</b><div class="small mut">וואטסאפ או שיתוף מהטלפון · <span dir="ltr">${esc(r?.phone||'')}</span></div></span>${I('chev')}</button>

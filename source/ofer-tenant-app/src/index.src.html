@@ -712,7 +712,7 @@ const EN=/*__EN__*/{};
 const EX=EN.x||{}, FR=Object.assign({},...Object.entries(EX).filter(e=>e[0].length>=8).map(e=>({[e[0]]:e[1]})),EN.f||{});
 const ENK=Object.keys(FR).sort((a,b)=>b.length-a.length), HEB=/[\u0590-\u05FF]/, trc=new Map();
 function tr(t){if(!HEB.test(t))return t;let c=trc.get(t);if(c!==undefined)return c;const k=t.trim();let out;
-  if(EX[k]!==undefined)out=t.replace(k,EX[k]);else if(FR[k]!==undefined)out=t.replace(k,FR[k]);else{out=t;for(const h of ENK){if(out.includes(h)){out=out.split(h).join(FR[h]);if(!HEB.test(out))break}}}
+  if(EX[k]!==undefined)out=t.replace(k,EX[k]);else if(FR[k]!==undefined)out=t.replace(k,FR[k]);else{out=t;for(const h of ENK){if(out.includes(h)){out=out.split(h).join(FR[h]);if(!HEB.test(out))break}}if(HEB.test(out)){if(window.__miss)window.__miss.add(k);out=t}}
   trc.set(t,out);return out}
 function trNode(n){if(n.nodeType===3){const v=n.nodeValue;if(HEB.test(v)){const o=tr(v);if(o!==v)n.nodeValue=o}}
   else if(n.nodeType===1&&n.nodeName!=='SCRIPT'&&n.nodeName!=='STYLE'){for(const a of ['placeholder','aria-label','alt','title','data-toast']){const v=n.getAttribute(a);if(v&&HEB.test(v))n.setAttribute(a,tr(v))}for(const c of n.childNodes)trNode(c)}}
@@ -871,8 +871,7 @@ function renderHome(){
 /* ---------- render: apartment ---------- */
 function renderProgress(){
   $('#p-progress').innerHTML=`
-    <div class="row between" style="align-items:flex-end"><div><div class="kicker">השלב הנוכחי</div><div class="stagebig" style="font-size:38px;margin-top:6px">${NOW_STAGE}</div></div><span class="chip ok">לפי לוח הזמנים</span></div>
-    ${msBar()}
+    <div class="row between" style="align-items:flex-end"><div><div class="kicker">השלב הנוכחי</div><div class="stagebig" style="font-size:26px;margin-top:4px">${NOW_STAGE}</div></div><span class="chip ok">לפי לוח הזמנים</span></div>
     <h3 class="sub">עדכונים מהאתר</h3>
     <div class="hscroll">${[...S.news.filter(x=>x.kind==='construction').map(x=>({cap:x.t,date:'עכשיו',src:x.img,nophoto:!x.img})),...PHOTOS].map(p=>`<div>${p.src||p.img?`<div class="upd ph"><img src="${p.src||A[p.img]}" alt="${esc(p.cap)}"></div>`:`<div class="upd"><img src="${A.bird}" alt=""></div>`}<b style="font-size:14.5px">${esc(p.cap)}</b><div class="small mut">${p.date}${p.src||p.img?' · צילום מהאתר':p.nophoto?'':' · כאן יופיעו תמונות ווידאו מהאתר'}</div></div>`).join('')}</div>
     <h3 class="sub">אבני דרך</h3>
@@ -989,7 +988,7 @@ function renderService(){
     ${personCard()}
     ${st==='after'&&S.parcel?`<div class="next" style="margin-bottom:12px"><div class="grow"><div class="kicker">חבילה ממתינה בלובי</div><div style="margin-top:3px">התקבלה היום ב-11:20</div></div><button class="btn" data-parcel="1">אספתי</button></div>`:''}
     <h3 class="sub">מה אפשר לסדר לך</h3>
-    <div class="svc">${kinds.map(k=>`<button data-req="${k}">${ICON[REQ[k].i]}<span><b>${REQ[k].t}</b><br><span class="small mut">${REQ[k].sub}</span></span></button>`).join('')}<button data-open="chat">${ICON.chat}<span><b>הודעה ל${HOST.name}</b><br><span class="small mut">מענה אנושי, בדרך כלל באותו יום</span></span></button></div>
+    <div class="svc">${kinds.map(k=>`<button data-req="${k}">${ICON[REQ[k].i]}<span><b>${REQ[k].t}</b><br><span class="small mut">${REQ[k].sub}</span></span></button>`).join('')}<button data-open="chat">${ICON.chat}<span><b>הודעה לצוות</b><br><span class="small mut">מגיעה ישר למי שמטפל בנושא</span></span></button></div>
     ${S.requests.length?`<h3 class="sub">הבקשות שלי</h3><div class="card">${S.requests.map(r=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${esc(r.title)}</b><div class="small mut">${esc(r.detail)}</div></div>${r.done?'<span class="chip ok">אושרה</span>':'<span class="chip info">התקבלה</span>'}</div>`).join('')}</div>`:''}
     ${st==='build'?'':`<h3 class="sub">ליקויים ובדק</h3>
     <p class="small mut" style="margin-bottom:10px">מדווחים כאן, הקבלן מטפל, ואנחנו עוקבים עד שהליקוי נסגר.</p>
@@ -1280,12 +1279,16 @@ const SHEETS={
       <button class="btn block" data-open="chat">שאלה ל${HOST.name}</button>`);
   },
   chat(){
-    openSheet(`<h3>הודעה ל${HOST.name}</h3><p class="small mut" style="margin:-8px 0 12px">${HOST.role}. מענה אנושי, בדרך כלל באותו יום עבודה.</p><div class="chat" id="chatBox"></div>
+    const TOP=[['הדירה והמפרט','הנדסה'],['תשלומים','כספים'],['החוזה והמסמכים','משפטית'],['פגישות וביקורים','מגורים'],['אחר',HOST.name]];let topic=S.chatTopic||'אחר';
+    openSheet(`<h3>הודעה לצוות</h3><p class="small mut" style="margin:-8px 0 12px">בוחרים נושא, וההודעה מגיעה ישר למי שמטפל בו.</p>
+      <label class="f">הנושא</label><div class="opt-row" id="chatTop">${TOP.map(t=>`<button class="opt ${t[0]===topic?'on':''}" data-topic="${t[0]}">${t[0]}</button>`).join('')}</div>
+      <p class="small mut" id="chatTo" style="margin:6px 0 10px"></p><div class="chat" id="chatBox"></div>
       <form class="row" id="chatForm" style="gap:8px"><input class="input" id="chatIn" placeholder="כתבו הודעה" aria-label="הודעה"><button class="btn gold">שליחה</button></form>`,sh=>{
-      const box=$('#chatBox',sh);
+      const box=$('#chatBox',sh),to=()=>{$('#chatTo',sh).textContent='תגיע אל: '+TOP.find(t=>t[0]===topic)[1]};to();
+      $$('#chatTop [data-topic]',sh).forEach(b=>b.onclick=()=>{topic=b.dataset.topic;S.chatTopic=topic;$$('#chatTop .opt',sh).forEach(x=>x.classList.toggle('on',x===b));to()});
       const draw=()=>{box.innerHTML=S.thread.length?S.thread.map(m=>`<div class="msg ${m.me?'me':'bot'}">${esc(m.t)}</div>`).join(''):'<div class="empty">עוד אין הודעות. אפשר לשאול כל דבר על הדירה, התשלומים או הבנייה.</div>';box.scrollTop=box.scrollHeight};
       draw();
-      $('#chatForm',sh).onsubmit=e=>{e.preventDefault();const v=$('#chatIn',sh).value.trim();if(!v)return;$('#chatIn',sh).value='';S.thread.push({me:true,t:v});save();draw();renderDev();toast('ההודעה נשלחה ל'+HOST.name)};
+      $('#chatForm',sh).onsubmit=e=>{e.preventDefault();const v=$('#chatIn',sh).value.trim();if(!v)return;$('#chatIn',sh).value='';S.thread.push({me:true,t:v,topic});save();draw();renderDev();toast('ההודעה נשלחה אל '+TOP.find(t=>t[0]===topic)[1])};
     });
   },
 };
@@ -1298,7 +1301,20 @@ async function saveFile(name,key,given){
   if(inArtifact()&&!(window.claude)){toast('ההורדה זמינה כשפותחים את האפליקציה בדפדפן');return}
   const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);toast('הקובץ ירד: '+name);
 }
-function contractHTML(id){
+function contractHTML(id){if(LANG==='en')return contractEN(id);return contractHE(id)}
+function contractEN(id){const r=RES.find(x=>x.id===id),rows=payRows(id),fl=r.floor?'floor '+r.floor:'the garden floor';
+  return `<h4>Apartment Sale Contract</h4><div class="stamp">Sample for demonstration only · not a binding contract</div>
+  <p>Made and signed on February 15, 2026</p>
+  <p><b>Between:</b> [Name of the selling company] (“the Company”)<br><b>And:</b> ${r.name}${r.co?' and '+r.co:''} [surname, ID number] (“the Buyer”)</p>
+  <h5>1. The apartment</h5><p>${r.apt}, ${fl}, with a floor area of ${r.sqm} sqm and ${r.out}, in the SEA HOUSE building at Pituach by the Sea, Herzliya Pituach, as shown in the plan and specification attached to this contract.</p>
+  <h5>2. Price and payment schedule</h5><p>The total price is ${nis(r.price)} including VAT, payable according to the schedule below.</p>
+  <table><tr><th>Payment</th><th>Due date</th><th>Share</th><th>Amount</th></tr>${rows.map(x=>`<tr><td>${x.name}</td><td>${fmtDate(x.due)}</td><td>${x.pct}%</td><td>${nis(x.base)}</td></tr>`).join('')}</table>
+  <h5>3. Index linkage</h5><p>The linked portion of each payment is linked to the Residential Construction Input Index. Base index: ${BASE_INDEX}.</p>
+  <h5>4. Handover</h5><p>Estimated handover: during 2029, subject to the terms of this contract.</p>
+  <h5>5. Security</h5><p>Each payment is secured by a guarantee under the Sale (Apartments) (Assurance of Investments of Purchasers of Apartments) Law, 5735-1975.</p>
+  <h5>6. Defects liability and warranty</h5><p>Defects liability and warranty periods are as set out in the Sale (Apartments) Law, 5733-1973.</p>
+  <div class="sig"><div>The Company<br>Signed digitally</div><div>The Buyer<br>Signed digitally</div></div>`}
+function contractHE(id){
   const r=RES.find(x=>x.id===id), rows=payRows(id);
   return `<h4>חוזה מכר דירה</h4><div class="stamp">דוגמה לצורכי הדגמה בלבד · אינו חוזה מחייב</div>
   <p>שנערך ונחתם ביום 15 בפברואר 2026</p>
@@ -1314,7 +1330,8 @@ function contractHTML(id){
 }
 /* ---------- sample documents (realistic content, clearly marked as samples) ---------- */
 const STAMP='<div class="stamp">מסמך לדוגמה לצורכי הדגמה בלבד</div>';
-function sampleDoc(name){const r=cur(),rows=payRows(),p2=rows[1],p3=rows[2],full=r.name+(r.co?' ו'+r.co:'');
+function sampleDoc(name){if(LANG==='en'){const h=sampleDocEN(name);if(h)return h}return sampleDocHE(name)}
+function sampleDocHE(name){const r=cur(),rows=payRows(),p2=rows[1],p3=rows[2],full=r.name+(r.co?' ו'+r.co:'');
  const head=(t,sub)=>`<h4>${t}</h4>${STAMP}<p class="small" style="text-align:center;margin:-6px 0 12px;color:#777">${sub}</p>`;
  const kv=a=>`<table>${a.map(x=>`<tr><td style="width:42%;color:#666">${x[0]}</td><td>${x[1]}</td></tr>`).join('')}</table>`;
  const D={
@@ -1351,6 +1368,46 @@ function sampleDoc(name){const r=cur(),rows=payRows(),p2=rows[1],p3=rows[2],full
   `<table><tr><th>מערכת</th><th>ספק</th><th>אחריות</th></tr>${GUIDE.map(g=>`<tr><td>${g.t}</td><td>${g.sup}</td><td>${g.w}</td></tr>`).join('')}</table>
   <h5>תקופות בדק ואחריות</h5><table>${WARRANTY.map(w=>`<tr><td>${w.t}</td><td>עד ${fmtDate(w.end)}</td></tr>`).join('')}</table>
   <p class="small" style="color:#777">כל תעודה מקורית תצורף כקובץ נפרד ביום המסירה.</p>`};
+ return D[name]?D[name]():null}
+function sampleDocEN(name){const r=cur(),rows=payRows(),p2=rows[1],p3=rows[2],full=r.name+(r.co?' and '+r.co:''),fl=r.floor?'Floor '+r.floor:'Garden floor';
+ const STAMP_EN='<div class="stamp">Sample document for demonstration only</div>';
+ const head=(t,sub)=>`<h4>${t}</h4>${STAMP_EN}<p class="small" style="text-align:center;margin:-6px 0 12px;color:#777">${sub}</p>`;
+ const kv=a=>`<table>${a.map(x=>`<tr><td style="width:42%;color:#666">${x[0]}</td><td>${x[1]}</td></tr>`).join('')}</table>`;
+ const unit=`${r.apt} · Unit ${r.unit}`;
+ const D={
+ 'מפרט טכני מלא':()=>head('Technical Specification','Appendix B to the sale contract · '+r.apt)+
+  `<p>This specification describes the apartment as it will be handed over. Any change to it is made only through a written quote and your written approval.</p>
+  <h5>1. Apartment details</h5>${kv([['Building','SEA HOUSE, Pituach by the Sea, Herzliya Pituach'],['Apartment',unit],['Floor',fl],['Floor area',r.sqm+' sqm'],['Outdoor space',r.out],['Rooms',r.beds],['Orientation',r.dir]])}
+  <h5>2. Finishes</h5>${kv([['Living areas flooring','120×120 cm porcelain tiles, choice of 3 shades'],['Bathroom flooring','60×120 cm porcelain tiles, wall tiling to the ceiling'],['Balcony flooring','Textured porcelain tiles suitable for outdoor use'],['Ceiling height','About 2.85 m in living areas, with a dropped ceiling in the hallway and bathrooms'],['Interior doors','Painted laminated doors with stainless steel handles']])}
+  <h5>3. Kitchen</h5>${kv([['Cabinets','Upper and lower cabinets with soft-close fittings · [kitchen supplier]'],['Countertop','2 cm quartz, choice of 3 shades'],['Sink and tap','Integrated sink with pull-out tap'],['Provisions','Points for a dishwasher, built-in oven and hob']])}
+  <h5>4. Bathrooms</h5>${kv([['Sanitary ware','Wall-hung toilet and vanity unit with integrated basin · [sanitary ware supplier]'],['Shower','Glass shower enclosure with linear drain'],['Taps','Chrome mixer taps']])}
+  <h5>5. Systems</h5>${kv([['Air conditioning','Ducted mini-central system, one unit per zone · [A/C supplier]'],['Hot water','150-liter solar water heater with electric backup'],['Electrical','Three-phase panel, points as per the electrical plan'],['Shutters','Electric aluminum shutters in the bedrooms'],['Mamad (safe room)','Blast door, window and filtration system to Home Front Command standards']])}
+  <p class="small" style="color:#777;margin-top:12px">Supplier names in brackets will be updated under the project’s supplier agreements.</p>`,
+ 'ערבות חוק מכר · תשלום 2':()=>head('Sale Law Guarantee','Sale (Apartments) (Assurance of Investments of Purchasers of Apartments) Law, 5735-1975')+
+  kv([['Guarantee number','[guarantee number]'],['Issuing bank','[the project’s accompanying bank]'],['Beneficiary',full],['Apartment',`${unit} · ${fl}`],['Payment',`Second payment · ${p2.pct}% of the price`],['Principal',nis(p2.base)],['Index linkage','Residential Construction Input Index, base '+BASE_INDEX],['Date of issue','September 1, 2026'],['Valid until','Registration of the apartment in the buyer’s name, or handover, whichever is earlier']])+
+  `<p style="margin-top:12px">The guarantee secures repayment of the amount paid, plus index linkage, if the Company is unable to deliver the apartment as set out in the law. The original guarantee is sent by mail.</p>`,
+ 'קבלה · תשלום 2':()=>head('Receipt','Receipt no. [number] · Date: September 1, 2026')+
+  kv([['Received from',full],['For',`${unit} · Second payment`],['Payment method','Bank transfer'],['Principal',nis(p2.base)],['Index linkage',nis(p2.link)],['Total received',`<b>${nis(p2.total)}</b>`]])+
+  `<p style="margin-top:12px">The amount includes VAT. Thank you,<br>Finance Department</p>`,
+ 'דוח הצמדה למדד · רבעון 3':()=>head('Index Linkage Report','Q3 · July–September 2026')+
+  `<p>Residential Construction Input Index, as published by the Israel Central Bureau of Statistics. Contract base index: <b>${BASE_INDEX}</b>.</p>
+  <table><tr><th>Month</th><th>Index</th><th>Change from base</th></tr>${[['July 2026',107.4],['August 2026',107.9],['September 2026',CUR_INDEX]].map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td>+${((x[1]/BASE_INDEX-1)*100).toFixed(2)}%</td></tr>`).join('')}</table>
+  <h5>Effect on your next payment</h5>${kv([['Payment',p3.name],['Due date',fmtDate(p3.due)],['Principal',nis(p3.base)],['Linkage at the latest index',nis(p3.link)],['Estimated total',`<b>${nis(p3.total)}</b>`]])}
+  <p class="small" style="color:#777">The final amount is calculated using the index known on the payment date.</p>`,
+ 'הצעת מחיר · ריצוף מקלחת':()=>head('Change Request Quote','Quote no. [number] · October 20, 2026')+
+  kv([['To',full],['Apartment',unit],['Change','Replacing the floor and wall tiles in the main shower with marble-look tiles']])+
+  `<table><tr><th>Item</th><th>Quantity</th><th>Amount</th></tr><tr><td>Tile price difference</td><td>8 sqm</td><td>${nis(2600)}</td></tr><tr><td>Laying and grouting</td><td>8 sqm</td><td>${nis(950)}</td></tr><tr><td>Credit for standard tiles</td><td>8 sqm</td><td>-${nis(320)}</td></tr><tr><td>Handling and coordination</td><td></td><td>${nis(670)}</td></tr><tr><td><b>Total incl. VAT</b></td><td></td><td><b>${nis(3900)}</b></td></tr></table>
+  <p>This quote is valid for 30 days. The work will be carried out during the finishing stage, subject to engineering approval. You approve the quote with a digital signature in the app.</p>`,
+ 'אישור שינוי · נקודת חשמל':()=>head('Change Approval','Change no. [number] · June 2, 2026')+
+  kv([['Resident',full],['Apartment',unit],['Change','Moving an electrical outlet on the living room wall 80 cm to the left, per the attached drawing'],['Price',nis(1450)+' incl. VAT'],['Scheduled','During the electrical works'],['Status','<b>Approved</b> · signed digitally']])+
+  `<div class="sig"><div>Engineering<br>Approved</div><div>Resident<br>Signed digitally</div></div>`,
+ 'מדריך הדירה':()=>head('Home Guide','What’s in your home and how to look after it')+
+  GUIDE.map(g=>`<h5>${g.t}</h5><p><span>${g.s}</span> · <span>${g.sup}</span> · Warranty: <span>${g.w}</span></p><p style="color:#555">${g.tip}</p>`).join('')+
+  `<h5>Water and electricity</h5><p>The apartment’s main water valve is in the utility cupboard. The electrical panel is next to the front door, with every circuit labeled.</p>`,
+ 'תעודות אחריות ספקים':()=>head('Supplier Warranties','By system · updated at handover')+
+  `<table><tr><th>System</th><th>Supplier</th><th>Warranty</th></tr>${GUIDE.map(g=>`<tr><td>${g.t}</td><td>${g.sup}</td><td>${g.w}</td></tr>`).join('')}</table>
+  <h5>Defects liability and warranty periods</h5><table>${WARRANTY.map(w=>`<tr><td>${w.t}</td><td>Until ${fmtDate(w.end)}</td></tr>`).join('')}</table>
+  <p class="small" style="color:#777">Each original certificate will be added as a separate file on handover day.</p>`};
  return D[name]?D[name]():null}
 function openSampleDoc(name){const html=sampleDoc(name);if(!html)return false;const r=cur();
  openSheet(`<h3>${esc(name)}</h3><p class="small mut" style="margin:-8px 0 12px">${r.apt} · ${floorTxt(r)}</p><div class="doc">${html}</div>
@@ -1472,7 +1529,26 @@ const LEGAL={
   <h4>מה עוד לא נבדק</h4><p>בדיקת נגישות מלאה בידי מורשה נגישות עוד לא בוצעה. היא תבוצע לפני העלייה לאוויר.</p>
   <h4>רכז הנגישות</h4><p>אם נתקלת בבעיה, אפשר לפנות אלינו דרך ״הודעה״ באפליקציה, ונטפל בתוך 14 ימים. פרטי רכז הנגישות יתווספו לפני העלייה לאוויר.</p>
   <p class="small mut">עודכן לאחרונה: נובמבר 2026</p>`]};
-const legalSheet=k=>openSheet(`<h3>${LEGAL[k][0]}</h3>${DRAFT}<div class="legal">${LEGAL[k][1]}</div><button class="btn block" id="legalBack" style="margin-top:18px">סגירה</button>`,sh=>{$('#legalBack',sh).onclick=()=>{closeSheet()}});
+const LEGAL_EN={
+ privacy:['Privacy Policy',`<p>This app is operated by Ofer Investments (“the Company”) for buyers of apartments at Pituach by the Sea.</p>
+  <h4>What we keep</h4><p>Your identification and contact details, your apartment and contract details, your payment schedule and the payments you have made, the requests and messages you send, and the documents in your home file.</p>
+  <h4>Why</h4><p>To manage our relationship with you as a buyer: project updates, payments, documents, change requests, handover and the defects liability period. We will not use your information for marketing without your separate consent, which you can withdraw at any time.</p>
+  <h4>Who can see it</h4><p>Company employees, only as their role requires: resident relations, finance, engineering, legal and management. The project’s law firm, the project’s sales agents and service providers receive only what they need for their work, under a data processing agreement.</p>
+  <h4>Security and retention</h4><p>Your information is protected in line with the Israeli Privacy Protection (Data Security) Regulations. We keep it for as long as you have a contract with the Company, and afterwards as required by law.</p>
+  <h4>Your rights</h4><p>You may review your information and ask us to correct it, under the Israeli Privacy Protection Law. Just contact resident relations through the app.</p>`],
+ terms:['Terms of Use',`<p>This app gives you information and service. It does not change or replace your sale contract.</p>
+  <h4>What governs</h4><p>Your sale contract, the specification and the sale plans attached to it are the governing documents. If anything in the app differs from them, the documents prevail.</p>
+  <h4>Stages and dates</h4><p>Construction stages are shown for tracking only. The binding handover date is the one in your contract.</p>
+  <h4>Payments</h4><p>Amounts in the app are calculated using the latest known index and are for information only. The amount due is the one in the official payment demand.</p>
+  <h4>Renderings</h4><p>Renderings and images are for illustration only and do not form part of the specification.</p>
+  <h4>Suppliers and site visits</h4><p>Supplier meetings are for choosing finishes within the specification. Upgrades beyond the specification are agreed directly with the supplier. Site visits are accompanied by a Company representative and are subject to site safety rules.</p>
+  <h4>Change requests</h4><p>A change becomes binding only once you have received a written quote and approved it with your signature.</p>`],
+ access:['Accessibility Statement',`<p>We are working to make this app accessible to everyone, in line with the Israeli Equal Rights for Persons with Disabilities (Service Accessibility) Regulations and Israeli Standard 5568, at level AA.</p>
+  <h4>What we have done</h4><p>Screen reader and keyboard support, larger text, high contrast, reduced motion, text alternatives for images, and Hebrew and English versions.</p>
+  <h4>What has not been tested yet</h4><p>A full audit by a certified accessibility consultant has not yet been carried out. It will be completed before launch.</p>
+  <h4>Accessibility coordinator</h4><p>If you run into a problem, contact us through “Message the team” in the app, and we will respond within 14 days. The coordinator’s details will be added before launch.</p>
+  <p class="small mut">Last updated: November 2026</p>`]};
+const legalSheet=k=>openSheet(`<h3>${(LANG==='en'?LEGAL_EN:LEGAL)[k][0]}</h3>${DRAFT}<div class="legal">${(LANG==='en'?LEGAL_EN:LEGAL)[k][1]}</div><button class="btn block" id="legalBack" style="margin-top:18px">סגירה</button>`,sh=>{$('#legalBack',sh).onclick=()=>{closeSheet()}});
 /* demo bar only when asked for (claude.ai preview, ?demo, or the switch in settings) */
 const demoOn=()=>S.demo===true||/[?&]demo/.test(location.search)||(()=>{try{return window.top!==window.self}catch(e){return true}})();
 function applyDemo(){const on=demoOn();$('#phone').classList.toggle('demo',on);if(!on&&S.role==='dev'){S.role='res';save();applyRole();renderAll()}}
