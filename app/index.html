@@ -185,9 +185,14 @@ button.link{color:var(--gold-d);text-decoration:underline;font-size:14px}
 .empty{text-align:center;color:var(--mut);padding:26px 0}
 .plan{background:#fff;border-radius:var(--r);overflow:auto;border:1px solid var(--line)}.plan img{display:block;width:100%}.plan.zoom img{width:220%}
 .gal{display:grid;grid-template-columns:1fr 1fr;gap:4px}.gal.full img{border-radius:0}.gal img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:var(--r);display:block}.gal img.wide{grid-column:1/-1;aspect-ratio:16/10}
-.splash{position:absolute;inset:0;z-index:60;background:var(--sand);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;transition:opacity .9s}
+.splash{position:absolute;inset:0;z-index:60;background:linear-gradient(180deg,#A8CBEC 0%,#7FAAD8 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;transition:opacity .9s}
 .splash.off{opacity:0;pointer-events:none}
-.splash .bd{width:112px;animation:rise 1.2s ease both}.splash .wm{width:200px;animation:rise 1.2s .25s ease both}.splash .em{width:140px;opacity:.7;animation:rise 1.2s .5s ease both}.splash .of{width:84px;position:absolute;bottom:46px;opacity:.85}
+.splash .bdw{display:block;width:112px;animation:fly 1.7s cubic-bezier(.25,.7,.3,1) both}
+.splash .bd{width:112px;display:block;transform-origin:50% 60%;animation:flap .42s ease-in-out 4}
+@keyframes fly{0%{transform:translate(18px,120px) rotate(8deg) scale(.8);opacity:0}12%{opacity:1}100%{transform:none;opacity:1}}
+@keyframes flap{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.45) translateY(4px)}}.splash .wm{width:200px;animation:rise 1.2s .25s ease both}.splash .em{width:140px;opacity:.7;animation:rise 1.2s .5s ease both}.splash .of{width:84px;position:absolute;bottom:46px;opacity:.9}
+.splash img{filter:brightness(0) invert(1)}
+.splash .wm{animation-delay:.9s!important}.splash .em{animation-delay:1.15s!important}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}}
 details summary::-webkit-details-marker{display:none}
 :focus-visible{outline:2px solid var(--gold-d);outline-offset:2px}
@@ -558,7 +563,7 @@ table.tbl{width:100%;border-collapse:collapse;background:var(--paper);border-rad
   </div>
 
   <div class="phone" id="phone">
-    <div class="splash" id="splash"><img class="bd" data-a="bird" alt=""><img class="wm" data-a="wordmark" alt="Pituach by the Sea"><img class="em" data-a="embrace" alt="Embrace Life"><img class="of" data-a="ofer" alt="Ofer Investments"></div>
+    <div class="splash" id="splash"><span class="bdw"><img class="bd" data-a="bird" alt=""></span><img class="wm" data-a="wordmark" alt="Pituach by the Sea"><img class="em" data-a="embrace" alt="Embrace Life"><img class="of" data-a="ofer" alt="Ofer Investments"></div>
     <header class="top">
       <div class="top-row">
         <button class="icon-btn" aria-label="הגדרות" data-open="settings"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
