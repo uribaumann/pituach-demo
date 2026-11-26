@@ -1644,8 +1644,8 @@ function renderProgress(){
     <div class="hscroll">${[...S.news.filter(x=>x.kind==='construction').map(x=>({cap:x.t,date:'עכשיו',src:x.img,nophoto:!x.img})),...PHOTOS].map(p=>`<div>${p.src||p.img?`<div class="upd ph"><img src="${p.src||A[p.img]}" alt="${esc(p.cap)}"></div>`:`<div class="upd"><img src="${A.bird}" alt=""></div>`}<b style="font-size:14.5px">${esc(p.cap)}</b><div class="small mut">${p.date}${p.src||p.img?' · צילום מהאתר':p.nophoto?'':' · כאן יופיעו תמונות ווידאו מהאתר'}</div></div>`).join('')}</div>
     <h3 class="sub">אבני דרך</h3>
     <div class="tl">${MILESTONES.map((m,i)=>`<div class="tl-item ${i===S.proj.stage?'now':i<S.proj.stage?'done':''}"><b>${m.t}</b><div class="small mut">${i===S.proj.stage?'בביצוע':i<S.proj.stage?'הושלם':m.d}</div></div>`).join('')}</div>
-    <p class="small mut" style="margin-top:10px">שלבי הבנייה מוצגים לצורך מעקב בלבד. מועד המסירה המחייב הוא המועד שבחוזה.</p><div><span class="ltag">דורש אישור משפטי לפני העלייה לאוויר</span> <span class="small mut">הצגת שנים משוערות</span></div>
-    <p class="small mut" style="margin-top:22px">מועדים עתידיים הם הערכה בלבד. מועד המסירה המחייב הוא זה שבחוזה.</p>`;
+    <div style="margin-top:10px"><span class="ltag">דורש אישור משפטי לפני העלייה לאוויר</span> <span class="small mut">הצגת שנים משוערות</span></div>
+    <p class="small mut" style="margin-top:22px">מועדים עתידיים הם הערכה בלבד.</p>`;
 }
 function renderChanges(){
   const lbl={approved:['אושר','ok'],quote:['ממתין לאישורך','warn'],review:['בבדיקה','info'],rejected:['לא אושר','']};
@@ -1679,7 +1679,7 @@ function renderGuide(){
     <div class="card img"><img src="${A.pool_in}" alt=""><div class="in">${AMEN.map(a=>`<div class="list-item" style="padding:9px 0"><span style="color:var(--gold-d)">${ICON.check}</span><div class="grow" style="font-size:14.5px">${a}</div></div>`).join('')}<p class="small mut" style="margin-top:8px">לפי מפרט הבניין בחוברת השיווק.</p></div></div>
     <h3 class="sub">תזכורות בדק ואחריות</h3>
     <div class="card">${WARRANTY.map(w=>`<div class="list-item"><span class="ic-round">${ICON.shield}</span><div class="grow"><b style="font-size:14.5px">${w.t}</b><div class="small mut">בתוקף עד ${fmtDate(w.end)}</div></div></div>`).join('')}
-    <p class="small mut" style="margin-top:8px">התקופות כאן לדוגמה. התקופות המחייבות מופיעות בחוזה ובחוק המכר.</p></div>`;
+    <p class="small mut" style="margin-top:8px">התקופות כאן לדוגמה.</p></div>`;
 }
 function renderPlan(){
   const r=cur();
@@ -1694,7 +1694,7 @@ function renderPlan(){
     <h3 class="sub">הדמיות</h3>
     <div class="gal full">${r.gal.map((g,i)=>galImg(g,i%3===0?'wide':'')).join('')}</div>
     <button class="btn block" style="margin-top:12px" data-open="gallery">לכל הדמיות הפרויקט</button>
-    <p class="small mut" style="margin-top:14px;text-align:center">התוכניות וההדמיות להמחשה בלבד. המחייב הוא המפרט ותוכניות המכר שצורפו לחוזה.</p>`;
+    <p class="small mut" style="margin-top:14px;text-align:center">התוכניות וההדמיות להמחשה בלבד.</p>`;
   $('#planZoom').onclick=e=>{const z=$('#planBox').classList.toggle('zoom');e.target.textContent=z?'הקטנה':'הגדלה'};
 }
 function renderApt(){renderProgress();renderPlan();renderChanges();renderHandover();renderGuide()}
@@ -1713,7 +1713,7 @@ function renderMoney(){
       <div class="grid2" style="margin-top:10px"><div><div class="small mut">מדד בסיס</div><b>${BASE_INDEX}</b></div><div><div class="small mut">מדד אחרון</div><b>${CUR_INDEX} <span class="chip warn">+${((CUR_INDEX/BASE_INDEX-1)*100).toFixed(1)}%</span></b></div></div></div>
     <h3 class="sub">לוח תשלומים</h3>
     <div class="card">${rows.map(r=>`<div class="list-item"><span class="ic-round" style="${r.paid?'background:#DCEFE4;color:var(--ok)':''}">${r.paid?ICON.check:ICON.card}</span><div class="grow"><b style="font-size:14.5px">${r.name}</b><div class="small mut">${fmtDate(r.due)} · ${r.pct}%</div></div><div style="text-align:left"><b>${nis(r.total)}</b><div>${r.paid?'<span class="chip ok">שולם</span>':np&&r.id===np.id?`<button class="btn gold" style="padding:5px 10px;font-size:12.5px;margin-top:3px" data-pay="${r.id}">לתשלום</button>`:'<span class="chip">עתידי</span>'}</div></div></div>`).join('')}</div>
-    <p class="small mut">הסכומים מחושבים לפי המדד האחרון הידוע, ולמידע בלבד. הסכום לתשלום הוא לפי דרישת התשלום שתישלח אליך, והחוזה הוא המסמך הקובע.</p>`;
+    <p class="small mut">הסכומים מחושבים לפי המדד האחרון הידוע, ולמידע בלבד.</p>`;
 }
 
 /* ---------- render: docs ---------- */
