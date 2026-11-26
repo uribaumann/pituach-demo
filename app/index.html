@@ -493,11 +493,19 @@ table.tbl{width:100%;border-collapse:collapse;background:var(--paper);border-rad
 .hs-track::-webkit-scrollbar{display:none}
 .hs-s{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;background:center/cover}
 .hero-full.hs .in{position:relative;pointer-events:none}.hero-full.hs .in :is(button,a){pointer-events:auto}
-.hs-lines{position:absolute;top:16px;left:0;right:0;z-index:2;display:flex;justify-content:center;gap:6px;padding:0 20px}
-.hs-lines button{width:26px;height:20px;padding:0;border:0;background:none;display:flex;align-items:center;cursor:pointer}
-.hs-lines button i{display:block;width:100%;height:2px;border-radius:2px;background:#ffffff66;transition:background .3s,height .3s}
-.hs-lines button.on i{background:#fff;height:3px}
-.hs-cap{position:absolute;top:40px;left:0;right:0;z-index:2;text-align:center;font-size:10px;letter-spacing:2.2px;color:#ffffffd9;text-shadow:0 1px 6px #0006;pointer-events:none}
+.hs-lines{position:absolute;bottom:14px;left:0;right:0;z-index:3;display:flex;justify-content:center;gap:8px;padding:0 20px}
+.hero-full.hs .in{padding-bottom:58px}
+.hs-lines button{width:40px;height:28px;padding:0;border:0;background:none;display:flex;align-items:center;cursor:pointer}
+.hs-lines button:hover i{background:#ffffffb3;height:4px}
+.hs-lines button i{display:block;width:100%;height:3px;border-radius:3px;background:#ffffff66;transition:background .3s,height .2s}
+.hs-lines button.on i{background:#fff;height:4px}
+.hs-nav{position:absolute;top:50%;z-index:3;width:46px;height:46px;margin-top:-23px;border-radius:50%;background:#ffffffd9;color:var(--ink);display:none;place-items:center;box-shadow:0 6px 20px #0003;cursor:pointer;transition:opacity .2s,transform .2s}
+.hs-nav:hover{background:#fff;transform:scale(1.06)}.hs-nav svg{width:20px;height:20px}
+.hs-nav.prev{inset-inline-start:18px}.hs-nav.next{inset-inline-end:18px}
+@media (hover:hover) and (pointer:fine){.hs-nav{display:grid;opacity:.0}.hero-full.hs:hover .hs-nav,.hs-nav:focus-visible{opacity:1}}
+.hs-track.drag{cursor:grabbing;scroll-snap-type:none;scroll-behavior:auto}
+@media (hover:hover) and (pointer:fine){.hs-track{cursor:grab}}
+.hs-cap{position:absolute;top:18px;left:0;right:0;z-index:2;text-align:center;font-size:10px;letter-spacing:2.2px;color:#ffffffd9;text-shadow:0 1px 6px #0006;pointer-events:none}
 .hero-full .ms i{background:#ffffff40}.hero-full .ms i.done{background:#fff}.hero-full .ms i.now{background:#C9D6EA}
 .stagenum{font-size:12px;letter-spacing:2px;opacity:.85}
 .stagebig{font-family:var(--serif);font-weight:300;font-size:34px;line-height:1.15}
@@ -882,7 +890,9 @@ const EN={
 "הודעה לשכנים": "Message to neighbours",
 "ההודעה פורסמה בלוח הבניין": "Posted to the building board",
 "מוקד חירום 24/7": "24/7 emergency line",
-"בגרסה המלאה: חיוג למוקד החירום, 24/7": "In the full version: call the 24/7 emergency line"
+"בגרסה המלאה: חיוג למוקד החירום, 24/7": "In the full version: call the 24/7 emergency line",
+"התמונה הקודמת": "Previous photo",
+"התמונה הבאה": "Next photo"
 },
 "f": {
 "בוקר טוב, ": "Good morning, ",
@@ -1625,19 +1635,28 @@ function personCard(){return `<div class="card"><div class="person"><div class="
 const HERO_MORE=['sea_sunset','tower_sunset','aerial','lobby_desk','pool_in','terrace'];
 function heroSlides(r,st){const ks=[r.hero[st],...HERO_MORE.filter(k=>k!==r.hero[st])].slice(0,5);const cap=k=>(GALLERY.find(g=>g[0]===k)||[0,''])[1];
   return `<div class="hs-track" aria-label="תמונות הפרויקט, החליקו לתמונה הבאה" tabindex="0">${ks.map((k,i)=>`<div class="hs-s" role="img" aria-label="${cap(k)}" data-cap="${i?cap(k):''}" style="background-image:url(${A[k]})"></div>`).join('')}</div>
-  <div class="hs-lines" role="tablist">${ks.map((k,i)=>`<button role="tab" data-hs="${i}" class="${i?'':'on'}" aria-label="תמונה ${i+1} מתוך ${ks.length}" aria-selected="${!i}"><i></i></button>`).join('')}</div><div class="hs-cap"></div>`}
+  <div class="hs-lines" role="tablist">${ks.map((k,i)=>`<button role="tab" data-hs="${i}" class="${i?'':'on'}" aria-label="תמונה ${i+1} מתוך ${ks.length}" aria-selected="${!i}"><i></i></button>`).join('')}</div><div class="hs-cap"></div>
+  <button class="hs-nav prev" data-hsnav="-1" aria-label="התמונה הקודמת"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+  <button class="hs-nav next" data-hsnav="1" aria-label="התמונה הבאה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>`}
 function hsSync(t){const w=t.clientWidth||1,i=Math.round(Math.abs(t.scrollLeft)/w),h=t.parentNode;
   h.querySelectorAll('.hs-lines button').forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-selected',j===i)});
   const s=t.children[i];h.querySelector('.hs-cap').textContent=s?s.dataset.cap:''}
 function hsGo(t,i){const n=t.children.length;i=(i+n)%n;const rtl=getComputedStyle(t).direction==='rtl';t.scrollTo({left:(rtl?-1:1)*i*t.clientWidth,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})}
 document.addEventListener('scroll',e=>{const t=e.target;if(t.classList&&t.classList.contains('hs-track')){t._u=Date.now();clearTimeout(t._sy);t._sy=setTimeout(()=>hsSync(t),60)}},true);
+document.addEventListener('click',e=>{const n=e.target.closest('[data-hsnav]');if(!n)return;const t=n.closest('.hs').querySelector('.hs-track');t._u=Date.now();hsGo(t,Math.round(Math.abs(t.scrollLeft)/t.clientWidth)+ +n.dataset.hsnav)});
+(()=>{let d=null;document.addEventListener('pointerdown',e=>{const t=e.target.closest('.hs-track');if(!t||e.pointerType!=='mouse'||e.button!==0)return;d={t,x:e.clientX,sl:t.scrollLeft,moved:false};t.classList.add('drag')});
+ addEventListener('pointermove',e=>{if(!d)return;const dx=e.clientX-d.x;if(Math.abs(dx)>4)d.moved=true;d.t.scrollLeft=d.sl-dx});
+ addEventListener('pointerup',e=>{if(!d)return;const {t,x,sl,moved}=d;d=null;t.classList.remove('drag');t._u=Date.now();
+  const w=t.clientWidth,rtl=getComputedStyle(t).direction==='rtl',dx=e.clientX-x,i0=Math.round(Math.abs(sl)/w);
+  let i=i0;if(moved&&Math.abs(dx)>w*0.1)i=i0+((rtl?dx>0:dx<0)?1:-1);hsGo(t,Math.max(0,Math.min(t.children.length-1,i)))});
+ document.addEventListener('click',e=>{if(e.target.closest('.hs-track.drag'))e.preventDefault()},true)})();
 document.addEventListener('click',e=>{const b=e.target.closest('[data-hs]');if(!b)return;const t=b.closest('.hs').querySelector('.hs-track');t._u=Date.now();hsGo(t,+b.dataset.hs)});
 document.addEventListener('keydown',e=>{const t=e.target;if(!t.classList||!t.classList.contains('hs-track')||!/Arrow(Left|Right)/.test(e.key))return;e.preventDefault();const i=Math.round(Math.abs(t.scrollLeft)/t.clientWidth),rtl=getComputedStyle(t).direction==='rtl';hsGo(t,i+((e.key==='ArrowLeft')===rtl?1:-1))});
 setInterval(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches||document.hidden)return;const t=document.querySelector('#s-home.on .hs-track, #s-home:not([hidden]) .hs-track');if(!t||!t.offsetParent||Date.now()-(t._u||0)<9000)return;const i=Math.round(Math.abs(t.scrollLeft)/t.clientWidth);t._auto=1;hsGo(t,i+1)},6500);
 function renderHome(){
   const r=cur(), np=nextPayment(), st=S.stage, quote=S.changes.find(c=>c.status==='quote'), openT=S.tickets.filter(t=>t.step<3).length;
   const msg={build:'הבית שלך נבנה, על קו הים של הרצליה פיתוח.',handover:S.appt?`פגישת המסירה שלך: ${esc(S.appt)}`:'הבית מוכן. נשאר רק לבחור מתי לקבל את המפתח.',after:'ברוכים הבאים הביתה.'}[st];
-  const stat=st==='build'?`<div style="margin-top:16px"><div class="stagenum">${stageOf()} · שלבי הבנייה</div><div class="stagebig">${NOW_STAGE}</div>${msBar()}</div>`:'';
+  const stat=st==='build'?`<div style="margin-top:16px"><div class="stagenum">${stageOf()} · שלבי הבנייה</div><div class="stagebig">${NOW_STAGE}</div></div>`:'';
   let next;
   if(st==='build'&&quote)next=['הצעת מחיר ממתינה לאישורך',esc(quote.title)+' · '+nis(quote.price),'לאישור',`data-sign="${quote.id}"`];
   else if(st==='build'&&np)next=['התשלום הבא',fmtDate(np.due)+' · '+nis(np.total),'לתשלום','data-goto="money"'];
