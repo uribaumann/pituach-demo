@@ -250,6 +250,10 @@ dialog form,dialog .dlg{display:flex;flex-direction:column;max-height:calc(100dv
 .a11y-btn{position:fixed;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));width:48px;height:48px;border-radius:50%;background:var(--accent);color:var(--accent-ink);border:0;display:grid;place-items:center;z-index:60;box-shadow:0 6px 20px #3f5a8555}
 .a11y-btn svg{width:26px;height:26px}
 .a11y-pop{position:fixed;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(76px + env(safe-area-inset-bottom,0px));width:290px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 20px 50px #0003;padding:16px;z-index:61;display:flex;flex-direction:column;gap:12px}
+.asbox{display:flex;align-items:center;gap:8px}.assel{width:auto;min-height:36px;padding:4px 10px;font-size:.88em;max-width:190px}
+.bellb{position:relative}.bellb .dot{position:absolute;top:2px;left:2px;min-width:18px;height:18px;border-radius:9px;background:var(--bad);color:#fff;font-size:.68em;font-weight:600;display:grid;place-items:center;padding:0 4px}
+.asnote{display:flex;align-items:center;gap:12px;background:var(--warn-bg);color:var(--ink);border-radius:10px;padding:10px 14px;font-size:.92em;flex-wrap:wrap}.asnote svg{width:18px;height:18px;color:var(--warn)}
+@media (max-width:980px){.asbox label{display:none}.assel{max-width:120px}}
 .confirm-bar{display:flex;gap:8px;align-items:center;background:var(--bad-bg);color:var(--bad);border-radius:8px;padding:6px 10px;font-size:.88em;flex-wrap:wrap}
 .log td{font-size:.92em}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
@@ -391,10 +395,168 @@ function seed(){
   vpRule:true,
   log:[{at:'2026-11-24T09:12',who:'מערכת',t:'נועה כהן ביקשה פגישה עם ספק המטבחים'},{at:'2026-11-22T18:40',who:'מערכת',t:'דניאל פרץ שלח שאלה על המפרט'},{at:'2026-11-20T10:05',who:'מערכת',t:'מאיה אברהם ביקשה ביקור באתר'}],
  }}
+/* ---------- team and permissions ---------- */
+const PEOPLE=[
+{
+"id": "uri",
+"name": "אורי",
+"title": "אחראי קשרי לקוחות · אחראי האפליקציה",
+"dept": "מגורים ושיווק",
+"perm": "admin"
+},
+{
+"id": "resvp",
+"name": "סמנכ״לית מגורים",
+"title": "סמנכ״לית מגורים",
+"dept": "מגורים ושיווק",
+"perm": "res_vp"
+},
+{
+"id": "pm",
+"name": "מנהלת פרויקטים",
+"title": "מנהלת פרויקטים",
+"dept": "מגורים ושיווק",
+"perm": "res_pm"
+},
+{
+"id": "engvp",
+"name": "סמנכ״ל הנדסה",
+"title": "סמנכ״ל הנדסה",
+"dept": "הנדסה",
+"perm": "eng_vp"
+},
+{
+"id": "arch",
+"name": "אדריכלית",
+"title": "אדריכלית",
+"dept": "הנדסה",
+"perm": "eng"
+},
+{
+"id": "planco",
+"name": "מתאמת תכנון",
+"title": "מתאמת תכנון",
+"dept": "הנדסה",
+"perm": "eng"
+},
+{
+"id": "cfo",
+"name": "סמנכ״ל כספים",
+"title": "סמנכ״ל כספים",
+"dept": "כספים",
+"perm": "fin_vp"
+},
+{
+"id": "ctrl",
+"name": "חשבת",
+"title": "חשבת",
+"dept": "כספים",
+"perm": "fin"
+},
+{
+"id": "books",
+"name": "מנהלת חשבונות",
+"title": "מנהלת חשבונות",
+"dept": "כספים",
+"perm": "fin_ops"
+},
+{
+"id": "legal",
+"name": "סמנכ״לית משפטית",
+"title": "סמנכ״לית משפטית",
+"dept": "משפטית",
+"perm": "legal"
+},
+{
+"id": "lx1",
+"name": "עו״ד מנהל הפרויקט",
+"title": "משרד עורכי דין חיצוני",
+"dept": "משפטית · חיצוני",
+"perm": "legal_ext",
+"ext": true
+},
+{
+"id": "lx2",
+"name": "עו״ד במשרד החיצוני",
+"title": "משרד עורכי דין חיצוני",
+"dept": "משפטית · חיצוני",
+"perm": "legal_ext",
+"ext": true
+},
+{
+"id": "lx3",
+"name": "עו״ד במשרד החיצוני",
+"title": "משרד עורכי דין חיצוני",
+"dept": "משפטית · חיצוני",
+"perm": "legal_ext",
+"ext": true
+},
+{
+"id": "mk1",
+"name": "משווק הפרויקט",
+"title": "משווק הפרויקט",
+"dept": "שיווק · חיצוני",
+"perm": "mkt_ext",
+"ext": true
+},
+{
+"id": "mk2",
+"name": "משווקת",
+"title": "משווקת",
+"dept": "שיווק · חיצוני",
+"perm": "mkt_ext",
+"ext": true
+},
+{
+"id": "mk3",
+"name": "משווקת",
+"title": "משווקת",
+"dept": "שיווק · חיצוני",
+"perm": "mkt_ext",
+"ext": true
+},
+{
+"id": "mk4",
+"name": "משווק",
+"title": "משווק",
+"dept": "שיווק · חיצוני",
+"perm": "mkt_ext",
+"ext": true
+},
+{
+"id": "ceo",
+"name": "מנכ״לית",
+"title": "מנכ״לית",
+"dept": "הנהלה",
+"perm": "ceo"
+}
+];
+const P=id=>PEOPLE.find(p=>p.id===id)||{id,name:id,title:'',dept:'',perm:''};
+const ALL_ROUTES=['overview','residents','docs','payments','reminders','messages','requests','changes','defects','suppliers','construction','broadcast','gallery','homebook','config','activity'];
+const PERMS={
+ admin:{t:'מנהל מערכת',r:ALL_ROUTES,d:'הכול, כולל הגדרות והרשאות'},
+ res_vp:{t:'סמנכ״לית מגורים',r:['overview','residents','docs','payments','reminders','messages','requests','changes','construction','broadcast','gallery','activity'],d:'הכול לצפייה, ואישור עדכונים והודעות שמזכירים מועד או מסירה'},
+ res_pm:{t:'ניהול פרויקט',r:['overview','residents','docs','requests','changes','suppliers','construction','messages'],d:'דיירים, בקשות, ספקים ושלבי הבנייה'},
+ eng_vp:{t:'סמנכ״ל הנדסה',r:['overview','construction','changes','defects','docs'],d:'שלבי בנייה, שינויי דיירים וליקויים, ואישור אבני הדרך'},
+ eng:{t:'הנדסה',r:['overview','changes','docs','construction','defects'],d:'שינויי דיירים, הצעות מחיר, תוכניות וצילומים מהאתר'},
+ fin_vp:{t:'סמנכ״ל כספים',r:['overview','payments','reminders','residents','docs'],d:'תשלומים, מדד ותזכורות, לצפייה ולאישור'},
+ fin:{t:'כספים',r:['overview','payments','reminders','residents','docs'],d:'תשלומים, מדד, קבלות ותזכורות'},
+ fin_ops:{t:'הנהלת חשבונות',r:['overview','payments','reminders'],d:'תשלומים ותזכורות. כל תזכורת לדייר יוצאת רק באישורה'},
+ legal:{t:'משפטית',r:['overview','docs','construction','broadcast','activity'],d:'חוזים ומסמכים, ונוסחי עדכונים והודעות'},
+ legal_ext:{t:'משפטית · חיצוני',r:['docs'],d:'חוזים וערבויות בלבד'},
+ mkt_ext:{t:'שיווק · חיצוני',r:['residents'],d:'צירוף רוכש חדש ביום החתימה'},
+ ceo:{t:'הנהלה',r:['overview','residents','payments','construction','activity'],d:'תמונת מצב לצפייה'}};
+const REM_APPROVER='books';
+let AS=(()=>{try{return sessionStorage.getItem('pa-as')||'uri'}catch(e){return 'uri'}})();
+const CUR=()=>P(AS);
+const canSee=r=>(PERMS[CUR().perm]||PERMS.admin).r.includes(r==='resident'?'residents':r);
+const canApproveRem=()=>AS===REM_APPROVER;
+const isVP=()=>CUR().perm==='res_vp';
+const first=s=>s.split(' ')[0];
 const KEY='pituach-admin-v1';
-let ST=LS.get(KEY);if(!ST||ST.v!==1)ST=seed();
+let ST=LS.get(KEY);if(!ST||ST.v!==1)ST=seed();ST.reminders=ST.reminders||[];ST.remLead=ST.remLead||14;
 const save=()=>LS.set(KEY,ST);
-function log(t){ST.log.unshift({at:new Date().toISOString(),who:'אורי',t});ST.log=ST.log.slice(0,300);save()}
+function log(t){ST.log.unshift({at:new Date().toISOString(),who:CUR().name,t});ST.log=ST.log.slice(0,300);save()}
 const resOf=id=>ST.residents.find(r=>r.id===id);
 const rname=id=>id?(resOf(id)||{name:'דייר שהוסר'}).name:'כל הפרויקט';
 const floorTxt=r=>+r.floor?'קומה '+r.floor:'קומת הגן';
@@ -405,6 +567,16 @@ const openChg=()=>ST.changes.filter(c=>c.status==='review');
 const openTk=()=>ST.tickets.filter(t=>t.step<3);
 const unreadN=()=>Object.values(ST.unread).reduce((a,b)=>a+b,0);
 const pendUpd=()=>ST.updates.filter(u=>u.status==='vp');
+const pendRem=()=>ST.reminders.filter(x=>x.status==='pending');
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+const remText=(r,p)=>`שלום ${first(r.name)}, תזכורת: ${p.name} בסך ${nis(p.total)} (כולל הצמדה למדד) מועדו ב-${fmtD(p.due)}. לכל שאלה אני כאן. ${ST.host.name}, קשרי דיירים`;
+/* every unpaid payment in the next 4 months gets a reminder that waits for the bookkeeper's approval */
+function ensureReminders(){let n=0;ST.residents.forEach(r=>payRows(r).filter(p=>!p.paid&&!p.fixed&&(new Date(p.due)-new Date())<122*864e5).forEach(p=>{
+  if(ST.reminders.some(x=>x.res===r.id&&x.pay===p.id&&x.status!=='skipped'))return;
+  ST.reminders.push({id:uid('rm'),res:r.id,pay:p.id,status:'pending',created:today(),by:'מערכת',text:'',sendOn:addDays(p.due,-ST.remLead)});n++}));
+ const t=today();ST.reminders.filter(x=>x.status==='sched'&&x.sendOn<=t).forEach(sendRem);if(n)save();return n}
+function sendRem(x){const r=resOf(x.res),p=r&&payRows(r).find(y=>y.id===x.pay);if(!p)return;x.status='sent';x.sentAt=today();
+ (ST.threads[x.res]||(ST.threads[x.res]=[])).push({me:true,t:x.text||remText(r,p),at:new Date().toISOString()})}
 
 /* ================= auth (demo: checked in the browser) ================= */
 const AUTH_KEY='pituach-admin-auth';
@@ -415,7 +587,7 @@ const saveAuth=()=>LS.set(AUTH_KEY,AUTH);
 const IDLE_MIN=30;let lastAct=Date.now();
 function session(){const s=SS.get('pa-session')||LS.get('pa-remember');return s&&s.exp>Date.now()?s:null}
 function startSession(remember){const s={email:AUTH.email,exp:Date.now()+(remember?7*864e5:12*36e5)};SS.set('pa-session',s);if(remember)LS.set('pa-remember',s)}
-function logout(msg){SS.del('pa-session');try{localStorage.removeItem('pa-remember')}catch(e){}location.hash='';renderLogin(msg)}
+function logout(msg){SS.del('pa-session');AS='uri';try{sessionStorage.removeItem('pa-as')}catch(e){}try{localStorage.removeItem('pa-remember')}catch(e){}location.hash='';renderLogin(msg)}
 ['click','keydown','pointermove'].forEach(e=>addEventListener(e,()=>{lastAct=Date.now()},{passive:true}));
 setInterval(()=>{if(session()&&Date.now()-lastAct>IDLE_MIN*6e4)logout('נותקת אחרי 30 דקות ללא פעילות. אפשר להתחבר שוב.')},30000);
 
@@ -452,14 +624,14 @@ function renderLogin(msg=''){
 /* ================= shell ================= */
 const NAV=[
  ['','סקירה',[['overview','home','סקירה כללית']]],
- ['','דיירים',[['residents','users','דיירים ודירות'],['docs','doc','מסמכים'],['payments','card','תשלומים ומדד'],['messages','chat','הודעות']]],
+ ['','דיירים',[['residents','users','דיירים ודירות'],['docs','doc','מסמכים'],['payments','card','תשלומים ומדד'],['reminders','bell','תזכורות תשלום'],['messages','chat','הודעות']]],
  ['','שירות',[['requests','inbox','בקשות ופגישות'],['changes','pen','שינויי דיירים'],['defects','tool','ליקויים ובדק'],['suppliers','store','ספקים']]],
  ['','תוכן באפליקציה',[['construction','crane','שלבי בנייה ועדכונים'],['broadcast','mega','הודעה לכל הדיירים'],['gallery','image','גלריה ומסך הבית'],['homebook','book','מדריך הדירה ואחריות']]],
  ['','מערכת',[['config','gear','הגדרות והרשאות'],['activity','list','יומן פעולות']]]];
-const BADGE={requests:()=>openReq().length,changes:()=>openChg().length,defects:()=>openTk().length,messages:unreadN,construction:()=>pendUpd().length};
-const VIEW_T={};NAV.forEach(g=>g[2].forEach(n=>VIEW_T[n[0]]=n[2]));
+const BADGE={reminders:()=>pendRem().length,requests:()=>openReq().length,changes:()=>openChg().length,defects:()=>openTk().length,messages:unreadN,construction:()=>pendUpd().length};
+const VIEW_T={};NAV.forEach(g=>g[2].forEach(n=>VIEW_T[n[0]]=n[2]));VIEW_T.reminders='תזכורות תשלום';
 let route='overview',sub='',ui={};
-function parseHash(){const h=location.hash.slice(1);const m=h.match(/^res-([a-z0-9]+)$/);if(m){route='resident';sub=m[1]}else{route=VIEW_T[h]?h:'overview';sub=''}}
+function parseHash(){const h=location.hash.slice(1);const m=h.match(/^res-([a-z0-9]+)$/);if(m){route='resident';sub=m[1]}else{route=VIEW_T[h]?h:'overview';sub=''}if(!canSee(route)){route=ALL_ROUTES.find(canSee)||'overview';sub=''}}
 function shell(){
  $('#app').innerHTML=`<div class="shell">
   <nav class="side" id="side" aria-label="ניווט ראשי">
@@ -471,11 +643,13 @@ function shell(){
    <header class="top">
     <button class="ib menu-btn" id="menuBtn" aria-label="תפריט" aria-controls="side" aria-expanded="false">${I('menu')}</button>
     <div class="search" role="search"><label for="q" class="sr">חיפוש</label>${I('search')}<input type="search" id="q" placeholder="חיפוש דייר, דירה או מסמך" autocomplete="off" aria-controls="sres" aria-expanded="false"><div class="sres" id="sres" hidden></div></div>
-    <div class="me"><button class="ib" id="themeBtn" aria-label="מצב תצוגה בהיר או כהה">${I('sun')}</button><div class="av" aria-hidden="true">א</div><div class="who"><b>אורי</b><div class="small mut">מנהל מערכת</div></div><button class="btn sm" id="logoutBtn">${I('out')}יציאה</button></div>
+    <div class="me"><div class="asbox"><label for="asSel" class="small mut">צפייה בתור</label><select id="asSel" class="assel">${[...new Set(PEOPLE.map(p=>p.dept))].map(d=>`<optgroup label="${esc(d)}">${PEOPLE.filter(p=>p.dept===d).map(p=>`<option value="${p.id}">${esc(p.name)}${p.id==='uri'?' (אני)':''}</option>`).join('')}</optgroup>`).join('')}</select></div><button class="ib" id="themeBtn" aria-label="מצב תצוגה בהיר או כהה">${I('sun')}</button><button class="ib bellb" id="bellBtn" aria-label="התראות"></button><div id="meBox" class="row" style="gap:10px;flex-wrap:nowrap"></div><button class="btn sm" id="logoutBtn">${I('out')}יציאה</button></div>
    </header>
    <main class="content" id="content" tabindex="-1"></main>
   </div></div>`;
  $('#menuBtn').onclick=()=>toggleSide();
+ $('#asSel').onchange=e=>switchAs(e.target.value);
+ $('#bellBtn').onclick=()=>{const n=myAlerts();go(n.route)};
  $('#logoutBtn').onclick=()=>{log('יציאה ממרכז הניהול');logout('יצאת ממרכז הניהול.')};
  $('#themeBtn').onclick=()=>{const r=document.documentElement,cur=r.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.dataset.theme=cur==='dark'?'light':'dark';LS.set('pa-theme',r.dataset.theme)};
  const q=$('#q');q.oninput=()=>searchRun(q.value);q.onkeydown=e=>{if(e.key==='Escape'){q.value='';searchRun('')}if(e.key==='ArrowDown'){const f=$('#sres a');if(f){e.preventDefault();f.focus()}}};
@@ -484,8 +658,8 @@ function shell(){
 }
 function toggleSide(open){const s=$('#side'),o=open??!s.classList.contains('open');s.classList.toggle('open',o);$('#menuBtn').setAttribute('aria-expanded',o);
  let sc=$('.scrim');if(o&&!sc){sc=document.createElement('div');sc.className='scrim';sc.onclick=()=>toggleSide(false);document.body.append(sc)}if(!o&&sc)sc.remove()}
-function navHTML(){return NAV.map(g=>`${g[1]!=='סקירה'?`<div class="grp">${g[1]}</div>`:''}${g[2].map(([id,ic,t])=>{const b=BADGE[id]?BADGE[id]():0;
- return `<a href="#${id}" ${route===id||(route==='resident'&&id==='residents')?'aria-current="page"':''}>${I(ic)}<span>${t}</span>${b?`<span class="badge" aria-label="${b} ממתינים">${b}</span>`:''}</a>`}).join('')}`).join('')}
+function navHTML(){return NAV.map(g=>{const items=g[2].filter(n=>canSee(n[0]));if(!items.length)return '';return `${g[1]!=='סקירה'?`<div class="grp">${g[1]}</div>`:''}${items.map(([id,ic,t])=>{const b=BADGE[id]?BADGE[id]():0;
+ return `<a href="#${id}" ${route===id||(route==='resident'&&id==='residents')?'aria-current="page"':''}>${I(ic)}<span>${t}</span>${b?`<span class="badge" aria-label="${b} ממתינים">${b}</span>`:''}</a>`}).join('')}`}).join('')}
 function searchRun(v){const box=$('#sres'),q=v.trim().toLowerCase();if(!q){box.hidden=true;$('#q').setAttribute('aria-expanded','false');return}
  const hits=[...ST.residents.filter(r=>(r.name+r.co+r.apt+r.phone+r.email+' '+r.unit).toLowerCase().includes(q)).map(r=>[`#res-${r.id}`,'users',r.name,r.apt+' · דירה '+r.unit]),
   ...ST.docs.filter(d=>(d.title+d.file+d.cat).toLowerCase().includes(q)).slice(0,6).map(d=>[`#docs`,'doc',d.title,rname(d.res)+' · '+d.cat]),
@@ -493,9 +667,19 @@ function searchRun(v){const box=$('#sres'),q=v.trim().toLowerCase();if(!q){box.h
  box.innerHTML=hits.length?hits.map(h=>`<a href="${h[0]}">${I(h[1])}<span class="grow"><b>${esc(h[2])}</b><div class="small mut">${esc(h[3])}</div></span></a>`).join(''):'<div class="mut small" style="padding:10px">לא נמצאו תוצאות</div>';
  box.hidden=false;$('#q').setAttribute('aria-expanded','true');$$('#sres a').forEach(a=>a.onclick=()=>{box.hidden=true;$('#q').value=''})}
 function go(h){if(location.hash==='#'+h)render();else location.hash=h}
+function myAlerts(){if(canApproveRem())return{n:pendRem().length,route:'reminders',t:'תזכורות תשלום לאישורך'};if(isVP())return{n:pendUpd().length+ST.broadcasts.filter(b=>b.status==='vp').length,route:'construction',t:'עדכונים לאישורך'};
+ const n=openReq().length+openChg().length+openTk().length+unreadN();return{n:canSee('requests')?n:0,route:canSee('requests')?'overview':ALL_ROUTES.find(canSee),t:'דברים שמחכים לטיפול'}}
+function topBar(){const c=CUR(),a=myAlerts();$('#meBox').innerHTML=`<div class="av" aria-hidden="true">${esc(c.name[0])}</div><div class="who"><b>${esc(c.name)}</b><div class="small mut">${esc(c.title)}</div></div>`;
+ $('#bellBtn').innerHTML=I('bell')+(a.n?`<span class="dot">${a.n}</span>`:'');$('#bellBtn').setAttribute('aria-label',a.n?`${a.n} ${a.t}`:'אין התראות חדשות');$('#asSel').value=AS;
+ document.querySelector('.asnote')?.remove();if(AS!=='uri')$('#content').insertAdjacentHTML('afterbegin',`<div class="asnote" role="status">${I('eye')}<span class="grow">תצוגה לדוגמה: כך תיראה המערכת אצל <b>${esc(c.name)}</b>, ${esc(c.title)}, כשהמשתמש ייפתח.</span><button class="btn sm" data-act="asBack">חזרה לתצוגה שלי</button></div>`)}
+function switchAs(id){AS=id;try{sessionStorage.setItem('pa-as',id)}catch(e){}ui={};if(!canSee(route))location.hash=ALL_ROUTES.find(canSee);render(true);if(id!=='uri')toast('צפייה בתור '+P(id).name);setTimeout(popAlerts,350)}
+function popAlerts(){if(!canApproveRem())return;const list=pendRem();if(!list.length||$('#dlg').open)return;
+ dialog(`<div class="dlg"><div class="dh"><div><div class="small mut">${esc(CUR().name)}, יש משהו שמחכה לך</div><h2>${list.length} תזכורות תשלום ממתינות לאישורך</h2></div><button class="ib" data-close aria-label="סגירה">${I('x')}</button></div>
+  <div class="db"><p class="mut">תזכורת לדייר יוצאת רק אחרי שאת מאשרת. אחרי האישור היא נשלחת לבד, ${ST.remLead} ימים לפני מועד התשלום.</p><div class="list">${list.slice(0,6).map(x=>{const r=resOf(x.res),p=r&&payRows(r).find(y=>y.id===x.pay);return p?`<div class="li"><span class="ic">${I('card')}</span><div class="grow"><b style="font-weight:500">${esc(r.name)}</b> · ${esc(p.name)}<div class="small mut num">${nis(p.total)} · מועד ${fmtD(p.due)}${x.by!=='מערכת'?' · ביקש/ה: '+esc(x.by):''}</div></div></div>`:''}).join('')}</div>${list.length>6?`<p class="small mut">ועוד ${list.length-6}</p>`:''}</div>
+  <div class="df"><button class="btn pri" data-act="goRem">${I('check')}לבדיקה ואישור</button><button class="btn" data-close>אחר כך</button></div></div>`)}
 function render(focus){parseHash();$('#nav').innerHTML=navHTML();const v=VIEWS[route]||VIEWS.overview;$('#content').innerHTML=v();
  document.title=(route==='resident'?(resOf(sub)||{}).name:VIEW_T[route])+' · Pituach Admin';
- AFTER.forEach(f=>f());AFTER=[];if(focus){$('#content').focus({preventScroll:true});scrollTo(0,0)}toggleSide(false)}
+ AFTER.forEach(f=>f());AFTER=[];topBar();if(focus){$('#content').focus({preventScroll:true});scrollTo(0,0)}toggleSide(false)}
 let AFTER=[];
 const pageHead=(eye,t,p,acts='')=>`<div class="ph"><div><div class="eyebrow">${eye}</div><h1>${t}</h1>${p?`<p>${p}</p>`:''}</div><div class="row">${acts}</div></div>`;
 const chip=(t,c='')=>`<span class="chip ${c}">${esc(t)}</span>`;
@@ -510,12 +694,14 @@ VIEWS.overview=()=>{
   ...openChg().map(c=>({k:'בקשת שינוי',t:c.title,res:c.res,h:'changes',ic:'pen',d:c.date})),
   ...openTk().map(t=>({k:'ליקוי · '+TSTEPS[t.step],t:t.desc,res:t.res,h:'defects',ic:'tool',d:t.date})),
   ...Object.entries(ST.unread).filter(e=>e[1]).map(([id,n])=>({k:'הודעה חדשה',t:(ST.threads[id]||[]).filter(m=>!m.me).slice(-1)[0]?.t||'',res:id,h:'messages',ic:'chat',d:''})),
-  ...pendUpd().map(u=>({k:'עדכון ממתין לאישור סמנכ״ל',t:u.title,res:null,h:'construction',ic:'crane',d:u.date}))];
+  ...pendUpd().map(u=>({k:'עדכון ממתין לאישור '+P('resvp').name,t:u.title,res:null,h:'construction',ic:'crane',d:u.date,vp:1})),
+  ...ST.broadcasts.filter(b=>b.status==='vp').map(b=>({k:'הודעה ממתינה לאישור '+P('resvp').name,t:b.title,res:null,h:'broadcast',ic:'mega',d:b.date,vp:1})),
+  ...(canApproveRem()?pendRem().map(x=>{const r=resOf(x.res),p=r&&payRows(r).find(y=>y.id===x.pay);return{k:'תזכורת תשלום לאישורך',t:p?`${p.name} · ${nis(p.total)} · מועד ${fmtD(p.due)}`:'',res:x.res,h:'reminders',ic:'bell',d:x.created}}):[])].filter(t=>canSee(t.h)&&(!t.vp||isVP()||AS==='uri'));
  const h=new Date().getHours(),gr=h<12?'בוקר טוב':h<17?'צהריים טובים':'ערב טוב';
- return pageHead('OVERVIEW',`${gr}, אורי`,`${new Date().toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · ${tasks.length?`${tasks.length} דברים מחכים לך`:'אין משימות פתוחות'}`,
-   `<button class="btn" data-act="upload">${I('upload')}העלאת מסמך</button><button class="btn pri" data-act="newUpdate">${I('crane')}פרסום עדכון</button>`)+
+ return pageHead('OVERVIEW',`${gr}, ${esc(first(CUR().name))}`,`${new Date().toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · ${tasks.length?`${tasks.length} דברים מחכים לך`:'אין משימות פתוחות'}`,
+   (canSee('docs')?`<button class="btn" data-act="upload">${I('upload')}העלאת מסמך</button>`:'')+(canSee('construction')?`<button class="btn pri" data-act="newUpdate">${I('crane')}פרסום עדכון</button>`:'')+(canApproveRem()&&pendRem().length?`<a class="btn pri" href="#reminders">${I('bell')}${pendRem().length} תזכורות לאישור</a>`:''))+
  `<div class="tiles">
-  <a class="tile" href="#requests"><span class="k">ממתינים לטיפול</span><span class="v num">${tasks.length}</span><span class="s">בקשות, שינויים, ליקויים והודעות</span></a>
+  <a class="tile" href="#${tasks[0]?.h||'overview'}"><span class="k">ממתינים לטיפול</span><span class="v num">${tasks.length}</span><span class="s">${canApproveRem()?'תזכורות תשלום לאישור':'בקשות, שינויים, ליקויים והודעות'}</span></a>
   <a class="tile" href="#residents"><span class="k">דיירים באפליקציה</span><span class="v num">${ST.residents.length}</span><span class="s">פיילוט · פיתוח על הים</span></a>
   <a class="tile" href="#payments"><span class="k">תשלומים ב-4 החודשים הקרובים</span><span class="v num">${soon.length}</span><span class="s num">${nis(soon.reduce((a,x)=>a+x.p.total,0))} כולל הצמדה</span></a>
   <a class="tile" href="#construction"><span class="k">שלב הבנייה · ${ST.stage+1}/${ST.milestones.length}</span><span class="v" style="font-size:1.5em;padding:6px 0 4px">${esc(ST.milestones[ST.stage].t)}</span><div class="bar" aria-hidden="true">${ST.milestones.map((m,i)=>`<i class="${i<=ST.stage?'on':''}"></i>`).join('')}</div></a>
@@ -526,7 +712,7 @@ VIEWS.overview=()=>{
   </section>
   <div style="display:flex;flex-direction:column;gap:22px">
    <section class="panel" aria-labelledby="h-q"><div class="ph2"><h2 id="h-q">פעולות מהירות</h2></div><div class="list">
-    ${[['upload','upload','העלאת מסמכים','חוזים, תוכניות, קבלות ותעודות'],['broadcast','mega','הודעה לכל הדיירים','נשלחת כהתראה באפליקציה'],['photo','image','צילום חדש מהאתר','נכנס לעדכוני הבנייה'],['index','card','עדכון מדד תשומות הבנייה',`כרגע ${ST.index.cur} · ${esc(ST.index.month)}`]].map(a=>`<button class="li" style="border-inline:0;border-top:0;background:none;text-align:right;width:100%" data-act="${a[0]}"><span class="ic">${I(a[1])}</span><span class="grow"><b style="font-weight:500">${a[2]}</b><div class="small mut">${a[3]}</div></span>${I('chev')}</button>`).join('')}
+    ${[['upload','upload','העלאת מסמכים','חוזים, תוכניות, קבלות ותעודות','docs'],['broadcast','mega','הודעה לכל הדיירים','נשלחת כהתראה באפליקציה','broadcast'],['photo','image','צילום חדש מהאתר','נכנס לעדכוני הבנייה','construction'],['index','card','עדכון מדד תשומות הבנייה',`כרגע ${ST.index.cur} · ${esc(ST.index.month)}`,'payments'],['goRem','bell','תזכורות תשלום',`${pendRem().length} ממתינות לאישור ${P(REM_APPROVER).name}`,'reminders']].filter(a=>canSee(a[4])).map(a=>`<button class="li" style="border-inline:0;border-top:0;background:none;text-align:right;width:100%" data-act="${a[0]}"><span class="ic">${I(a[1])}</span><span class="grow"><b style="font-weight:500">${a[2]}</b><div class="small mut">${a[3]}</div></span>${I('chev')}</button>`).join('')}
    </div></section>
    <section class="panel" aria-labelledby="h-l"><div class="ph2"><h2 id="h-l">פעילות אחרונה</h2><a class="btn ghost sm" href="#activity">ליומן המלא</a></div><div class="list">
     ${ST.log.slice(0,5).map(l=>`<div class="li" style="padding:9px 0"><div class="grow"><div>${esc(l.t)}</div><div class="small mut">${esc(l.who)} · ${fmtDT(l.at)}</div></div></div>`).join('')}
@@ -628,13 +814,28 @@ VIEWS.payments=()=>{const all=ST.residents.flatMap(r=>payRows(r).filter(p=>!p.pa
  return pageHead('PAYMENTS','תשלומים ומדד','ההצמדה מחושבת אוטומטית לפי מדד תשומות הבנייה. כשמעדכנים מדד, הסכומים מתעדכנים אצל כל הדיירים.',`<button class="btn pri" data-act="index">${I('card')}עדכון מדד</button>`)+
  `<div class="tiles"><div class="tile"><span class="k">מדד בסיס (בחוזה)</span><span class="v num">${ST.index.base}</span></div><div class="tile"><span class="k">מדד נוכחי · ${esc(ST.index.month)}</span><span class="v num">${ST.index.cur}</span></div><div class="tile"><span class="k">שיעור ההצמדה</span><span class="v num">${((ST.index.cur/ST.index.base-1)*100).toFixed(2)}%</span></div><div class="tile"><span class="k">תשלומים פתוחים</span><span class="v num">${all.length}</span><span class="s num">${nis(all.reduce((a,x)=>a+x.p.total,0))}</span></div></div>
  <div class="cols">
- <section class="panel" aria-labelledby="h-up"><div class="ph2"><h2 id="h-up">התשלומים הבאים</h2></div><div class="tbl-wrap"><table><thead><tr><th scope="col">מועד</th><th scope="col">דייר</th><th scope="col">תשלום</th><th scope="col">סכום כולל הצמדה</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
-  ${all.slice(0,ui.pAll?99:10).map(({r,p})=>`<tr><td class="num">${fmtD(p.due)}${new Date(p.due)<new Date()?' '+chip('באיחור','bad'):''}</td><td>${resLink(r.id)}</td><td>${esc(p.name)}</td><td class="num t">${nis(p.total)}</td><td class="act"><button class="btn sm" data-act="remind" data-res="${r.id}" data-p="${p.id}">${I('bell')}תזכורת</button> <button class="btn sm pri" data-act="pay" data-res="${r.id}" data-p="${p.id}">שולם</button></td></tr>`).join('')}
+ <section class="panel" aria-labelledby="h-up"><div class="ph2"><h2 id="h-up">התשלומים הבאים</h2></div><div class="tbl-wrap"><table><thead><tr><th scope="col">מועד</th><th scope="col">דייר</th><th scope="col">תשלום</th><th scope="col">סכום כולל הצמדה</th><th scope="col">תזכורת</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
+  ${all.slice(0,ui.pAll?99:10).map(({r,p})=>`<tr><td class="num">${fmtD(p.due)}${new Date(p.due)<new Date()?' '+chip('באיחור','bad'):''}</td><td>${resLink(r.id)}</td><td style="white-space:nowrap">${esc(p.name)}</td><td class="num t">${nis(p.total)}</td><td>${remChip(r.id,p.id)}</td><td class="act">${remState(r.id,p.id)?'':`<button class="btn sm" data-act="remind" data-res="${r.id}" data-p="${p.id}">${I('bell')}תזכורת</button> `}<button class="btn sm pri" data-act="pay" data-res="${r.id}" data-p="${p.id}">שולם</button></td></tr>`).join('')}
  </tbody></table></div>${all.length>10?`<button class="btn ghost sm" style="margin-top:10px" data-act="pAll">${ui.pAll?'הצגת פחות':`הצגת כל ${all.length} התשלומים`}</button>`:''}</section>
  <section class="panel" aria-labelledby="h-sch"><div class="ph2"><h2 id="h-sch">תבנית לוח התשלומים</h2>${pctSum!==100?chip(`סה״כ ${pctSum}%, צריך 100%`,'bad'):chip('סה״כ 100%','ok')}</div>
   <form id="schForm"><div class="tbl-wrap"><table><thead><tr><th scope="col">אבן דרך</th><th scope="col">%</th><th scope="col">מועד משוער</th></tr></thead><tbody>
   ${ST.schedule.map((p,i)=>`<tr><td><label class="sr" for="sn${i}">שם התשלום</label><input type="text" id="sn${i}" value="${esc(p.name)}" ${p.fixed?'disabled':''}></td><td style="width:84px"><label class="sr" for="sp${i}">אחוז</label><input type="number" id="sp${i}" value="${p.pct}" min="0" max="100" ${p.fixed?'disabled':''}></td><td><label class="sr" for="sd${i}">מועד</label><input type="date" id="sd${i}" value="${p.due}" ${p.fixed?'disabled':''}></td></tr>`).join('')}
   </tbody></table></div><div class="row" style="margin-top:12px"><button class="btn pri" type="submit">שמירת התבנית</button><span class="small mut">תשלומים ששולמו נעולים לעריכה.</span></div></form></section></div>`};
+
+const remState=(res,pay)=>ST.reminders.find(x=>x.res===res&&x.pay===pay&&x.status!=='skipped');
+function remChip(res,pay){const x=remState(res,pay);if(!x)return '<span class="mut small">—</span>';return x.status==='pending'?chip('ממתינה ל'+first(P(REM_APPROVER).name),'warn'):x.status==='sched'?chip('תישלח '+fmtD(x.sendOn),'info'):chip('נשלחה '+fmtD(x.sentAt),'ok')}
+/* ---- reminders ---- */
+VIEWS.reminders=()=>{const tab=ui.remt||'pending';const L={pending:pendRem(),sched:ST.reminders.filter(x=>x.status==='sched'),sent:ST.reminders.filter(x=>x.status==='sent'),skipped:ST.reminders.filter(x=>x.status==='skipped')};
+ const ap=P(REM_APPROVER),mine=canApproveRem();
+ const rows=L[tab].map(x=>{const r=resOf(x.res),p=r&&payRows(r).find(y=>y.id===x.pay);if(!p)return '';return `<tr>${tab==='pending'&&mine?`<td><input type="checkbox" data-remsel="${x.id}" checked aria-label="לסמן את התזכורת של ${esc(r.name)}"></td>`:''}
+  <td>${resLink(r.id)}<div class="small mut">דירה ${esc(r.unit)}</div></td><td>${esc(p.name)}</td><td class="num">${fmtD(p.due)}</td><td class="num t">${nis(p.total)}</td>
+  <td class="num">${tab==='sent'?fmtD(x.sentAt):tab==='skipped'?esc(x.why||''):fmtD(x.sendOn<=today()?today():x.sendOn)}</td><td class="small">${esc(x.by)}${x.approvedBy?`<div class="mut">אישרה: ${esc(x.approvedBy)}</div>`:''}</td>
+  <td class="act">${tab==='pending'?(mine?`<button class="btn sm" data-act="remEdit" data-r="${x.id}">${I('edit')}נוסח</button> <button class="btn sm" data-act="remSkip" data-r="${x.id}">דילוג</button> <button class="btn sm pri" data-act="remOk" data-r="${x.id}">${I('check')}אישור</button>`:chip('ממתינה ל'+ap.name,'warn')):tab==='sched'?`${mine||AS==='uri'?`<button class="btn sm" data-act="remNow" data-r="${x.id}">שליחה עכשיו</button>`:''}`:''}</td></tr>`}).join('');
+ return pageHead('REMINDERS','תזכורות תשלום',`כל תזכורת לדייר יוצאת רק אחרי אישור של ${esc(ap.name)}, ${esc(ap.title)}. המערכת מכינה תזכורת לכל תשלום ב-4 החודשים הקרובים, ואחרי האישור היא נשלחת לבד ${ST.remLead} ימים לפני המועד.`,
+  tab==='pending'&&mine&&L.pending.length?`<button class="btn pri" data-act="remBulk">${I('check')}אישור המסומנות</button>`:'')+
+ (!mine&&L.pending.length?`<div class="notice">${I('lock').replace('<svg','<svg style="width:16px;height:16px;vertical-align:-3px"')} ${L.pending.length} תזכורות ממתינות לאישור של <b>${esc(ap.name)}</b>. היא מקבלת התראה ברגע שתזכורת חדשה נוצרת.${AS==='uri'?` <button class="btn ghost sm" data-act="asUser" data-u="${ap.id}">לראות איך זה נראה אצלה</button>`:''}</div>`:'')+
+ `<section class="panel"><div class="ph2"><div class="seg" role="group" aria-label="סטטוס">${[['pending','ממתינות לאישור'],['sched','מתוזמנות'],['sent','נשלחו'],['skipped','דולגו']].map(([k,t])=>`<button aria-pressed="${tab===k}" data-remt="${k}">${t}${L[k].length?` · ${L[k].length}`:''}</button>`).join('')}</div></div>
+ ${rows?`<div class="tbl-wrap"><table><thead><tr>${tab==='pending'&&mine?'<th scope="col"><span class="sr">בחירה</span></th>':''}<th scope="col">דייר</th><th scope="col">תשלום</th><th scope="col">מועד התשלום</th><th scope="col">סכום כולל הצמדה</th><th scope="col">${tab==='sent'?'נשלחה':tab==='skipped'?'סיבה':'תישלח ב-'}</th><th scope="col">נוצרה ע״י</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>${rows}</tbody></table></div>`:`<div class="empty">${tab==='pending'?'אין תזכורות שממתינות לאישור.':'אין תזכורות כאן.'}</div>`}</section>`};
 
 /* ---- requests ---- */
 function reqTable(list,inRes){return list.length?`<div class="tbl-wrap"><table><thead><tr><th scope="col">סוג</th>${inRes?'':'<th scope="col">דייר</th>'}<th scope="col">פרטים</th><th scope="col">מועד מבוקש</th><th scope="col">התקבלה</th><th scope="col">סטטוס</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
@@ -675,7 +876,7 @@ VIEWS.suppliers=()=>pageHead('SUPPLIERS','ספקים','הספקים שהדייר
  </tbody></table></div><p class="small mut" style="margin-top:12px">שמות הספקים בסוגריים הם מקום שמור. מעדכנים לשמות האמיתיים מתוך הסכמי הספקים של הפרויקט.</p></section>`;
 
 /* ---- construction ---- */
-VIEWS.construction=()=>pageHead('CONSTRUCTION','שלבי בנייה ועדכונים','הדיירים רואים שלבים ולא אחוזים. עדכון שמזכיר מועד, מסירה או אכלוס ממתין לאישור סמנכ״ל מגורים לפני שהוא יוצא.',`<button class="btn" data-act="photo">${I('image')}צילום מהאתר</button><button class="btn pri" data-act="newUpdate">${I('plus')}עדכון חדש</button>`)+
+VIEWS.construction=()=>pageHead('CONSTRUCTION','שלבי בנייה ועדכונים',`הדיירים רואים שלבים ולא אחוזים. עדכון שמזכיר מועד, מסירה או אכלוס ממתין לאישור ${esc(P('resvp').name)}, ${esc(P('resvp').title)}, לפני שהוא יוצא.`,`<button class="btn" data-act="photo">${I('image')}צילום מהאתר</button><button class="btn pri" data-act="newUpdate">${I('plus')}עדכון חדש</button>`)+
  `<div class="cols"><section class="panel" aria-labelledby="h-ms"><div class="ph2"><h2 id="h-ms">אבני הדרך</h2><span class="small mut">מסירה משוערת: ${esc(ST.delivery)}</span></div>
   <fieldset style="border:0;padding:0;margin:0"><legend class="sr">השלב הנוכחי</legend><div class="ms">${ST.milestones.map((m,i)=>`<div class="m ${i<ST.stage?'done':i===ST.stage?'now':''}"><span class="dot">${i<ST.stage?I('check'):''}</span><div><b style="font-weight:500">${esc(m.t)}</b><div class="small mut">${i<ST.stage?'הושלם':i===ST.stage?'בביצוע עכשיו':'צפוי · '+esc(m.d)}</div></div>
   <label class="check"><input type="radio" name="stage" value="${i}" ${i===ST.stage?'checked':''}> השלב הנוכחי</label></div>`).join('')}</div></fieldset>
@@ -683,17 +884,17 @@ VIEWS.construction=()=>pageHead('CONSTRUCTION','שלבי בנייה ועדכונ
  <section class="panel" aria-labelledby="h-ph"><div class="ph2"><h2 id="h-ph">צילומים מהאתר</h2><button class="btn sm" data-act="photo">${I('upload')}הוספה</button></div><div class="gal" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
   ${ST.photos.map(p=>`<figure class="gi" style="margin:0"><div class="im" style="background-image:url(${imgUrl(p.src)})" role="img" aria-label="${esc(p.cap)}"></div><figcaption class="bd small"><span>${esc(p.cap)}</span><span class="mut num">${fmtD(p.date)}</span></figcaption></figure>`).join('')}</div></section></div>
  <section class="panel" aria-labelledby="h-up2"><div class="ph2"><h2 id="h-up2">עדכונים לדיירים</h2></div><div class="list">
-  ${ST.updates.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(u=>`<div class="li" style="align-items:flex-start">${u.img?`<div style="width:120px;aspect-ratio:4/3;border-radius:8px;background:var(--soft) url(${imgUrl(u.img)}) center/cover;flex:none"></div>`:''}<div class="grow"><div class="row"><b style="font-weight:500">${esc(u.title)}</b>${u.status==='pub'?chip('פורסם','ok'):u.status==='vp'?chip('ממתין לאישור סמנכ״ל מגורים','warn'):chip('טיוטה','plain')}</div><p class="mut" style="margin-top:4px">${esc(u.text)}</p><div class="small mut num" style="margin-top:4px">${fmtD(u.date)}</div></div>
-  ${u.status==='vp'?`<button class="btn sm pri" data-act="vpOk" data-u="${u.id}">סמנכ״ל אישר · פרסום</button>`:u.status==='draft'?`<button class="btn sm pri" data-act="pubUpd" data-u="${u.id}">פרסום</button>`:''}</div>`).join('')}</div></section>`;
+  ${ST.updates.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(u=>`<div class="li" style="align-items:flex-start">${u.img?`<div style="width:120px;aspect-ratio:4/3;border-radius:8px;background:var(--soft) url(${imgUrl(u.img)}) center/cover;flex:none"></div>`:''}<div class="grow"><div class="row"><b style="font-weight:500">${esc(u.title)}</b>${u.status==='pub'?chip(u.approvedBy?'פורסם · אישרה '+u.approvedBy:'פורסם','ok'):u.status==='vp'?chip('ממתין לאישור '+P('resvp').name,'warn'):chip('טיוטה','plain')}</div><p class="mut" style="margin-top:4px">${esc(u.text)}</p><div class="small mut num" style="margin-top:4px">${fmtD(u.date)}</div></div>
+  ${u.status==='vp'?(isVP()?`<button class="btn sm pri" data-act="vpOk" data-u="${u.id}">${I('check')}אישור ופרסום</button>`:chip('ממתין ל'+P('resvp').name,'warn')):u.status==='draft'?`<button class="btn sm pri" data-act="pubUpd" data-u="${u.id}">פרסום</button>`:''}</div>`).join('')}</div></section>`;
 
 /* ---- broadcast ---- */
 const BCAT={critical:'חשוב',payments:'תשלומים',construction:'בנייה',community:'קהילה'};
 VIEWS.broadcast=()=>pageHead('BROADCAST','הודעה לכל הדיירים','נשלחת לכל דייר כהודעה אישית ומופיעה בהתראות באפליקציה. הדייר יכול לכבות קטגוריות, חוץ מ"חשוב".')+
  `<div class="cols"><section class="panel"><form id="bcForm" novalidate><div class="grid2">${fld('bc-title','כותרת','','text',{req:1,span:1})}${fld('bc-text','תוכן ההודעה','','textarea',{req:1,span:1})}
   ${fld('bc-cat','קטגוריה','construction','select',{options:Object.entries(BCAT)})}${fld('bc-to','נמענים','all','select',{options:[['all','כל הדיירים ('+ST.residents.length+')'],...ST.residents.map(r=>[r.id,r.name])]})}</div>
-  <div id="bcWarn" class="notice" style="margin-top:14px" hidden><b>ההודעה מזכירה מועד או מסירה.</b> היא תישמר כממתינה לאישור סמנכ״ל מגורים ולא תישלח עד שתאושר.</div>
+  <div id="bcWarn" class="notice" style="margin-top:14px" hidden><b>ההודעה מזכירה מועד או מסירה.</b> היא תישמר כממתינה לאישור ${esc(P('resvp').name)} ולא תישלח עד שתאושר.</div>
   <div class="row" style="margin-top:16px"><button class="btn pri" type="submit">${I('mega')}שליחה</button></div></form></section>
- <section class="panel"><div class="ph2"><h2>נשלחו</h2></div><div class="list">${ST.broadcasts.slice().reverse().map(b=>`<div class="li" style="align-items:flex-start"><span class="ic">${I('mega')}</span><div class="grow"><div class="row"><b style="font-weight:500">${esc(b.title)}</b>${chip(BCAT[b.cat],'plain')}${b.status==='vp'?chip('ממתין לסמנכ״ל','warn'):''}</div><p class="small mut">${esc(b.text)}</p><div class="small mut">${b.to==='all'?'כל הדיירים':esc(rname(b.to))} · ${fmtD(b.date)}</div></div>${b.status==='vp'?`<button class="btn sm pri" data-act="bcOk" data-b="${b.id}">סמנכ״ל אישר · שליחה</button>`:''}</div>`).join('')||'<div class="empty">עוד לא נשלחו הודעות.</div>'}</div></section></div>`;
+ <section class="panel"><div class="ph2"><h2>נשלחו</h2></div><div class="list">${ST.broadcasts.slice().reverse().map(b=>`<div class="li" style="align-items:flex-start"><span class="ic">${I('mega')}</span><div class="grow"><div class="row"><b style="font-weight:500">${esc(b.title)}</b>${chip(BCAT[b.cat],'plain')}${b.status==='vp'?chip('ממתין ל'+P('resvp').name,'warn'):''}</div><p class="small mut">${esc(b.text)}</p><div class="small mut">${b.to==='all'?'כל הדיירים':esc(rname(b.to))} · ${fmtD(b.date)}</div></div>${b.status==='vp'?(isVP()?`<button class="btn sm pri" data-act="bcOk" data-b="${b.id}">${I('check')}אישור ושליחה</button>`:''):''}</div>`).join('')||'<div class="empty">עוד לא נשלחו הודעות.</div>'}</div></section></div>`;
 
 /* ---- gallery ---- */
 VIEWS.gallery=()=>{const f=ui.gcat||'all';const list=ST.gallery.filter(g=>f==='all'||(f==='hero'?ST.hero.includes(g.id):g.cat===f));
@@ -717,12 +918,17 @@ VIEWS.homebook=()=>pageHead('HOME BOOK','מדריך הדירה ואחריות','
 /* ---- config ---- */
 VIEWS.config=()=>pageHead('SETTINGS','הגדרות והרשאות','מי נכנס למרכז הניהול, איך הדיירים פוגשים אותך באפליקציה, וכללי האישור.')+
  `<div class="cols even"><section class="panel" aria-labelledby="h-host"><div class="ph2"><h2 id="h-host">איש הקשר באפליקציה</h2></div><form id="hostForm" novalidate><div class="grid2">${fld('h-name','שם',ST.host.name,'text',{req:1})}${fld('h-role','תפקיד כפי שהדייר רואה',ST.host.role,'text',{req:1})}${fld('h-hours','שעות מענה',ST.host.hours)}${fld('h-reply','זמן מענה שמוצג לדייר',ST.host.reply)}</div><button class="btn pri" style="margin-top:14px" type="submit">שמירה</button></form></section>
- <section class="panel" aria-labelledby="h-rule"><div class="ph2"><h2 id="h-rule">כללי אישור</h2></div><label class="check" style="align-items:flex-start"><span class="switch"><input type="checkbox" id="vpRule" ${ST.vpRule?'checked':''}><i></i></span><span>עדכון או הודעה שמזכירים מועד, מסירה או אכלוס ממתינים לאישור סמנכ״ל מגורים<div class="small mut">מומלץ להשאיר פעיל. מונע התחייבות למועדים בלי אישור.</div></span></label>
+ <section class="panel" aria-labelledby="h-rule"><div class="ph2"><h2 id="h-rule">כללי אישור</h2></div><label class="check" style="align-items:flex-start"><span class="switch"><input type="checkbox" id="vpRule" ${ST.vpRule?'checked':''}><i></i></span><span>עדכון או הודעה שמזכירים מועד, מסירה או אכלוס ממתינים לאישור ${esc(P('resvp').name)}, ${esc(P('resvp').title)}<div class="small mut">מומלץ להשאיר פעיל. מונע התחייבות למועדים בלי אישור.</div></span></label>
   <div class="field" style="margin-top:18px"><label for="deliv">שנת מסירה משוערת שמוצגת לדיירים</label><input type="text" id="deliv" value="${esc(ST.delivery)}" style="max-width:160px"></div></section></div>
- <section class="panel" aria-labelledby="h-users"><div class="ph2"><h2 id="h-users">משתמשים והרשאות</h2>${chip('כרגע: מנהל מערכת בלבד','info')}</div><div class="tbl-wrap"><table><thead><tr><th scope="col">משתמש</th><th scope="col">מחלקה</th><th scope="col">הרשאה</th><th scope="col">מה רואה</th><th scope="col">מצב</th></tr></thead><tbody>
-  <tr><td><div class="row" style="flex-wrap:nowrap"><span class="av">א</span><div><b style="font-weight:500">אורי</b><div class="small mut" dir="ltr" style="text-align:right">${esc(AUTH.email)}</div></div></div></td><td>מגורים · קשרי דיירים</td><td>${chip('מנהל מערכת','info')}</td><td>הכול, כולל הגדרות והרשאות</td><td>${chip('פעיל','ok')}</td></tr>
-  ${[['מגורים','דיירים, בקשות, הודעות ומסמכים'],['כספים','תשלומים, מדד וקבלות'],['הנדסה','שלבי בנייה, צילומים, שינויים וליקויים'],['סמנכ״ל מגורים','הכול לצפייה, ואישור עדכונים שמזכירים מועד'],['סמנכ״ל הנדסה','שלבי בנייה ועדכונים לאישור']].map(([d,s])=>`<tr><td class="mut">טרם הוגדר</td><td>${d}</td><td>${chip('לפי מחלקה','plain')}</td><td class="small">${s}</td><td><button class="btn sm" disabled title="הזמנת משתמשים נוספים תיפתח בשלב הבא">הזמנה · בשלב הבא</button></td></tr>`).join('')}
- </tbody></table></div><p class="small mut" style="margin-top:12px">הרשאות לפי מחלקה מוכנות במבנה, ויופעלו אחרי אישור ההנהלה. עד אז רק מנהל המערכת נכנס.</p></section>
+ <section class="panel" aria-labelledby="h-users"><div class="ph2"><h2 id="h-users">משתמשים והרשאות</h2>${chip('פעיל כרגע: מנהל המערכת בלבד','info')}</div>
+ <p class="mut small" style="margin:-4px 0 14px">כל משתמש רואה רק את המסכים של התפקיד שלו. אפשר לראות איך המערכת תיראה אצל כל אחד עם "צפייה בתור".</p>
+ ${[...new Set(PEOPLE.map(p=>p.dept))].map(d=>`<h3 style="margin:18px 0 6px">${esc(d)}</h3><div class="tbl-wrap"><table><thead><tr><th scope="col">שם</th><th scope="col">תפקיד</th><th scope="col">הרשאה</th><th scope="col">מה רואה</th><th scope="col">מצב</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
+ ${PEOPLE.filter(p=>p.dept===d).map(p=>`<tr><td><div class="row" style="flex-wrap:nowrap"><span class="av">${esc(p.name[0])}</span><b style="font-weight:500">${esc(p.name)}</b></div></td><td>${esc(p.title)}</td><td>${chip(PERMS[p.perm].t,p.perm==='admin'?'info':'plain')}</td><td class="small" style="max-width:300px">${esc(PERMS[p.perm].d)}${p.id===REM_APPROVER?'<div><b>מאשרת כל תזכורת תשלום לפני שהיא יוצאת</b></div>':''}${p.id==='resvp'?'<div><b>מאשרת עדכונים שמזכירים מועד</b></div>':''}</td>
+  <td>${p.id==='uri'?chip('פעיל','ok'):chip(p.ext?'חיצוני · ייפתח בהמשך':'ייפתח בשלב הבא','plain')}</td><td class="act">${p.id==='uri'?'':`<button class="btn sm" data-act="asUser" data-u="${p.id}">${I('eye')}צפייה בתור</button>`}</td></tr>`).join('')}</tbody></table></div>`).join('')}
+ <p class="small mut" style="margin-top:12px">פתיחת משתמשים נוספים תופעל אחרי אישור ההנהלה. עד אז רק מנהל המערכת נכנס, וצפייה בתור היא להדגמה בלבד.</p></section>
+ <section class="panel" aria-labelledby="h-rem"><div class="ph2"><h2 id="h-rem">תזכורות תשלום</h2></div><div class="grid2">
+  <div class="field"><span class="lbl">מאשרת לפני שליחה</span><div class="row"><span class="av">${esc(P(REM_APPROVER).name[0])}</span><span><b style="font-weight:500">${esc(P(REM_APPROVER).name)}</b><div class="small mut">${esc(P(REM_APPROVER).title)}</div></span></div></div>
+  ${fld('remLead','כמה ימים לפני המועד לשלוח',ST.remLead,'select',{options:[[7,'7 ימים'],[14,'14 ימים'],[21,'21 ימים'],[30,'30 ימים']]})}</div></section>
  <div class="cols even"><section class="panel" aria-labelledby="h-pw"><div class="ph2"><h2 id="h-pw">החלפת סיסמה</h2></div><form id="pwForm" novalidate><div class="grid2">${fld('pw-old','סיסמה נוכחית','','password',{req:1,span:1,attrs:'autocomplete="current-password" dir="ltr"'})}${fld('pw-new','סיסמה חדשה','','password',{req:1,attrs:'autocomplete="new-password" dir="ltr" minlength="10"',hint:'לפחות 10 תווים, עם אות גדולה, ספרה ותו מיוחד'})}${fld('pw-new2','אימות הסיסמה החדשה','','password',{req:1,attrs:'autocomplete="new-password" dir="ltr"'})}</div><div id="pwMsg" role="alert" style="margin-top:12px" hidden></div><button class="btn pri" style="margin-top:14px" type="submit">${I('key')}עדכון סיסמה</button></form></section>
  <section class="panel" aria-labelledby="h-sec"><div class="ph2"><h2 id="h-sec">אבטחה</h2></div><div class="list">
   <div class="li"><span class="ic">${I('lock')}</span><div class="grow">ניתוק אוטומטי אחרי ${IDLE_MIN} דקות ללא פעילות</div>${chip('פעיל','ok')}</div>
@@ -764,7 +970,17 @@ const ACT={
  msgRes:b=>{ui.mres=b.dataset.res;go('messages')},
  pay:b=>{const r=resOf(b.dataset.res),p=ST.schedule.find(x=>x.id===b.dataset.p);r.paid[p.id]=true;log(`סימון תשלום כשולם: ${p.name} · ${r.name}`);save();toast(`${p.name} של ${r.name} סומן כשולם`);render()},
  unpay:b=>{const r=resOf(b.dataset.res);delete r.paid[b.dataset.p];log('ביטול סימון תשלום · '+r.name);save();render()},
- remind:b=>{const r=resOf(b.dataset.res),p=ST.schedule.find(x=>x.id===b.dataset.p);log(`תזכורת תשלום נשלחה: ${p.name} · ${r.name}`);save();toast('התזכורת נשלחה ל'+r.name)},
+ remind:b=>{const r=resOf(b.dataset.res),p=ST.schedule.find(x=>x.id===b.dataset.p),ex=ST.reminders.find(x=>x.res===r.id&&x.pay===p.id&&['pending','sched'].includes(x.status));
+  if(ex){toast(ex.status==='pending'?`כבר ממתינה לאישור של ${P(REM_APPROVER).name}`:`כבר אושרה ותישלח ב-${fmtD(ex.sendOn)}`);return}
+  ST.reminders.push({id:uid('rm'),res:r.id,pay:p.id,status:'pending',created:today(),by:CUR().name,text:'',sendOn:today()});log(`בקשת תזכורת תשלום: ${p.name} · ${r.name} · נשלחה לאישור ${P(REM_APPROVER).name}`);save();toast(`נשלח ל${P(REM_APPROVER).name} לאישור. היא תקבל התראה`);render()},
+ goRem:()=>{closeDlg();go('reminders')},
+ asBack:()=>switchAs('uri'),
+ asUser:b=>switchAs(b.dataset.u),
+ remOk:b=>approveRem([b.dataset.r]),
+ remBulk:()=>{const ids=$$('[data-remsel]:checked').map(c=>c.dataset.remsel);if(!ids.length){toast('לא סומנו תזכורות');return}approveRem(ids)},
+ remSkip:b=>{const x=ST.reminders.find(y=>y.id===b.dataset.r),r=resOf(x.res);formDlg('דילוג על התזכורת',fld('sk-why','למה לא לשלוח?','','select',{options:['הדייר כבר שילם','הדייר ביקש דחייה, מטופל מול כספים','סוכם עם הדייר בטלפון','אחר']}),'דילוג',()=>{x.status='skipped';x.why=$('#sk-why').value;log(`דילוג על תזכורת · ${r?.name} · ${x.why}`);toast('התזכורת לא תישלח')})},
+ remEdit:b=>{const x=ST.reminders.find(y=>y.id===b.dataset.r),r=resOf(x.res),p=payRows(r).find(y=>y.id===x.pay);formDlg('הנוסח שהדייר יקבל',`${fld('re-text','הודעה ל'+r.name,x.text||remText(r,p),'textarea',{req:1})}${fld('re-on','תאריך שליחה',x.sendOn,'date',{hint:'אם התאריך עבר, ההודעה תישלח מיד עם האישור'})}`,'שמירה',()=>{x.text=$('#re-text').value.trim();x.sendOn=$('#re-on').value||x.sendOn;log('עריכת נוסח תזכורת · '+r.name);toast('הנוסח נשמר')})},
+ remNow:b=>{const x=ST.reminders.find(y=>y.id===b.dataset.r);sendRem(x);log('תזכורת נשלחה עכשיו · '+rname(x.res));save();toast('התזכורת נשלחה ל'+rname(x.res));render()},
  pAll:()=>{ui.pAll=!ui.pAll;render()},
  index:()=>formDlg('עדכון מדד תשומות הבנייה',`<div class="grid2">${fld('i-cur','המדד החדש',ST.index.cur,'number',{req:1,attrs:'step="0.1" min="50"'})}${fld('i-month','חודש המדד',ST.index.month,'text',{req:1})}</div><p class="small mut">המדד הבסיסי בחוזה: ${ST.index.base}. הסכומים לתשלום יתעדכנו אצל כל הדיירים.</p>`,'עדכון',()=>{const v=+$('#i-cur').value;if(!(v>0))return false;ST.index.cur=v;ST.index.month=$('#i-month').value.trim();log(`עדכון מדד: ${v} · ${ST.index.month}`);toast('המדד עודכן והסכומים חושבו מחדש')}),
  reqOk:b=>{const q=ST.requests.find(x=>x.id===b.dataset.q),r=resOf(q.res),sup=q.kind==='supplier'?ST.suppliers.find(s=>s.cat===q.opt):null,ans=q.kind==='design'||q.kind==='special';
@@ -792,14 +1008,14 @@ const ACT={
  photo:()=>pickFiles(null,'image/*',f=>{formDlg('צילום חדש מהאתר',`<div style="aspect-ratio:16/9;border-radius:10px;background:var(--soft) url(${URL.createObjectURL(f)}) center/cover"></div><div class="grid2">${fld('p-cap','כיתוב','','text',{req:1,span:1})}${fld('p-date','תאריך הצילום',today(),'date')}</div><label class="check"><input type="checkbox" id="p-upd">לפרסם גם כעדכון לדיירים</label>`,'הוספה',()=>{
   const id=uid('ph');FS.put(id,f);const src='u:'+id;urlCache.set(src,URL.createObjectURL(f));ST.photos.unshift({id,cap:$('#p-cap').value.trim(),date:$('#p-date').value,src});
   if($('#p-upd').checked)ST.updates.push({id:uid('u'),title:$('#p-cap').value.trim(),text:'צילום חדש מהאתר.',img:src,date:today(),status:'pub'});log('צילום חדש מהאתר: '+$('#p-cap').value.trim());toast('הצילום נוסף')})}),
- newUpdate:()=>{let img=null;formDlg('עדכון חדש לדיירים',`${fld('n-title','כותרת','','text',{req:1})}${fld('n-text','מה קרה באתר','','textarea',{req:1})}<div class="field"><span class="lbl">תמונה</span><div class="row"><button type="button" class="btn sm" id="n-img">${I('image')}בחירת תמונה</button><span class="small mut" id="n-imgn">לא נבחרה</span></div></div><div id="n-warn" class="notice" hidden><b>העדכון מזכיר מועד או מסירה.</b> הוא יישמר כממתין לאישור סמנכ״ל מגורים.</div>`,'פרסום',()=>{
+ newUpdate:()=>{let img=null;formDlg('עדכון חדש לדיירים',`${fld('n-title','כותרת','','text',{req:1})}${fld('n-text','מה קרה באתר','','textarea',{req:1})}<div class="field"><span class="lbl">תמונה</span><div class="row"><button type="button" class="btn sm" id="n-img">${I('image')}בחירת תמונה</button><span class="small mut" id="n-imgn">לא נבחרה</span></div></div><div id="n-warn" class="notice" hidden><b>העדכון מזכיר מועד או מסירה.</b> הוא יישמר כממתין לאישור ${esc(P('resvp').name)}.</div>`,'פרסום',()=>{
    const t=$('#n-title').value.trim(),x=$('#n-text').value.trim(),needs=ST.vpRule&&LEGALRX.test(t+' '+x);let src=null;if(img){const id=uid('u');FS.put(id,img);src='u:'+id;urlCache.set(src,URL.createObjectURL(img))}
-   ST.updates.push({id:uid('u'),title:t,text:x,img:src,date:today(),status:needs?'vp':'pub'});log(needs?'עדכון נשמר לאישור סמנכ״ל: '+t:'פרסום עדכון: '+t);toast(needs?'נשמר. ממתין לאישור סמנכ״ל מגורים':'העדכון פורסם לכל הדיירים');if(route!=='construction')setTimeout(()=>go('construction'))});
+   ST.updates.push({id:uid('u'),title:t,text:x,img:src,date:today(),status:needs?'vp':'pub'});log(needs?'עדכון נשמר לאישור סמנכ״ל: '+t:'פרסום עדכון: '+t);toast(needs?'נשמר. '+P('resvp').name+' קיבלה התראה לאישור':'העדכון פורסם לכל הדיירים');if(route!=='construction')setTimeout(()=>go('construction'))});
   $('#n-img').onclick=()=>pickFiles(null,'image/*',f=>{img=f;$('#n-imgn').textContent=f.name});
   const chk=()=>{$('#n-warn').hidden=!(ST.vpRule&&LEGALRX.test($('#n-title').value+' '+$('#n-text').value))};$('#n-title').oninput=chk;$('#n-text').oninput=chk},
- vpOk:b=>{const u=ST.updates.find(x=>x.id===b.dataset.u);u.status='pub';log('סמנכ״ל מגורים אישר · פרסום: '+u.title);save();toast('העדכון פורסם');render()},
+ vpOk:b=>{const u=ST.updates.find(x=>x.id===b.dataset.u);u.status='pub';u.approvedBy=CUR().name;log('אישור ופרסום עדכון: '+u.title);save();toast('העדכון פורסם');render()},
  pubUpd:b=>{const u=ST.updates.find(x=>x.id===b.dataset.u);u.status='pub';save();render()},
- bcOk:b=>{const x=ST.broadcasts.find(y=>y.id===b.dataset.b);x.status='sent';log('סמנכ״ל מגורים אישר · נשלחה הודעה: '+x.title);save();toast('ההודעה נשלחה');render()},
+ bcOk:b=>{const x=ST.broadcasts.find(y=>y.id===b.dataset.b);x.status='sent';x.approvedBy=CUR().name;log('אישור ושליחת הודעה: '+x.title);save();toast('ההודעה נשלחה');render()},
  broadcast:()=>go('broadcast'),
  heroTog:b=>{toggleHero(b.dataset.g,false)},
  heroMv:b=>{const i=ST.hero.indexOf(b.dataset.g),j=i+ +b.dataset.d;[ST.hero[i],ST.hero[j]]=[ST.hero[j],ST.hero[i]];log('שינוי סדר התמונות במסך הבית');save();render();const n=$(`[data-act=heroMv][data-g="${b.dataset.g}"]:not([disabled])`);n&&n.focus()},
@@ -807,9 +1023,12 @@ const ACT={
  guideEdit:b=>{const g=b.dataset.g?ST.guide.find(x=>x.id===b.dataset.g):{t:'',s:'',sup:'',w:'',tip:''};formDlg(b.dataset.g?'עריכת מערכת':'מערכת חדשה',`<div class="grid2">${fld('g-t','מערכת',g.t,'text',{req:1})}${fld('g-s','מפרט',g.s)}${fld('g-sup','ספק',g.sup)}${fld('g-w','אחריות',g.w)}${fld('g-tip','טיפ לדייר',g.tip,'textarea',{span:1})}</div>`,'שמירה',()=>{Object.assign(g,{t:$('#g-t').value.trim(),s:$('#g-s').value.trim(),sup:$('#g-sup').value.trim(),w:$('#g-w').value.trim(),tip:$('#g-tip').value.trim()});if(!b.dataset.g){g.id=uid('g');ST.guide.push(g)}log('עדכון מדריך הדירה: '+g.t);toast('נשמר')})},
  guideDel:b=>{const g=ST.guide.find(x=>x.id===b.dataset.g);formDlg('הסרה ממדריך הדירה',`<p>להסיר את "${esc(g.t)}" ממדריך הדירה?</p>`,'הסרה',()=>{ST.guide=ST.guide.filter(x=>x!==g);log('הסרה ממדריך הדירה: '+g.t)})},
  reset:()=>{$('#resetBox').innerHTML=`<div class="confirm-bar" role="alert" style="margin-top:12px"><span class="grow">למחוק את כל השינויים והקבצים שהועלו, ולחזור לנתוני הדמו?</span><button class="btn sm danger" data-act="resetYes">איפוס</button><button class="btn sm" onclick="this.closest('.confirm-bar').remove()">ביטול</button></div>`;$('#resetBox .btn').focus()},
- resetYes:async()=>{for(const d of ST.docs)if(d.src.startsWith('u:'))await FS.del(d.src.slice(2));ST=seed();save();toast('נתוני הדמו אופסו');go('overview')},
+ resetYes:async()=>{for(const d of ST.docs)if(d.src.startsWith('u:'))await FS.del(d.src.slice(2));ST=seed();ST.reminders=[];ST.remLead=14;ensureReminders();save();toast('נתוני הדמו אופסו');go('overview')},
 };
 ACT.galUp=()=>{const i=document.createElement('input');i.type='file';i.accept='image/*';i.multiple=true;i.onchange=async()=>{for(const f of i.files){const id=uid('g');await FS.put(id,f);const src='u:'+id;await urlOf(src);ST.gallery.unshift({id,src,cap:f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' '),cat:'bld'})}log(`העלאת ${i.files.length} תמונות לגלריה`);save();toast(i.files.length+' תמונות נוספו. אפשר לערוך כיתוב וקטגוריה');ui.gcat='all';render()};i.click()};
+function approveRem(ids){const t=today();let sent=0,sch=0;ids.forEach(id=>{const x=ST.reminders.find(y=>y.id===id);if(!x||x.status!=='pending')return;x.approvedBy=CUR().name;x.approvedAt=new Date().toISOString();
+ if(x.sendOn<=t){sendRem(x);sent++}else{x.status='sched';sch++}});log(`אישור ${ids.length>1?ids.length+' תזכורות תשלום':'תזכורת תשלום'}${sent?` · ${sent} נשלחו`:''}${sch?` · ${sch} תוזמנו`:''}`);save();
+ toast(sent&&!sch?(sent>1?`${sent} תזכורות נשלחו לדיירים`:'התזכורת נשלחה לדייר'):`אושר. ${sch>1?sch+' תזכורות יישלחו':'התזכורת תישלח'} ${ST.remLead} ימים לפני המועד${sent?`, ו-${sent} נשלחו כבר עכשיו`:''}`);render()}
 function toggleHero(id,on){on=on??!ST.hero.includes(id);if(on){if(ST.hero.length>=5){toast('אפשר עד 5 תמונות במסך הבית. הוציאו אחת קודם.');render();return}ST.hero.push(id)}else ST.hero=ST.hero.filter(x=>x!==id);log((on?'הוספה למסך הבית: ':'הוצאה ממסך הבית: ')+(ST.gallery.find(g=>g.id===id)||{}).cap);save();render()}
 
 /* ================= events ================= */
@@ -819,6 +1038,7 @@ document.addEventListener('click',e=>{
  const rt=e.target.closest('[data-rtab]');if(rt){ui.rtab=rt.dataset.rtab;render();$(`[data-rtab="${ui.rtab}"]`).focus();return}
  const rk=e.target.closest('[data-rk]');if(rk){ui.rk=rk.dataset.rk;render();$(`[data-rk="${ui.rk}"]`).focus();return}
  const rs=e.target.closest('[data-rs]');if(rs){ui.rs=rs.dataset.rs;render();$(`[data-rs="${ui.rs}"]`).focus();return}
+ const rt2=e.target.closest('[data-remt]');if(rt2){ui.remt=rt2.dataset.remt;render();$(`[data-remt="${ui.remt}"]`).focus();return}
  const gc=e.target.closest('[data-gcat]');if(gc){ui.gcat=gc.dataset.gcat;render();$(`[data-gcat="${ui.gcat}"]`).focus();return}
  const mr=e.target.closest('[data-mres]');if(mr){ui.mres=mr.dataset.mres;render();$(`[data-mres="${ui.mres}"]`).focus();return}
 });
@@ -835,7 +1055,8 @@ document.addEventListener('change',e=>{const t=e.target;
  if(t.dataset.gcap){const g=ST.gallery.find(x=>x.id===t.dataset.gcap);g.cap=t.value.trim();log('עדכון כיתוב: '+g.cap);save();toast('הכיתוב נשמר')}
  if(t.id==='dcat'){ui.dcat=t.value;render()}if(t.id==='dres'){ui.dres=t.value;render()}
  if(t.name==='stage'){ST.stage=+t.value;log('עדכון שלב הבנייה: '+ST.milestones[ST.stage].t);save();toast('השלב עודכן אצל כל הדיירים: '+ST.milestones[ST.stage].t);render();$(`input[name=stage][value="${ST.stage}"]`).focus()}
- if(t.id==='vpRule'){ST.vpRule=t.checked;log('כלל אישור סמנכ״ל: '+(t.checked?'פעיל':'כבוי'));save();toast(t.checked?'הכלל פעיל':'הכלל כובה')}
+ if(t.id==='vpRule'){ST.vpRule=t.checked;log('כלל אישור עדכונים: '+(t.checked?'פעיל':'כבוי'));save();toast(t.checked?'הכלל פעיל':'הכלל כובה')}
+ if(t.id==='remLead'){ST.remLead=+t.value;ST.reminders.filter(x=>['pending','sched'].includes(x.status)).forEach(x=>{const r=resOf(x.res),p=r&&payRows(r).find(y=>y.id===x.pay);if(p&&x.by==='מערכת')x.sendOn=addDays(p.due,-ST.remLead)});log('תזכורות יישלחו '+ST.remLead+' ימים לפני המועד');save();toast('נשמר')}
  if(t.id==='deliv'){ST.delivery=t.value.trim();log('שנת מסירה משוערת: '+ST.delivery);save();toast('נשמר')}
 });
 let typing;document.addEventListener('input',e=>{const t=e.target;
@@ -845,7 +1066,7 @@ document.addEventListener('submit',e=>{const f=e.target;
  if(f.id==='resForm'){e.preventDefault();if(!validate(f))return;Object.assign(resOf(sub),readRes());log('עדכון פרטי דייר: '+resOf(sub).name);save();toast('הפרטים נשמרו ויוצגו לדייר באפליקציה');render()}
  if(f.dataset.thread){e.preventDefault();const id=f.dataset.thread,i=$('input',f),v=i.value.trim();if(!v)return;(ST.threads[id]||(ST.threads[id]=[])).push({me:true,t:v,at:new Date().toISOString()});log('הודעה ל'+rname(id));save();render();const n=$('#mt-'+id);n&&n.focus();const th=$('#thr');th&&(th.scrollTop=th.scrollHeight)}
  if(f.id==='schForm'){e.preventDefault();ST.schedule.forEach((p,i)=>{if(p.fixed)return;p.name=$('#sn'+i).value.trim();p.pct=+$('#sp'+i).value;p.due=$('#sd'+i).value});log('עדכון תבנית לוח התשלומים');save();toast('התבנית נשמרה');render()}
- if(f.id==='bcForm'){e.preventDefault();if(!validate(f))return;const t=$('#bc-title').value.trim(),x=$('#bc-text').value.trim(),needs=ST.vpRule&&LEGALRX.test(t+' '+x);ST.broadcasts.push({id:uid('b'),title:t,text:x,cat:$('#bc-cat').value,to:$('#bc-to').value,date:today(),status:needs?'vp':'sent'});log(needs?'הודעה נשמרה לאישור סמנכ״ל: '+t:'נשלחה הודעה: '+t);save();toast(needs?'נשמרה. ממתינה לאישור סמנכ״ל מגורים':'ההודעה נשלחה');render()}
+ if(f.id==='bcForm'){e.preventDefault();if(!validate(f))return;const t=$('#bc-title').value.trim(),x=$('#bc-text').value.trim(),needs=ST.vpRule&&LEGALRX.test(t+' '+x);ST.broadcasts.push({id:uid('b'),title:t,text:x,cat:$('#bc-cat').value,to:$('#bc-to').value,date:today(),status:needs?'vp':'sent'});log(needs?'הודעה נשמרה לאישור סמנכ״ל: '+t:'נשלחה הודעה: '+t);save();toast(needs?'נשמרה. '+P('resvp').name+' קיבלה התראה לאישור':'ההודעה נשלחה');render()}
  if(f.id==='wForm'){e.preventDefault();ST.warranty.forEach((w,i)=>{w.t=$('#wt'+i).value.trim();w.end=$('#we'+i).value});log('עדכון תקופות בדק');save();toast('נשמר')}
  if(f.id==='mForm'){e.preventDefault();Object.assign(ST.mgmt,{name:$('#m-name').value.trim(),phone:$('#m-phone').value.trim(),email:$('#m-email').value.trim(),hours:$('#m-hours').value.trim()});log('עדכון פרטי חברת הניהול');save();toast('נשמר')}
  if(f.id==='hostForm'){e.preventDefault();if(!validate(f))return;Object.assign(ST.host,{name:$('#h-name').value.trim(),role:$('#h-role').value.trim(),hours:$('#h-hours').value.trim(),reply:$('#h-reply').value.trim()});log('עדכון איש הקשר באפליקציה');save();toast('נשמר. הדיירים יראו את השינוי באפליקציה')}
@@ -877,7 +1098,7 @@ $('#a11yBtn').onclick=()=>{const p=$('#a11yPop'),o=p.hidden;p.hidden=!o;$('#a11y
 document.head.insertAdjacentHTML('beforeend','<style>body.links a{text-decoration:underline!important;text-underline-offset:3px}</style>');
 
 /* ================= boot ================= */
-async function boot(){await FS.ready;await warmImages();shell();render(true)}
+async function boot(){await FS.ready;await warmImages();ensureReminders();shell();render(true);setTimeout(popAlerts,600)}
 addEventListener('hashchange',()=>{if(session())render(true)});
 (function init(){const th=LS.get('pa-theme');if(th)document.documentElement.dataset.theme=th;applyA11y();if(session())boot();else renderLogin()})();
 </script>
