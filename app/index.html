@@ -149,6 +149,13 @@ canvas.sign{width:100%;height:150px;background:var(--paper);border:1px dashed #2
 .toast{position:absolute;top:14px;left:16px;right:16px;background:var(--navy);color:#fff;padding:14px 18px;border-radius:var(--r);font-size:13.5px;z-index:40;box-shadow:0 14px 40px #0003;transform:translateY(calc(-100% - 60px));transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .toast.on{transform:none}
 .phone:not(.demo) .demo-strip{display:none!important}
+.nextpay .howpay{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}.nextpay .howpay p{font-size:14px;margin-top:4px;color:var(--ink)}
+.nextpay .dlrow a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.bldg{position:relative;margin:16px 0 0;border-radius:18px;overflow:hidden;aspect-ratio:16/10;max-width:100%}
+.bldg img{width:100%;height:100%;object-fit:cover;display:block}
+.bldg figcaption{position:absolute;inset:auto 0 0 0;padding:28px 18px 14px;background:linear-gradient(#0000,#1f1e1bb3);color:#fff;text-align:right}
+.bldg figcaption .latin{color:#ffffffcc;text-align:right;display:block}.bldg figcaption b{font-family:'Heebo',Arial,sans-serif;font-weight:300;font-size:22px;letter-spacing:4px}
+@media (max-width:899px){.phone nav.tabs:not(.devnav){position:fixed;left:0;right:0;bottom:0;z-index:18;background:#fff!important;backdrop-filter:none}}
 /* hero text in the same face as the stage label and SEA HOUSE */
 .greet,.stagebig{font-family:'Heebo',Arial,sans-serif!important;font-weight:300!important;letter-spacing:0}
 .hero-full .welc,.welc{font-family:'Heebo',Arial,sans-serif!important;font-style:normal!important;font-weight:300!important;font-size:14px!important;letter-spacing:1.5px!important}
@@ -586,8 +593,8 @@ table.tbl{width:100%;border-collapse:collapse;background:var(--paper);border-rad
       <section class="screen" id="s-apt">
         <div class="title-row"><h2 class="title" data-k="MY APARTMENT">הדירה שלי</h2><button class="doclink" data-goto="docs">מסמכים</button></div>
         <div class="seg" id="aptSeg">
+          <button data-pane="plan">הדירה והתוכנית</button>
           <button data-pane="progress">התקדמות</button>
-          <button data-pane="plan">תוכנית</button>
           <button data-pane="changes">שינויים</button>
           <button data-pane="handover">מסירה</button>
           <button data-pane="guide">מדריך</button>
@@ -932,7 +939,17 @@ const EN={
 "אחראי קשרי דיירים": "Residents relations",
 "הנושא": "Topic",
 "הדירה והמפרט": "Home and spec",
-"החוזה והמסמכים": "Contract and documents"
+"החוזה והמסמכים": "Contract and documents",
+"התשלום הבא": "Next payment",
+"מועד התשלום": "Due date",
+"איך משלמים": "How to pay",
+"בשובר מפנקס השוברים שקיבלתם במעמד החתימה. אפשר לשלם בסניף בנק לאומי, בתיאום מראש.": "With a voucher from the voucher book you received at signing. You can pay at a Bank Leumi branch, by appointment.",
+"תיאום פגישה בבנק לאומי": "Book a Bank Leumi appointment",
+"שליחת דוא״ל לבנק": "Email the bank",
+"דוא״ל הבנק המלווה יתווסף אחרי אימות מול הכספים": "The bank's email will be added once finance confirms it",
+"לאימות מול הכספים לפני העלייה לאוויר": "To confirm with finance before launch",
+"הבניין שלך, SEA HOUSE": "Your building, SEA HOUSE",
+"הדירה והתוכנית": "Home and plan"
 },
 "f": {
 "בוקר טוב, ": "Good morning, ",
@@ -1555,7 +1572,9 @@ const EN={
 "\"הוסף למסך הבית\"": "\"Add to Home Screen\"",
 "\"הוסף\"": "\"Add\"",
 "למעלה": "at the top",
-"עכשיו: ": "Now: "
+"עכשיו: ": "Now: ",
+" · כולל הצמדה": " · incl. indexation",
+"דוא״ל הבנק: [יעודכן] · ": "Bank email: [to be added] · "
 }
 };
 const EX=EN.x||{}, FR=Object.assign({},...Object.entries(EX).filter(e=>e[0].length>=8).map(e=>({[e[0]]:e[1]})),EN.f||{});
@@ -1764,6 +1783,7 @@ function renderGuide(){
 function renderPlan(){
   const r=cur();
   $('#p-plan').innerHTML=`
+    <figure class="bldg"><img src="${A[r.hero.build]}" alt="הבניין שלך, SEA HOUSE"><figcaption><span class="latin">YOUR BUILDING</span><b>SEA HOUSE</b></figcaption></figure>
     <div style="text-align:center;padding:14px 0 22px"><div class="latin" style="text-align:center">SEA HOUSE · ${r.floor?'FLOOR '+r.floor:'GARDEN FLOOR'}</div><div class="lat" style="font-size:27px;line-height:1.15;margin:10px 0 0;letter-spacing:1px">${r.apt}</div></div>
     <div class="kpis"><div><div class="big" style="font-size:30px">${r.sqm}</div><div class="kicker">מ״ר</div></div><div><div style="font-size:17px;padding:7px 0">${r.out}</div><div class="kicker">בחוץ</div></div><div><div style="font-size:17px;padding:7px 0">${r.beds}</div><div class="kicker">חדרי שינה</div></div><div><div style="font-size:15px;padding:8px 6px">${r.dir}</div><div class="kicker">כיוון</div></div></div>
     ${r.co?`<p class="small mut" style="text-align:center;margin-top:14px">בעלי הדירה: ${r.name} ו${r.co} · לשניהם גישה מלאה לאפליקציה</p>`:''}
@@ -1789,6 +1809,11 @@ function renderMoney(){
     <div class="card dark"><div class="kicker">שולם עד היום</div><div class="big">${nis(paidSum)}</div>
       <div class="bar" style="margin:10px 0"><i style="width:${paidSum/(paidSum+left)*100}%"></i></div>
       <div class="row between small"><span class="mut">מחיר הדירה ${nis(cur().price)}</span><span class="mut">נותר ${nis(left)}</span></div></div>
+    ${np?`<div class="card nextpay"><div class="kicker">התשלום הבא</div>
+      <div class="row between" style="align-items:flex-end;margin-top:6px"><div><div class="big" style="font-size:30px">${nis(np.total)}</div><div class="small mut">${np.name} · כולל הצמדה</div></div><div style="text-align:left"><div style="font-size:17px">${fmtDate(np.due)}</div><div class="small mut">מועד התשלום</div></div></div>
+      <div class="howpay"><b>איך משלמים</b><p>בשובר מפנקס השוברים שקיבלתם במעמד החתימה. אפשר לשלם בסניף בנק לאומי, בתיאום מראש.</p>
+      <div class="dlrow"><a class="btn gold" href="https://www.leumi.co.il/he/leumi-digital/Talk_to_us/appointment" target="_blank" rel="noopener">תיאום פגישה בבנק לאומי</a><button class="btn" data-toast="דוא״ל הבנק המלווה יתווסף אחרי אימות מול הכספים">שליחת דוא״ל לבנק</button></div>
+      <p class="small mut" style="margin-top:8px">דוא״ל הבנק: [יעודכן] · <span class="ltag">לאימות מול הכספים לפני העלייה לאוויר</span></p></div></div>`:''}
     <div class="card"><div class="row between"><b>הצמדה למדד תשומות הבנייה</b><button class="small" style="color:var(--gold-d);font-weight:700" data-open="indexInfo">מה זה?</button></div>
       <div class="grid2" style="margin-top:10px"><div><div class="small mut">מדד בסיס</div><b>${BASE_INDEX}</b></div><div><div class="small mut">מדד אחרון</div><b>${CUR_INDEX} <span class="chip warn">+${((CUR_INDEX/BASE_INDEX-1)*100).toFixed(1)}%</span></b></div></div></div>
     <h3 class="sub">לוח תשלומים</h3>
@@ -2227,7 +2252,7 @@ const galImg=(k,cls='')=>`<img class="${cls}" data-g="${k}" src="${A[k]}" alt="$
 let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2600)}
 
 /* ---------- navigation ---------- */
-function defaultPane(){return{build:'progress',handover:'handover',after:'guide'}[S.stage]}
+function defaultPane(){return{build:'plan',handover:'handover',after:'guide'}[S.stage]}
 let pane=defaultPane();
 function setPane(p){if(S.scope==='pilot'&&(p==='handover'||p==='guide'))p='progress';pane=p;$$('#aptSeg button').forEach(b=>b.classList.toggle('on',b.dataset.pane===p));$$('.pane').forEach(x=>x.classList.toggle('on',x.id==='p-'+p))}
 function go(tab,p){

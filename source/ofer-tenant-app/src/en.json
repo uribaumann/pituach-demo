@@ -229,7 +229,17 @@
 "אחראי קשרי דיירים": "Residents relations",
 "הנושא": "Topic",
 "הדירה והמפרט": "Home and spec",
-"החוזה והמסמכים": "Contract and documents"
+"החוזה והמסמכים": "Contract and documents",
+"התשלום הבא": "Next payment",
+"מועד התשלום": "Due date",
+"איך משלמים": "How to pay",
+"בשובר מפנקס השוברים שקיבלתם במעמד החתימה. אפשר לשלם בסניף בנק לאומי, בתיאום מראש.": "With a voucher from the voucher book you received at signing. You can pay at a Bank Leumi branch, by appointment.",
+"תיאום פגישה בבנק לאומי": "Book a Bank Leumi appointment",
+"שליחת דוא״ל לבנק": "Email the bank",
+"דוא״ל הבנק המלווה יתווסף אחרי אימות מול הכספים": "The bank's email will be added once finance confirms it",
+"לאימות מול הכספים לפני העלייה לאוויר": "To confirm with finance before launch",
+"הבניין שלך, SEA HOUSE": "Your building, SEA HOUSE",
+"הדירה והתוכנית": "Home and plan"
 },
 "f": {
 "בוקר טוב, ": "Good morning, ",
@@ -852,6 +862,8 @@
 "\"הוסף למסך הבית\"": "\"Add to Home Screen\"",
 "\"הוסף\"": "\"Add\"",
 "למעלה": "at the top",
-"עכשיו: ": "Now: "
+"עכשיו: ": "Now: ",
+" · כולל הצמדה": " · incl. indexation",
+"דוא״ל הבנק: [יעודכן] · ": "Bank email: [to be added] · "
 }
 }
