@@ -259,6 +259,27 @@ dialog form,dialog .dlg{display:flex;flex-direction:column;max-height:calc(100dv
 .asnote{display:flex;align-items:center;gap:12px;background:var(--warn-bg);color:var(--ink);border-radius:10px;padding:10px 14px;font-size:.92em;flex-wrap:wrap}.asnote svg{width:18px;height:18px;color:var(--warn)}
 @media (max-width:980px){.asbox label{display:none}.assel{max-width:120px}}
 .bellpop{position:fixed;z-index:70;width:min(360px,calc(100vw - 24px));max-height:70vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 20px 50px #0003;padding:14px}
+.mebtn{display:flex;align-items:center;gap:10px;background:none;border:0;padding:2px;border-radius:999px;color:inherit;font:inherit;cursor:pointer;text-align:right}
+.mebtn:hover .av,.mebtn[aria-expanded="true"] .av{box-shadow:0 0 0 3px var(--accent)}
+.mepop .mehead{display:flex;gap:12px;align-items:center;padding:4px 4px 12px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.mepop .mehead .av{width:48px;height:48px;font-size:1.3em}
+.mepop dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 14px;margin:6px 4px 12px;font-size:.93em}
+.mepop dt{color:var(--mut)}.mepop dd{margin:0;overflow-wrap:anywhere}
+.mepop .row{gap:8px}
+@media (max-width:700px){
+ .tbl-wrap{margin:0;padding:0;overflow:visible}
+ .tbl-wrap table,.tbl-wrap tbody,.tbl-wrap tr,.tbl-wrap td{display:block;width:100%}
+ .tbl-wrap thead{display:none}
+ .tbl-wrap tr{border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:10px;background:var(--panel)}
+ .tbl-wrap td{border:0!important;padding:5px 0 5px 0;padding-right:96px;position:relative;min-height:28px;text-align:right}
+ .tbl-wrap td{display:flow-root}
+ .tbl-wrap td::before{content:attr(data-lb);float:right;width:88px;margin-right:-96px;padding-top:1px;color:var(--mut);font-size:.82em;line-height:1.3}
+ .tbl-wrap td:first-child,.tbl-wrap td.act,.tbl-wrap td.nolb{padding-right:0}
+ .tbl-wrap td:first-child::before,.tbl-wrap td.act::before,.tbl-wrap td.nolb::before{display:none}
+ .tbl-wrap td:first-child{font-size:1.05em;padding-bottom:8px}
+ .tbl-wrap td.act{text-align:right;white-space:normal;padding-top:10px;margin-top:4px;border-top:1px solid var(--line)!important}
+ .tbl-wrap td.act:empty{display:none}
+}
 .bellpop .li{padding:10px 4px}.bellpop .li:hover{background:var(--hover);border-radius:8px}
 .confirm-bar{display:flex;gap:8px;align-items:center;background:var(--bad-bg);color:var(--bad);border-radius:8px;padding:6px 10px;font-size:.88em;flex-wrap:wrap}
 .log td{font-size:.92em}
@@ -737,8 +758,19 @@ function searchRun(v){const box=$('#sres'),q=v.trim().toLowerCase();if(!q){box.h
 function go(h){if(location.hash==='#'+h)render();else location.hash=h}
 function myAlerts(){if(canApproveRem())return{n:pendRem().length,route:'reminders',t:'תזכורות תשלום לאישורך'};if(isVP())return{n:pendUpd().length+ST.broadcasts.filter(b=>b.status==='vp').length,route:'construction',t:'עדכונים לאישורך'};
  const n=openReq().length+openChg().length+openTk().length+unreadN();return{n:canSee('requests')?n:0,route:canSee('requests')?'overview':ALL_ROUTES.find(canSee),t:'דברים שמחכים לטיפול'}}
+function meClose(){const p=$('#mePop');if(p)p.parentNode.removeChild(p);$('#meBtn')?.setAttribute('aria-expanded','false')}
+function mePop(){if($('#mePop')){meClose();return}bellClose();const c=CUR(),pm=PERMS[c.perm]||{};
+ document.body.insertAdjacentHTML('beforeend',`<div id="mePop" class="bellpop mepop" role="dialog" aria-label="הפרטים שלי"><div class="mehead"><div class="av" aria-hidden="true">${esc(c.name[0])}</div><div><b style="font-size:1.1em">${esc(c.name)}</b><div class="small mut">${esc(c.title)}</div></div></div>
+ <dl><dt>מחלקה</dt><dd>${esc(c.dept||'—')}</dd><dt>דוא״ל</dt><dd>${c.email?`<a href="mailto:${esc(c.email)}" dir="ltr">${esc(c.email)}</a>`:'<span class="mut">עדיין לא הוזן</span>'}</dd><dt>הרשאה</dt><dd>${esc(pm.t||'')}<div class="small mut">${esc(pm.d||'')}</div></dd></dl>
+ <div class="row">${canSee('config')?`<a class="btn sm" href="#config">${I('gear')}הגדרות</a>`:''}<button class="btn sm" id="meOut">${I('out')}יציאה</button></div></div>`);
+ const pop=$('#mePop'),b=$('#meBtn').getBoundingClientRect();pop.style.top=(b.bottom+8)+'px';pop.style.left=Math.max(12,Math.min(b.left,innerWidth-pop.offsetWidth-12))+'px';
+ $('#meBtn').setAttribute('aria-expanded','true');$('#meOut').onclick=()=>{meClose();log('יציאה ממרכז הניהול');logout('יצאת ממרכז הניהול.')};pop.querySelector('a,button')?.focus()}
+document.addEventListener('click',e=>{if($('#mePop')&&!e.target.closest('#mePop,#meBtn'))meClose();if(e.target.closest('#mePop a'))meClose()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#mePop')){meClose();$('#meBtn').focus()}});
+function labelTables(root){root.querySelectorAll('.tbl-wrap table:not([data-lb])').forEach(t=>{t.dataset.lb=1;const hs=[...t.querySelectorAll('thead th')].map(h=>h.classList.contains('sr')||h.querySelector('.sr')?'':h.textContent.trim());t.querySelectorAll('tbody tr').forEach(r=>[...r.children].forEach((td,i)=>{if(hs[i]!==undefined)td.setAttribute('data-lb',hs[i]);if(!hs[i])td.classList.add('nolb')}))})}
+new MutationObserver(()=>labelTables(document)).observe(document.documentElement,{childList:true,subtree:true});
 function bellClose(){const p=$('#bellPop');if(p)p.parentNode.removeChild(p);$('#bellBtn')?.setAttribute('aria-expanded','false')}
-function bellPop(){if($('#bellPop')){bellClose();return}
+function bellPop(){if($('#bellPop')){bellClose();return}meClose();
  const list=taskList();$('#bellBtn').setAttribute('aria-expanded','true');
  document.body.insertAdjacentHTML('beforeend',`<div id="bellPop" class="bellpop" role="dialog" aria-label="התראות"><div class="ph2" style="margin:0 0 8px"><b>מה מחכה לך</b><span class="small mut">${list.length||'אין'} פריטים</span></div>
   ${list.length?`<div class="list">${list.slice(0,8).map(t=>`<a class="li" href="#${t.h}" style="text-decoration:none;color:inherit"><span class="ic">${I(t.ic)}</span><span class="grow"><span class="small mut">${esc(t.k)}${t.res?' · '+esc(rname(t.res)):''}</span><div style="font-size:.95em">${esc(t.t)}</div></span></a>`).join('')}</div>${list.length>8?`<a class="btn sm" href="#overview" style="margin-top:8px">לכל ${list.length} הפריטים</a>`:''}`:'<div class="empty">הכול מטופל</div>'}</div>`);
@@ -746,7 +778,8 @@ function bellPop(){if($('#bellPop')){bellClose();return}
  $$('a',pop).forEach(a=>a.addEventListener('click',bellClose));const fa=pop.querySelector('a');if(fa)fa.focus()}
 document.addEventListener('click',e=>{if($('#bellPop')&&!e.target.closest('#bellPop,#bellBtn'))bellClose()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#bellPop')){bellClose();$('#bellBtn').focus()}});
-function topBar(){const c=CUR(),a=myAlerts();$('#meBox').innerHTML=`<div class="av" aria-hidden="true">${esc(c.name[0])}</div><div class="who"><b>${esc(c.name)}</b><div class="small mut">${esc(c.title)}</div></div>`;
+function topBar(){const c=CUR(),a=myAlerts();$('#meBox').innerHTML=`<button class="mebtn" id="meBtn" aria-haspopup="dialog" aria-expanded="false" aria-label="הפרטים שלי: ${esc(c.name)}"><div class="av" aria-hidden="true">${esc(c.name[0])}</div><div class="who"><b>${esc(c.name)}</b><div class="small mut">${esc(c.title)}</div></div></button>`;
+ $('#meBtn').onclick=e=>{e.stopPropagation();mePop()};
  $('#bellBtn').innerHTML=I('bell')+(a.n?`<span class="dot">${a.n}</span>`:'');$('#bellBtn').setAttribute('aria-label',a.n?`${a.n} ${a.t}`:'אין התראות חדשות');
  document.querySelector('.asnote')?.remove();if(AS!=='uri')$('#content').insertAdjacentHTML('afterbegin',`<div class="asnote" role="status">${I('eye')}<span class="grow">תצוגה לדוגמה: כך תיראה המערכת אצל <b>${esc(c.name)}</b>, ${esc(c.title)}, כשהמשתמש ייפתח.</span><button class="btn sm" data-act="asBack">חזרה לתצוגה שלי</button></div>`)}
 function switchAs(id){AS=id;try{sessionStorage.setItem('pa-as',id)}catch(e){}ui={};if(!canSee(route))location.hash=ALL_ROUTES.find(canSee);render(true);if(id!=='uri')toast('צפייה בתור '+P(id).name);setTimeout(popAlerts,350)}
