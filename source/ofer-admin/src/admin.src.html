@@ -118,6 +118,7 @@ input[aria-invalid=true]{border-color:var(--bad)}
 .nav a[aria-current=page] svg{color:var(--accent)}
 .nav .badge{margin-inline-start:auto}
 .badge{min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:var(--accent);color:var(--accent-ink);font-size:.76em;display:inline-grid;place-items:center;font-weight:600}
+.side-logout{display:none!important}
 .side .foot{margin-top:auto;padding:16px 10px 0;display:flex;flex-direction:column;gap:8px}
 .side .foot img{height:26px;align-self:flex-end}
 .main{min-width:0;display:flex;flex-direction:column}
@@ -144,6 +145,7 @@ input[aria-invalid=true]{border-color:var(--bad)}
   .top{padding-right:max(16px,env(safe-area-inset-right,0px));padding-left:max(16px,env(safe-area-inset-left,0px))}
   .content{padding-right:max(16px,env(safe-area-inset-right,0px));padding-left:max(16px,env(safe-area-inset-left,0px))}
   .me .who{display:none}
+  .top{gap:8px}.top .search{max-width:none}#logoutBtn{display:none}.side-logout{display:inline-flex!important}
 }
 .scrim{position:fixed;inset:0;background:#0005;z-index:39}
 
@@ -152,7 +154,8 @@ input[aria-invalid=true]{border-color:var(--bad)}
 .panel>.ph2{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
 .cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px;align-items:start}
 .cols.even{grid-template-columns:repeat(2,minmax(0,1fr))}
-@media (max-width:1100px){.cols,.cols.even{grid-template-columns:1fr}}
+.cols.msgcols{grid-template-columns:minmax(0,300px) minmax(0,1fr)}
+@media (max-width:1100px){.cols,.cols.even,.cols.msgcols{grid-template-columns:1fr}}
 .tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 @media (max-width:1100px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;display:flex;flex-direction:column;gap:4px;text-align:right;color:var(--ink);text-decoration:none}
@@ -267,6 +270,7 @@ dialog form,dialog .dlg{display:flex;flex-direction:column;max-height:calc(100dv
 <div class="a11y-pop" id="a11yPop" role="dialog" aria-label="נגישות" hidden></div>
 <dialog id="dlg"></dialog>
 <script>
+document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','he');
 /*__ASSETS__*/
 /* ================= utilities ================= */
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -519,12 +523,12 @@ function shell(){
   <nav class="side" id="side" aria-label="ניווט ראשי">
    <div class="brand"><img class="logo" src="${A.wordmark}" alt="Pituach by the Sea"><span>מרכז הניהול</span></div>
    <div class="nav" id="nav"></div>
-   <div class="foot"><img class="logo" src="${A.ofer}" alt="עופר השקעות"></div>
+   <div class="foot"><button class="btn sm side-logout" data-act="logoutSide">${I('out')}יציאה</button><img class="logo" src="${A.ofer}" alt="עופר השקעות"></div>
   </nav>
   <div class="main">
    <header class="top">
     <button class="ib menu-btn" id="menuBtn" aria-label="תפריט" aria-controls="side" aria-expanded="false">${I('menu')}</button>
-    <div class="search" role="search"><label for="q" class="sr">חיפוש</label>${I('search')}<input type="search" id="q" placeholder="חיפוש דייר, דירה או מסמך" autocomplete="off" aria-controls="sres" aria-expanded="false"><div class="sres" id="sres" hidden></div></div>
+    <div class="search" role="search"><label for="q" class="sr">חיפוש</label>${I('search')}<input type="search" id="q" placeholder="חיפוש" autocomplete="off" aria-controls="sres" aria-expanded="false"><div class="sres" id="sres" hidden></div></div>
     <div class="me"><button class="ib bellb" id="bellBtn" aria-label="התראות"></button><div id="meBox" class="row" style="gap:10px;flex-wrap:nowrap"></div><button class="btn sm" id="logoutBtn">${I('out')}יציאה</button></div>
    </header>
    <main class="content" id="content" tabindex="-1"></main>
@@ -583,7 +587,7 @@ VIEWS.overview=()=>{
    (canSee('docs')?`<button class="btn" data-act="upload">${I('upload')}העלאת מסמך</button>`:'')+(canSee('construction')?`<button class="btn pri" data-act="newUpdate">${I('crane')}פרסום עדכון</button>`:'')+(canApproveRem()&&pendRem().length?`<a class="btn pri" href="#reminders">${I('bell')}${pendRem().length} תזכורות לאישור</a>`:''))+
  `<div class="tiles">
   <a class="tile" href="#${tasks[0]?.h||'overview'}"><span class="k">ממתינים לטיפול</span><span class="v num">${tasks.length}</span><span class="s">${canApproveRem()?'תזכורות תשלום לאישור':'בקשות, שינויים, ליקויים והודעות'}</span></a>
-  <a class="tile" href="#residents"><span class="k">הצטרפו לאפליקציה</span><span class="v num">${ST.residents.filter(r=>(r.invite||{}).st==='joined').length} מתוך ${ST.residents.length}</span><span class="s">${(()=>{const w=ST.residents.filter(r=>(r.invite||{}).st!=='joined').length,i=ST.residents.filter(r=>invState(r).k==='idle').length;return [w?`${w} עוד לא הצטרפו`:'כולם הצטרפו',i?`${i} לא נכנסו חודש`:''].filter(Boolean).join(' · ')})()}</span></a>
+  <a class="tile" href="#residents"><span class="k">הצטרפו לאפליקציה</span><span class="v num" dir="rtl"><bdi>${ST.residents.filter(r=>(r.invite||{}).st==='joined').length}</bdi> מתוך <bdi>${ST.residents.length}</bdi></span><span class="s">${(()=>{const w=ST.residents.filter(r=>(r.invite||{}).st!=='joined').length,i=ST.residents.filter(r=>invState(r).k==='idle').length;return [w?`${w} עוד לא הצטרפו`:'כולם הצטרפו',i?`${i} לא נכנסו חודש`:''].filter(Boolean).join(' · ')})()}</span></a>
   <a class="tile" href="#payments"><span class="k">תשלומים ב-4 החודשים הקרובים</span><span class="v num">${soon.length}</span><span class="s num">${nis(soon.reduce((a,x)=>a+x.p.total,0))} כולל הצמדה</span></a>
   <a class="tile" href="#construction"><span class="k">שלב הבנייה הנוכחי</span><span class="v" style="font-size:1.5em;padding:6px 0 4px">${esc(ST.milestones[ST.stage].t)}</span></a>
  </div>
@@ -769,7 +773,7 @@ function threadHTML(id){const th=ST.threads[id]||[];return `<div class="thread" 
  <form class="row" data-thread="${id}" style="margin-top:14px;flex-wrap:nowrap"><label class="sr" for="mt-${id}">הודעה ל${esc(rname(id))}</label><input type="text" id="mt-${id}" placeholder="כתיבת הודעה ל${esc(rname(id))}" autocomplete="off" class="grow"><button class="btn pri" type="submit">שליחה</button></form>`}
 VIEWS.messages=()=>{const cur=ui.mres||Object.keys(ST.unread).find(k=>ST.unread[k])||ST.residents[0]?.id;ui.mres=cur;if(ST.unread[cur]){ST.unread[cur]=0;save()}
  return pageHead('MESSAGES','הודעות','שיחה אישית עם כל דייר. מה שכותבים כאן מגיע אליו באפליקציה, מ'+esc(ST.host.name)+'.',canSee('broadcast')?`<a class="btn ghost sm" href="#broadcast" title="לעדכון בשלבים מרכזיים של הפרויקט">${I('mega')}הודעה לכל הדיירים</a>`:'')+
- `<div class="cols" style="grid-template-columns:minmax(0,300px) minmax(0,1fr)"><section class="panel" style="padding:10px"><div class="list" role="tablist" aria-label="דיירים">${ST.residents.map(r=>{const th=ST.threads[r.id]||[],last=th[th.length-1];
+ `<div class="cols msgcols"><section class="panel" style="padding:10px"><div class="list" role="tablist" aria-label="דיירים">${ST.residents.map(r=>{const th=ST.threads[r.id]||[],last=th[th.length-1];
   return `<button role="tab" aria-selected="${cur===r.id}" class="li" data-mres="${r.id}" style="border-inline:0;border-top:0;background:${cur===r.id?'var(--soft)':'none'};text-align:right;width:100%;padding:10px;border-radius:8px"><span class="av">${esc(r.name[0])}</span><span class="grow"><b style="font-weight:500">${esc(r.name)}</b><div class="small mut" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${last?esc(last.t):'אין הודעות'}</div></span>${ST.unread[r.id]?`<span class="badge">${ST.unread[r.id]}</span>`:''}</button>`}).join('')}</div></section>
  <section class="panel" role="tabpanel"><div class="ph2"><h2>${esc(rname(cur))}</h2><a class="btn ghost sm" href="#res-${cur}">לכרטיס הדייר</a></div>${threadHTML(cur)}</section></div>`};
 
@@ -882,6 +886,7 @@ const ACT={
   ST.reminders.push({id:uid('rm'),res:r.id,pay:p.id,status:'pending',created:today(),by:CUR().name,text:'',sendOn:today()});log(`בקשת תזכורת תשלום: ${p.name} · ${r.name} · נשלחה לאישור ${P(REM_APPROVER).name}`);save();toast(`נשלח ל${P(REM_APPROVER).name} לאישור. היא תקבל התראה`);render()},
  goRem:()=>{closeDlg();ui.ptab='rem';go('payments')},
  exp:b=>EXP[b.dataset.x](),
+ logoutSide:()=>{log('יציאה ממרכז הניהול');logout('יצאת ממרכז הניהול.')},
  reqMove:b=>{const q=ST.requests.find(x=>x.id===b.dataset.q);formDlg('העברה למחלקה',`<div class="notice"><b>${esc(rname(q.res))}</b> · ${esc(q.detail)}</div>${fld('mv-d','המחלקה שתטפל',deptOfReq(q),'select',{options:Object.entries(DEPTS)})}`,'העברה',()=>{q.dept=$('#mv-d').value;log(`פנייה הועברה ל${DEPTS[q.dept]} · ${rname(q.res)}`);toast('הפנייה הועברה ל'+DEPTS[q.dept])})},
  reinvite:b=>{const r=resOf(b.dataset.res);r.invite=r.invite||{};if(r.invite.st!=='joined')r.invite.st='invited';r.invite.at=today();log(`הזמנה לאפליקציה נשלחה${b.textContent.includes('שוב')?' שוב':''} · ${r.name}`);save();toast(`ההזמנה נשלחה ל${r.name}${r.email?' · '+r.email:''}`);render()},
  asBack:()=>switchAs('uri'),
