@@ -1,20 +1,59 @@
-# Pituach by the Sea · residents app demo
+<div dir="rtl" align="right">
 
-Clickable prototype of the residents app and its desktop admin center. All data is sample data.
+# Pituach by the Sea · אפליקציית הדיירים
 
-- `index.html`: landing page with links to both parts
-- `app/`: the residents app (open on a phone)
-- `admin/`: the admin center (open on a computer)
-- `source/`: the source both parts are built from
+אב טיפוס של אפליקציית הדיירים של **פיתוח על הים, הרצליה פיתוח**, ושל מרכז הניהול שמפעיל אותה. כל הנתונים באתר הם לדוגמה.
 
-## Updating the site
+### לצפייה
+
+| | קישור | איפה לפתוח |
+|---|---|---|
+| דף הפתיחה | https://uribaumann.github.io/pituach-demo/ | |
+| אפליקציית הדיירים | https://uribaumann.github.io/pituach-demo/app/ | בטלפון. אפשר להתקין למסך הבית |
+| מרכז הניהול | https://uribaumann.github.io/pituach-demo/admin/ | במחשב |
+
+## אפליקציית הדיירים
+
+<p align="center">
+<img src="docs/app-home.png" width="250" alt="מסך הבית">
+<img src="docs/app-apartment.png" width="250" alt="הדירה שלי">
+<img src="docs/app-payments.png" width="250" alt="תשלומים">
+</p>
+
+- מסך בית אישי לכל דייר, עם תמונות הפרויקט שמתחלפות
+- שלבי הבנייה וצילומים מהאתר
+- לוח תשלומים והצמדה למדד
+- חוזה ותוכנית הדירה לצפייה והורדה
+- בקשות: פגישה עם ספק, ביקור באתר ושאלות על המפרט
+- עברית ואנגלית, ותפריט נגישות
+
+**התקנה בטלפון:** באייפון פותחים את הקישור ב-Safari, לוחצים על כפתור השיתוף ובוחרים "הוסף למסך הבית". באנדרואיד פותחים ב-Chrome ולוחצים "התקנה".
+
+## מרכז הניהול
+
+<p align="center"><img src="docs/admin-overview.png" width="820" alt="מרכז הניהול: סקירה כללית"></p>
+<p align="center"><img src="docs/admin-documents.png" width="820" alt="מרכז הניהול: מסמכים"></p>
+
+- דיירים ודירות, עם כל השדות שמופיעים באפליקציה
+- העלאת מסמכים בגרירה, ושיוך לדייר או לכל הפרויקט
+- תשלומים ועדכון מדד
+- בקשות ופגישות עם ספקים, שינויי דיירים וליקויים
+- שלבי בנייה, עדכונים לדיירים והודעות, עם אישור סמנכ״ל מגורים לעדכון שמזכיר מועד
+- גלריה ובחירת התמונות למסך הבית
+- כניסה בדוא״ל וסיסמה. כרגע רק למנהל המערכת
+
+## לתשומת לב
+
+זה דמו להצגה פנימית. הכניסה למרכז הניהול נבדקת בדפדפן בלבד, וקבצים שמעלים נשמרים רק בדפדפן שהעלה אותם. לא מעלים לכאן מסמכים אמיתיים של דיירים.
+
+## עדכון האתר
+
+הקוד נמצא בתיקייה `source/`. אחרי שינוי מריצים:
 
 ```bash
-./publish.sh "What changed"
+./publish.sh "מה השתנה"
 ```
 
-The script rebuilds both parts, commits and pushes. GitHub Pages republishes within about a minute.
+הסקריפט בונה את שני החלקים, שומר ומעלה. GitHub Pages מעדכן את האתר בתוך כדקה.
 
-## Note
-
-This is a demo. The admin login is checked in the browser only, and uploaded files stay in the browser that uploaded them. Do not upload real resident documents.
+</div>
