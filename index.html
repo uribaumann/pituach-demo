@@ -13,11 +13,15 @@ a.c{background:var(--card);border:1px solid var(--line);border-radius:14px;paddi
 a.c:hover,a.c:focus-visible{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px #3F5A8533}
 a.c b{font:500 1.35em 'Frank Ruhl Libre',Georgia,serif}a.c span{color:var(--mut)}a.c i{font-style:normal;color:var(--accent);margin-top:8px;font-weight:500}
 small{color:var(--mut)}
+.qr{display:flex;gap:22px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.qr img{border-radius:8px;flex:none}.qr b{font:500 1.2em 'Frank Ruhl Libre',Georgia,serif}.qr .u{font-size:.85em;text-align:right}
+@media (max-width:560px){.qr{flex-direction:column;text-align:center}.qr .u{text-align:center}}
 </style></head><body><main>
 <div><div class="eye">PITUACH BY THE SEA · DEMO</div><h1>אפליקציית הדיירים · אב טיפוס</h1><p>שני חלקים: מה שהדייר רואה בטלפון, ומרכז הניהול במחשב.</p></div>
 <div class="grid">
 <a class="c" href="app/"><b>אפליקציית הדיירים</b><span>הדירה, שלבי הבנייה, תשלומים, מסמכים ובקשות. מומלץ לפתוח בטלפון.</span><i>לפתיחה ←</i></a>
 <a class="c" href="admin/"><b>מרכז הניהול</b><span>דיירים, העלאת מסמכים, תשלומים, בקשות ועדכונים. למחשב.</span><i>לפתיחה ←</i></a>
 </div>
+<section class="qr"><img src="docs/qr-app.png" alt="קוד QR לאפליקציית הדיירים" width="150" height="150"><div><b>להתקנה בטלפון</b><p>סורקים את הקוד עם המצלמה של הטלפון. באייפון: בכפתור השיתוף של Safari בוחרים "הוסף למסך הבית". באנדרואיד: לוחצים "התקנה".</p><p class="u" dir="ltr">uribaumann.github.io/pituach-demo/app</p></div></section>
 <small>דמו להצגה פנימית בלבד. כל הנתונים לדוגמה.</small>
 </main></body></html>
