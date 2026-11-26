@@ -463,6 +463,16 @@ table.tbl{width:100%;border-collapse:collapse;background:var(--paper);border-rad
   .phone .sheet{max-width:600px;border-radius:24px;max-height:86%}
   .phone .toast{max-width:460px;margin-inline:auto}
   .phone .install{display:none!important}
+  /* residents on the web: menu as a bar under the logo instead of a side column */
+  .phone[data-role=res]{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr)}
+  .phone[data-role=res] .top{border-bottom:0}
+  .phone[data-role=res] nav.tabs:not(.devnav){grid-column:1;grid-row:2;flex-direction:row;justify-content:center;gap:8px;padding:6px 24px 14px;border-inline-end:0;border-bottom:1px solid var(--line)}
+  .phone[data-role=res] nav.tabs:not(.devnav) button{padding:10px 22px;border-radius:999px;font-size:15.5px;color:var(--mut)}
+  .phone[data-role=res] nav.tabs:not(.devnav) button:hover{background:var(--sand2);color:var(--ink)}
+  .phone[data-role=res] nav.tabs:not(.devnav) button.on{background:var(--ink);color:#fff;font-weight:500}
+  .phone[data-role=res] nav.tabs:not(.devnav) button svg{width:19px;height:19px}
+  .phone[data-role=res] nav.tabs:not(.devnav) button.on svg,.phone[data-role=res] nav.tabs:not(.devnav) button.on svg *{color:#fff;stroke:#fff}
+  .phone[data-role=res] main{grid-column:1;grid-row:3}
   .phone .a11y-fab{top:auto;bottom:28px}
 }
 /* ---- developer view on a wide screen ---- */
