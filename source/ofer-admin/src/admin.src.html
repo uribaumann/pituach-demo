@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pituach Admin Center</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500&family=Heebo:wght@300;400;500;600&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Layout: fixed sidebar on the right (RTL) + a scrolling work area of panels and tables. Sea-blue on cream, the project's own line. */
+:root{
+  --bg:#EEF2F8;--side:#FAF9F6;--panel:#FFFFFF;--ink:#2B2A27;--mut:#5F6570;--line:#DFE4EC;--soft:#E6ECF5;
+  --accent:#3F5A85;--accent-ink:#FFFFFF;--sky:#C9D6EA;--hover:#F3F6FB;
+  --ok:#2F6B52;--ok-bg:#E3F1EA;--warn:#8A5A12;--warn-bg:#FBF0DC;--bad:#A23A3A;--bad-bg:#F8E5E5;--info-bg:#E4EBF6;
+  --shadow:0 1px 2px #2b2a270d,0 6px 24px #3f5a8510;
+  --serif:'Frank Ruhl Libre',Georgia,serif;--sans:'Heebo',Arial,sans-serif;--lat:'Cormorant Garamond',Georgia,serif;
+  --fs:15px;--r:10px;--logo:none;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#15181D;--side:#1B1F25;--panel:#20252C;--ink:#ECEEF2;--mut:#A7AEBA;--line:#323944;--soft:#2A313B;
+  --accent:#9DB6DC;--accent-ink:#14181E;--sky:#3A4C68;--hover:#262C35;
+  --ok:#8FD0B1;--ok-bg:#1E3A2E;--warn:#E8C27E;--warn-bg:#3D3020;--bad:#F0A3A3;--bad-bg:#432627;--info-bg:#28354A;--logo:invert(1);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15181D;--side:#1B1F25;--panel:#20252C;--ink:#ECEEF2;--mut:#A7AEBA;--line:#323944;--soft:#2A313B;
+  --accent:#9DB6DC;--accent-ink:#14181E;--sky:#3A4C68;--hover:#262C35;
+  --ok:#8FD0B1;--ok-bg:#1E3A2E;--warn:#E8C27E;--warn-bg:#3D3020;--bad:#F0A3A3;--bad-bg:#432627;--info-bg:#28354A;--logo:invert(1);color-scheme:dark}
+:root[data-contrast="high"]{--mut:var(--ink);--line:var(--mut)}
+:root[data-size="l"]{--fs:17px}:root[data-size="xl"]{--fs:19px}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.li>svg{width:18px;height:18px;color:var(--mut);flex:none}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 var(--fs)/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+h1,h2,h3{margin:0;font-weight:500;text-wrap:balance}
+h1{font-family:var(--serif);font-size:1.9em;line-height:1.2}
+h2{font-family:var(--serif);font-size:1.3em}
+h3{font-size:1em;font-weight:600}
+p{margin:0}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:fixed;top:-60px;right:16px;z-index:100;background:var(--accent);color:var(--accent-ink);padding:10px 16px;border-radius:8px}
+.skip:focus{top:calc(10px + env(safe-area-inset-top,0px))}
+.logo{filter:var(--logo)}
+.num{font-variant-numeric:tabular-nums}
+.lat{font-family:var(--lat);letter-spacing:.06em}
+.mut{color:var(--mut)}.small{font-size:.86em}
+
+/* ---------- login ---------- */
+.login{min-height:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
+.login-form{display:flex;align-items:center;justify-content:center;padding-block:40px;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px));background:var(--side)}
+.login-card{width:100%;max-width:400px;display:flex;flex-direction:column;gap:18px}
+.login-card .brand{display:flex;align-items:center;justify-content:space-between;gap:16px;direction:ltr}
+.login-card .brand img{height:30px}
+.login-card .brand .ofer{height:34px}
+.login-art{position:relative;background:#2B2A27 center/cover;min-height:360px}
+.login-art::after{content:"";position:absolute;inset:0;background:linear-gradient(#0000 45%,#14181ecc)}
+.login-art .cap{position:absolute;bottom:40px;right:44px;left:44px;z-index:1;color:#fff}
+.login-art .cap .lat{font-size:15px;letter-spacing:.32em;opacity:.9}
+.login-art .cap h2{font-size:2.1em;margin-top:6px;color:#fff}
+.notice{background:var(--info-bg);border-radius:8px;padding:12px 14px;font-size:.88em}
+.notice b{font-weight:600}
+.err{background:var(--bad-bg);color:var(--bad);border-radius:8px;padding:10px 14px;font-size:.92em}
+@media (max-width:820px){.login{grid-template-columns:1fr}.login-art{min-height:200px;order:-1}.login-art .cap{bottom:20px;right:20px;left:20px}.login-art .cap h2{font-size:1.5em}}
+
+/* ---------- forms ---------- */
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field>label,.lbl{font-size:.88em;font-weight:500}
+.field .hint{font-size:.8em;color:var(--mut)}
+input[type=text],input[type=email],input[type=password],input[type=number],input[type=date],input[type=time],input[type=tel],input[type=search],select,textarea{
+  width:100%;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-height:44px}
+textarea{min-height:96px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);outline:2px solid color-mix(in srgb,var(--accent) 30%,transparent);outline-offset:0}
+input[aria-invalid=true]{border-color:var(--bad)}
+.pw{position:relative}.pw input{padding-left:84px}
+.pw button{position:absolute;left:6px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--accent);padding:6px 8px;font-size:.86em}
+.check{display:flex;align-items:center;gap:10px;font-size:.92em}
+.check input{width:18px;height:18px;accent-color:var(--accent)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.span2{grid-column:span 2}
+@media (max-width:640px){.grid2,.grid3{grid-template-columns:1fr}.span2{grid-column:auto}}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:8px 16px;border-radius:8px;border:1px solid var(--line);background:var(--panel);font-weight:500;white-space:nowrap;text-decoration:none;color:var(--ink)}
+.btn:hover{background:var(--hover)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.pri:hover{filter:brightness(1.08)}
+.btn.ghost{border-color:transparent;background:none;color:var(--accent)}
+.btn.ghost:hover{background:var(--hover)}
+.btn.danger{color:var(--bad)}
+.btn.sm{min-height:34px;padding:4px 12px;font-size:.88em}
+.btn.wide{width:100%;min-height:48px}
+.btn svg{width:18px;height:18px;flex:none}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.ib{width:36px;height:36px;display:inline-grid;place-items:center;border-radius:8px;border:0;background:none;color:var(--mut)}
+.ib:hover{background:var(--hover);color:var(--ink)}
+.ib svg{width:18px;height:18px}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.between{justify-content:space-between}
+.grow{flex:1;min-width:0}
+
+/* ---------- shell ---------- */
+.shell{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:100%}
+.side{background:var(--side);border-left:1px solid var(--line);position:sticky;top:0;height:100vh;height:100dvh;overflow:auto;display:flex;flex-direction:column;padding:22px 14px 16px}
+.side .brand{padding:0 10px 18px;display:flex;flex-direction:column;gap:4px;direction:ltr;align-items:flex-end}
+.side .brand img{height:26px}
+.side .brand span{font-size:.78em;color:var(--mut);direction:rtl}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav .grp{font-size:.72em;letter-spacing:.06em;color:var(--mut);padding:16px 12px 6px;font-weight:500}
+.nav a{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:.95em}
+.nav a svg{width:19px;height:19px;color:var(--mut);flex:none}
+.nav a:hover{background:var(--hover)}
+.nav a[aria-current=page]{background:var(--soft);font-weight:500}
+.nav a[aria-current=page] svg{color:var(--accent)}
+.nav .badge{margin-inline-start:auto}
+.badge{min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:var(--accent);color:var(--accent-ink);font-size:.76em;display:inline-grid;place-items:center;font-weight:600}
+.side .foot{margin-top:auto;padding:16px 10px 0;display:flex;flex-direction:column;gap:8px}
+.side .foot img{height:26px;align-self:flex-end}
+.main{min-width:0;display:flex;flex-direction:column}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);display:flex;align-items:center;gap:14px;padding-block:12px;padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:28px;border-bottom:1px solid var(--line)}
+.top .search{flex:1;max-width:440px;position:relative}
+.top .search svg{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--mut)}
+.top .search input{padding-right:40px;background:var(--panel)}
+.sres{position:absolute;top:calc(100% + 6px);right:0;left:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:6px;max-height:360px;overflow:auto;z-index:20}
+.sres a{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:6px;color:var(--ink);text-decoration:none}
+.sres a:hover,.sres a:focus{background:var(--hover)}
+.me{display:flex;align-items:center;gap:10px;margin-inline-start:auto}
+.av{width:36px;height:36px;border-radius:50%;background:var(--sky);color:var(--ink);display:grid;place-items:center;font-weight:600;flex:none}
+.me .who{line-height:1.25;font-size:.9em}
+.menu-btn{display:none}
+.content{padding-block:28px 60px;padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:28px;display:flex;flex-direction:column;gap:22px;max-width:1360px;width:100%}
+.ph{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.ph .eyebrow{font-size:.74em;letter-spacing:.14em;color:var(--accent);font-weight:500;margin-bottom:4px;direction:ltr;text-align:right}
+.ph p{color:var(--mut);margin-top:6px;max-width:68ch}
+@media (max-width:980px){
+  .shell{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 0 0 auto;width:280px;z-index:40;transform:translateX(100%);transition:transform .2s;padding-top:calc(22px + env(safe-area-inset-top,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+  .side.open{transform:none;box-shadow:-20px 0 60px #0003}
+  .menu-btn{display:inline-grid}
+  .top{padding-right:max(16px,env(safe-area-inset-right,0px));padding-left:max(16px,env(safe-area-inset-left,0px))}
+  .content{padding-right:max(16px,env(safe-area-inset-right,0px));padding-left:max(16px,env(safe-area-inset-left,0px))}
+  .me .who{display:none}
+}
+.scrim{position:fixed;inset:0;background:#0005;z-index:39}
+
+/* ---------- panels, tiles, tables ---------- */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;min-width:0}
+.panel>.ph2{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px;align-items:start}
+.cols.even{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:1100px){.cols,.cols.even{grid-template-columns:1fr}}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:1100px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;display:flex;flex-direction:column;gap:4px;text-align:right;color:var(--ink);text-decoration:none}
+a.tile:hover{border-color:var(--accent)}
+.tile .k{font-size:.82em;color:var(--mut)}
+.tile .v{font-family:var(--serif);font-size:2em;line-height:1.15}
+.tile .s{font-size:.82em;color:var(--mut)}
+.tbl-wrap{overflow-x:auto;margin:0 -22px;padding:0 22px}
+table{width:100%;border-collapse:collapse;font-size:.93em}
+th{text-align:right;font-weight:500;color:var(--mut);font-size:.84em;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr.click{cursor:pointer}
+tbody tr.click:hover{background:var(--hover)}
+td .t{font-weight:500}
+td.act{white-space:nowrap;text-align:left}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;font-size:.8em;font-weight:500;white-space:nowrap;background:var(--soft);color:var(--ink)}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.7}
+.chip.ok{background:var(--ok-bg);color:var(--ok)}.chip.warn{background:var(--warn-bg);color:var(--warn)}.chip.bad{background:var(--bad-bg);color:var(--bad)}.chip.info{background:var(--info-bg);color:var(--accent)}
+.chip.plain::before{display:none}
+.empty{padding:28px;text-align:center;color:var(--mut);border:1px dashed var(--line);border-radius:var(--r)}
+.list{display:flex;flex-direction:column}
+.li{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.li:last-child{border-bottom:0}
+.li .ic{width:38px;height:38px;border-radius:10px;background:var(--soft);display:grid;place-items:center;color:var(--accent);flex:none}
+.li .ic svg{width:19px;height:19px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:thin}
+.tabs button{border:0;background:none;padding:10px 14px;border-bottom:2px solid transparent;color:var(--mut);white-space:nowrap;font-weight:500}
+.tabs button[aria-selected=true]{color:var(--ink);border-color:var(--accent)}
+.tabs .badge{margin-inline-start:6px;height:20px;min-width:20px;font-size:.72em}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.filters select,.filters input{width:auto;min-width:150px;min-height:40px}
+.seg{display:inline-flex;background:var(--soft);border-radius:9px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:none;padding:6px 14px;border-radius:7px;font-size:.9em;color:var(--mut)}
+.seg button[aria-pressed=true]{background:var(--panel);color:var(--ink);box-shadow:var(--shadow);font-weight:500}
+.switch{position:relative;display:inline-block;width:42px;height:24px;flex:none}
+.switch input{opacity:0;position:absolute;inset:0;margin:0;cursor:pointer;z-index:1}
+.switch i{position:absolute;inset:0;background:var(--line);border-radius:12px;transition:background .15s}
+.switch i::after{content:"";position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .15s;box-shadow:0 1px 2px #0003}
+.switch input:checked+i{background:var(--accent)}
+.switch input:checked+i::after{transform:translateX(-18px)}
+.switch input:focus-visible+i{outline:3px solid var(--accent);outline-offset:2px}
+
+/* ---------- upload ---------- */
+.drop{border:2px dashed var(--sky);border-radius:var(--r);padding:26px;display:flex;align-items:center;gap:18px;background:color-mix(in srgb,var(--soft) 50%,var(--panel));transition:background .15s,border-color .15s}
+.drop.over{border-color:var(--accent);background:var(--info-bg)}
+.drop .ic{width:52px;height:52px;border-radius:50%;background:var(--panel);display:grid;place-items:center;color:var(--accent);flex:none}
+.drop .ic svg{width:24px;height:24px}
+.fileic{width:38px;height:46px;border-radius:5px;background:var(--soft);display:grid;place-items:center;font-size:.66em;font-weight:600;color:var(--accent);flex:none;letter-spacing:.04em}
+.fileic.img{background-size:cover;background-position:center;color:transparent}
+.qlist{display:flex;flex-direction:column;gap:8px;max-height:200px;overflow:auto}
+.qlist .q{display:flex;align-items:center;gap:12px;padding:8px 10px;border:1px solid var(--line);border-radius:8px}
+
+/* ---------- resident ---------- */
+.res-head{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.res-head .plan{width:150px;height:104px;border-radius:10px;border:1px solid var(--line);background:#fff center/contain no-repeat;flex:none}
+.res-head .apt{font-family:var(--lat);font-size:1.25em;letter-spacing:.08em;direction:ltr;text-align:right}
+.facts{display:flex;gap:26px;flex-wrap:wrap;margin-top:8px}
+.facts div{font-size:.86em;color:var(--mut)}.facts b{display:block;color:var(--ink);font-weight:500;font-size:1.06em}
+.thread{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow:auto;padding:6px 2px}
+.bub{max-width:72%;padding:10px 14px;border-radius:14px;background:var(--soft);align-self:flex-start}
+.bub.me{align-self:flex-end;background:var(--accent);color:var(--accent-ink)}
+.bub .tm{font-size:.74em;opacity:.75;margin-top:4px}
+
+/* ---------- gallery ---------- */
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.gi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.gi .im{aspect-ratio:4/3;background:var(--soft) center/cover;position:relative;max-width:100%}
+.gi .im .pos{position:absolute;top:8px;right:8px;background:var(--accent);color:var(--accent-ink);border-radius:12px;padding:2px 10px;font-size:.76em;font-weight:600}
+.gi .bd{padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.gi input[type=text]{min-height:36px;padding:6px 10px;font-size:.9em}
+.ms{display:flex;flex-direction:column}
+.ms .m{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.ms .m:last-child{border:0}
+.ms .dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);background:var(--panel);display:grid;place-items:center}
+.ms .m.done .dot{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.ms .m.now .dot{border-color:var(--accent);box-shadow:0 0 0 4px var(--info-bg)}
+.ms .dot svg{width:12px;height:12px}
+.bar{height:6px;border-radius:3px;background:var(--soft);overflow:hidden;display:flex;gap:3px}
+.bar i{flex:1;background:var(--line)}.bar i.on{background:var(--accent)}
+
+/* ---------- dialog, toast, a11y ---------- */
+dialog{border:0;border-radius:14px;padding:0;background:var(--panel);color:var(--ink);width:min(640px,calc(100vw - 32px));max-height:calc(100dvh - 40px);box-shadow:0 30px 80px #0004}
+dialog.wide{width:min(980px,calc(100vw - 32px))}
+dialog::backdrop{background:#14181e80}
+dialog form,dialog .dlg{display:flex;flex-direction:column;max-height:calc(100dvh - 40px)}
+.dh{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line)}
+.db{padding:20px 22px;overflow:auto;display:flex;flex-direction:column;gap:16px}
+.df{display:flex;gap:10px;justify-content:flex-start;padding:14px 22px;border-top:1px solid var(--line);flex-wrap:wrap}
+.pv{background:var(--soft);border-radius:10px;min-height:300px;display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto;max-height:62vh}
+.pv canvas,.pv img{max-width:100%;height:auto;background:#fff;box-shadow:var(--shadow);border-radius:4px}
+.pv .pages{display:flex;flex-direction:column;gap:14px;align-items:center;width:100%}
+#toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));left:50%;transform:translate(-50%,20px);background:var(--ink);color:var(--panel);padding:12px 20px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:90;max-width:calc(100vw - 32px)}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.a11y-btn{position:fixed;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));width:48px;height:48px;border-radius:50%;background:var(--accent);color:var(--accent-ink);border:0;display:grid;place-items:center;z-index:60;box-shadow:0 6px 20px #3f5a8555}
+.a11y-btn svg{width:26px;height:26px}
+.a11y-pop{position:fixed;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(76px + env(safe-area-inset-bottom,0px));width:290px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 20px 50px #0003;padding:16px;z-index:61;display:flex;flex-direction:column;gap:12px}
+.confirm-bar{display:flex;gap:8px;align-items:center;background:var(--bad-bg);color:var(--bad);border-radius:8px;padding:6px 10px;font-size:.88em;flex-wrap:wrap}
+.log td{font-size:.92em}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">דלג לתוכן הראשי</a>
+<div id="app"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<button class="a11y-btn" id="a11yBtn" aria-label="הגדרות נגישות" aria-expanded="false" aria-controls="a11yPop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="1.6"/><path d="M5 8.5l7 1.5 7-1.5M12 10v4.5M12 14.5l-3.5 6M12 14.5l3.5 6"/></svg></button>
+<div class="a11y-pop" id="a11yPop" role="dialog" aria-label="נגישות" hidden></div>
+<dialog id="dlg"></dialog>
+<script>
+/*__ASSETS__*/
+/* ================= utilities ================= */
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nis=n=>'₪'+Math.round(n).toLocaleString('en-US');
+const fmtD=d=>d?new Date(d).toLocaleDateString('he-IL',{day:'numeric',month:'short',year:'numeric'}):'';
+const fmtDT=d=>new Date(d).toLocaleString('he-IL',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const today=()=>new Date().toISOString().slice(0,10);
+const uid=p=>p+Math.random().toString(36).slice(2,8);
+const kb=n=>n>1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
+const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const SS={get(k){try{return JSON.parse(sessionStorage.getItem(k))}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{sessionStorage.removeItem(k)}catch(e){}}};
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),3200)}
+const I=(()=>{const p={
+ home:'<path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/>',
+ users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.8a3.4 3.4 0 010 6.4M18 14.8c1.9.7 3.1 2.4 3.5 5.2"/>',
+ doc:'<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+ card:'<rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/>',
+ inbox:'<path d="M4 13l2.5-8h11L20 13v6a1 1 0 01-1 1H5a1 1 0 01-1-1z"/><path d="M4 13h4.5l1.5 2.5h4l1.5-2.5H20"/>',
+ pen:'<path d="M15.5 4.5l4 4L8 20H4v-4z"/><path d="M13 7l4 4"/>',
+ tool:'<path d="M14.7 6.3a4 4 0 00-5.4 5.2L3.5 17.3a1.8 1.8 0 002.5 2.5l5.8-5.8a4 4 0 005.2-5.4l-2.6 2.6-2.3-.4-.4-2.3z"/>',
+ crane:'<path d="M5 21V5l3-2v18M8 5h13M8 9l5-4M18 5v5M17 10h2v3h-2zM3 21h8"/>',
+ mega:'<path d="M3 10v4a1 1 0 001 1h2l5 4V5L6 9H4a1 1 0 00-1 1zM15 8.5a5 5 0 010 7M18 6a8.5 8.5 0 010 12"/>',
+ image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="9.5" r="1.8"/><path d="M21 16l-5-5-9 9"/>',
+ store:'<path d="M4 9l1.5-5h13L20 9M4 9h16v2a2.5 2.5 0 01-4 2 2.5 2.5 0 01-4 0 2.5 2.5 0 01-4 0 2.5 2.5 0 01-4-2zM5 13v7h14v-7M10 20v-4h4v4"/>',
+ book:'<path d="M4 5a2 2 0 012-2h13v15H6a2 2 0 00-2 2zM4 20a2 2 0 002 2h13v-4"/>',
+ gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/>',
+ list:'<path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/>',
+ upload:'<path d="M12 16V4M7 9l5-5 5 5M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3"/>',
+ search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
+ out:'<path d="M15 4h3a2 2 0 012 2v12a2 2 0 01-2 2h-3M10 16l-4-4 4-4M6 12h10"/>',
+ eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+ dl:'<path d="M12 4v12M7 11l5 5 5-5M4 20h16"/>',
+ trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+ x:'<path d="M6 6l12 12M18 6L6 18"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ chev:'<path d="M15 6l-6 6 6 6"/>',
+ lock:'<rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 018 0v3.5"/>',
+ chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+ cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+ menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
+ edit:'<path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"/>',
+ bell:'<path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15zM10 20.5a2 2 0 004 0"/>',
+ shield:'<path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
+ key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/>',
+ sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+};return n=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p[n]||''}</svg>`})();
+
+/* ================= file store (IndexedDB, with in-memory fallback) ================= */
+const FS=(()=>{let db=null;const mem=new Map();
+ const open=()=>new Promise(res=>{try{const r=indexedDB.open('pituach-admin-files',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>{db=r.result;res()};r.onerror=()=>res()}catch(e){res()}});
+ const tx=(m,fn)=>new Promise((res,rej)=>{try{const t=db.transaction('f',m),s=t.objectStore('f'),q=fn(s);t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error)}catch(e){rej(e)}});
+ return{ready:open(),
+  async put(k,b){mem.set(k,b);if(db)try{await tx('readwrite',s=>s.put(b,k))}catch(e){}},
+  async get(k){if(mem.has(k))return mem.get(k);if(db)try{const b=await tx('readonly',s=>s.get(k));if(b)mem.set(k,b);return b}catch(e){}return null},
+  async del(k){mem.delete(k);if(db)try{await tx('readwrite',s=>s.delete(k))}catch(e){}}}})();
+const urlCache=new Map();
+async function blobOf(src){if(!src)return null;if(src.startsWith('a:'))return AB[src.slice(2)]||null;return FS.get(src.slice(2))}
+async function urlOf(src){if(!src)return '';if(src.startsWith('a:'))return A[src.slice(2)]||'';if(urlCache.has(src))return urlCache.get(src);const b=await blobOf(src);const u=b?URL.createObjectURL(b):'';if(u)urlCache.set(src,u);return u}
+const imgUrl=src=>src&&src.startsWith('a:')?A[src.slice(2)]:(urlCache.get(src)||'');
+async function warmImages(){for(const s of [...ST.gallery.map(g=>g.src),...ST.photos.map(p=>p.src),...ST.updates.map(u=>u.img),...ST.residents.map(r=>r.plan)].filter(s=>s&&s.startsWith('u:')))await urlOf(s)}
+
+/* ================= seed data (mirrors the residents app) ================= */
+const RES0=[
+ {id:'noa',name:'נועה כהן',co:'איתי כהן',phone:'050-1234567',email:'noa@example.com',apt:'THE SOUTH WEST APT',type:'דירת מגורים',floor:5,sqm:140,out:'מרפסת 27 מ״ר',beds:'3 + ממ״ד',dir:'דרום־מערב, לים',plan:'a:plan_sw',price:9650000,unit:18,stage:'build',paid:{},signed:'2026-02-15'},
+ {id:'yonatan',name:'יונתן לוי',co:'שירה לוי',phone:'052-2345678',email:'yonatan@example.com',apt:'THE SEAGAL',type:'פנטהאוז',floor:12,sqm:370,out:'מרפסות 125 מ״ר',beds:'4 + חדר עבודה',dir:'קומה מלאה, 360° לים ולעיר',plan:'a:plan_seagal',price:41000000,unit:46,stage:'build',paid:{},signed:'2026-02-20'},
+ {id:'maya',name:'מאיה אברהם',co:'',phone:'054-3456789',email:'maya@example.com',apt:'THE NORTH WEST SEA VIEW PENTHOUSE',type:'פנטהאוז',floor:11,sqm:239,out:'מרפסות 108 מ״ר',beds:'3 + ממ״ד',dir:'צפון־מערב, לים',plan:'a:plan_ph',price:24500000,unit:44,stage:'build',paid:{},signed:'2026-03-02'},
+ {id:'daniel',name:'דניאל פרץ',co:'רוני פרץ',phone:'053-4567890',email:'daniel@example.com',apt:'THE NORTH EAST MINI PENTHOUSE',type:'מיני פנטהאוז',floor:10,sqm:156,out:'מרפסת 42 מ״ר',beds:'3 + ממ״ד',dir:'צפון־מזרח',plan:'a:plan_mini',price:12800000,unit:41,stage:'build',paid:{},signed:'2026-03-10'},
+ {id:'tamar',name:'תמר מזרחי',co:'',phone:'058-5678901',email:'tamar@example.com',apt:'THE SOUTH EAST GARDEN APT',type:'דירת גן',floor:0,sqm:116,out:'גינה 48 מ״ר',beds:'2 + ממ״ד',dir:'דרום־מזרח, לגינה',plan:'a:plan_garden',price:8200000,unit:2,stage:'build',paid:{},signed:'2026-04-01'}];
+const DOC_CATS=['חוזה ורכישה','תוכניות','תשלומים','שינויי דיירים','מסירה ואחריות','ספר הבית','כללי לפרויקט'];
+const GCAT={sea:'הים והנוף',bld:'הבניינים',common:'לובי ובריכה',in:'פנים הדירה'};
+const GAL0=[['sea_welcome','הים, מהמרפסות של SEA HOUSE','sea'],['sea_sunset','שקיעה מול חוף אכדיה','sea'],['aerial','הרצליה פיתוח, מבט מהאוויר','sea'],['sail','הים','sea'],['tower','המגדל והבניינים','bld'],['tower_sunset','המגדל מול הים','bld'],['tower_hero','SEA HOUSE','bld'],['ph_day','קומות הפנטהאוז','bld'],['street','מבט מהרחוב','bld'],['garden','הגן והשבילים','bld'],['exterior','הבניינים והגן','bld'],['tree_welcome','TREE HOUSE','bld'],['tree_facade','המרפסות של TREE HOUSE','bld'],['lobby_desk','לובי הכניסה','common'],['lobby_lounge','פינת הישיבה בלובי','common'],['pool_in','הבריכה','common'],['tree_lobby','הלובי של TREE HOUSE','common'],['lobby','הגינה הפנימית','common'],['sofa','הים, מכל חדר','in'],['dining','פינת האוכל מול הים','in'],['walk','הסלון והמטבח','in'],['terrace','המרפסת, בשעת ערב','in'],['dusk','הסלון בשקיעה','in'],['stone','אי המטבח','in'],['kitchen','המטבח','in'],['pool','ליד הבריכה','in'],['green','פינת ישיבה בגינה','in']];
+const HERO0=['tower_hero','sea_sunset','tower_sunset','aerial','lobby_desk'];
+const REQK={supplier:'פגישה עם ספק',visit:'ביקור באתר',design:'שאלה על המפרט',special:'בקשה אישית',move:'תיאום מעבר',guest:'אורח מגיע',amenity:'הזמנת מתקן'};
+const RSTAT={new:['חדשה','warn'],sched:['תואמה','info'],done:['טופלה','ok'],no:['נדחתה','bad']};
+const CSTAT={review:['בבדיקה','warn'],quote:['הצעת מחיר אצל הדייר','info'],approved:['אושר','ok'],declined:['נדחה','bad']};
+const TSTEPS=['התקבל','הועבר לקבלן','בטיפול','טופל'];
+const APPSTAGE={build:'שלב הבנייה',handover:'מסירה',after:'אחרי האכלוס'};
+const LEGALRX=/מסיר|מועד|תאריך|אכלוס|טופס 4|דחייה|עיכוב/;
+function seed(){
+ const d=(o)=>({id:uid('d'),date:today(),visible:true,...o});
+ const docs=[];
+ RES0.forEach(r=>{docs.push(d({res:r.id,cat:'חוזה ורכישה',title:'חוזה מכר חתום',file:'contract-'+r.id+'.pdf',type:'pdf',size:A0['contract_'+r.id]?Math.round(A0['contract_'+r.id][1].length*.75):0,src:'a:contract_'+r.id,date:r.signed}));
+  const pk=r.plan.slice(2);docs.push(d({res:r.id,cat:'תוכניות',title:'תוכנית הדירה',file:'plan-'+r.id+'.pdf',type:'pdf',size:Math.round(A0['plandoc_'+pk][1].length*.75),src:'a:plandoc_'+pk,date:r.signed}))});
+ docs.push(d({res:null,cat:'כללי לפרויקט',title:'הדמיה: הבניינים והגן',file:'exterior.jpg',type:'jpg',size:Math.round(A0.exterior[1].length*.75),src:'a:exterior',date:'2026-09-01'}));
+ return{
+  v:1,residents:structuredClone(RES0),docs,
+  index:{base:104.6,cur:108.3,month:'אוקטובר 2026'},
+  schedule:[{id:'p1',name:'מקדמה בחתימה',pct:10,due:'2026-02-15',fixed:true},{id:'p2',name:'תשלום שני',pct:15,due:'2026-09-01',fixed:true},{id:'p3',name:'סיום חפירה ודיפון',pct:15,due:'2027-03-01'},{id:'p4',name:'סיום שלד',pct:20,due:'2027-12-01'},{id:'p5',name:'גמרים ומערכות',pct:20,due:'2028-10-01'},{id:'p6',name:'יתרה במסירה',pct:20,due:'2029-06-01'}],
+  milestones:[{t:'חפירה ודיפון',d:'2026'},{t:'יסודות ומרתפים',d:'2027'},{t:'שלד הבניין',d:'2027'},{t:'מעטפת וחזיתות',d:'2028'},{t:'גמרים, מטבחים ומערכות',d:'2028'},{t:'פיתוח, לובי ומסירה',d:'2029'}],stage:0,delivery:'2029',
+  photos:[{id:'ph1',cap:'עבודות החפירה והדיפון, מבט מלמעלה',date:'2026-08-20',src:'a:site'}],
+  updates:[{id:'u1',title:'השלמת קירות הדיפון בצד המערבי',text:'צוותי הקבלן השלימו את קירות הדיפון בצד המערבי של המגרש. השלב הבא: המשך החפירה בצד הצפוני.',img:'a:site',date:'2026-10-27',status:'pub'}],
+  requests:[
+   {id:'q1',res:'maya',kind:'visit',detail:'סיור מלווה בשלב החפירה',when:'2026-12-15',time:'',status:'new',date:'2026-11-20'},
+   {id:'q2',res:'noa',kind:'supplier',opt:'מטבחים',detail:'פגישה באולם התצוגה של ספק המטבחים',when:'2027-01-14',time:'10:30',status:'new',date:'2026-11-24'},
+   {id:'q3',res:'daniel',kind:'design',detail:'מה גובה התקרה בסלון, והאם אפשר להנמיך לתאורה שקועה?',when:'',time:'',status:'new',date:'2026-11-22'},
+   {id:'q4',res:'yonatan',kind:'supplier',opt:'כלים סניטריים',detail:'בחירת כלים סניטריים לחדר הרחצה הראשי',when:'2026-12-03',time:'16:00',status:'sched',date:'2026-11-12'}],
+  changes:[
+   {id:'c1',res:'noa',title:'הזזת נקודת חשמל בסלון',price:1450,status:'approved',date:'2026-06-02'},
+   {id:'c2',res:'noa',title:'החלפת ריצוף במקלחת להדר',price:3900,status:'quote',date:'2026-10-20'},
+   {id:'c9',res:'yonatan',title:'הוספת בר יין מובנה בסלון',price:0,status:'review',date:'2026-11-05'},
+   {id:'c7',res:'tamar',title:'ברז גינה נוסף',price:900,status:'quote',date:'2026-11-02'}],
+  tickets:[
+   {id:'t1',res:'noa',cat:'אינסטלציה',desc:'טפטוף קל מתחת לכיור במטבח',urgency:'רגילה',step:3,date:'2026-10-28',contractor:'הקבלן הראשי'},
+   {id:'t2',res:'noa',cat:'דלתות וחלונות',desc:'תריס בחדר השינה נתקע באמצע',urgency:'רגילה',step:1,date:'2026-11-10',contractor:'הקבלן הראשי'}],
+  threads:{noa:[{me:false,t:'היי אורי, מתי אפשר לבקר באולם התצוגה של המטבחים?',at:'2026-11-24T09:12'}],yonatan:[{me:true,t:'יונתן, קיבלנו את בקשת בר היין. המהנדס בודק ונחזור עם הצעת מחיר.',at:'2026-11-06T11:00'}],maya:[],daniel:[{me:false,t:'שאלתי על גובה התקרה בסלון, תודה!',at:'2026-11-22T18:40'}],tamar:[]},
+  unread:{noa:1,daniel:1},
+  broadcasts:[{id:'b1',title:'עדכון חודשי מהאתר',text:'החפירה מתקדמת לפי התוכנית. מצורפים צילומים מהאתר.',cat:'construction',to:'all',date:'2026-11-01',status:'sent'}],
+  gallery:GAL0.map(([k,c,g])=>({id:k,src:'a:'+k,cap:c,cat:g})),hero:HERO0.slice(),
+  suppliers:[
+   {id:'s1',cat:'מטבחים',name:'[ספק מטבחים]',contact:'נציג אולם התצוגה',phone:'03-0000001',address:'אולם תצוגה, הרצליה פיתוח',notes:'פגישה של כשעה וחצי, מומלץ להגיע עם התוכנית'},
+   {id:'s2',cat:'כלים סניטריים',name:'[ספק כלים סניטריים]',contact:'מחלקת לקוחות פרויקטים',phone:'03-0000002',address:'אולם תצוגה, תל אביב',notes:''},
+   {id:'s3',cat:'ריצוף וחיפויים',name:'[ספק ריצוף]',contact:'יועצת עיצוב',phone:'03-0000003',address:'אולם תצוגה, ראשון לציון',notes:'דוגמאות ריצוף להשאלה'},
+   {id:'s4',cat:'אלומיניום ודלתות',name:'[ספק אלומיניום]',contact:'מנהל פרויקט',phone:'03-0000004',address:'',notes:'פגישות באתר בלבד'}],
+  guide:[
+   {id:'g1',t:'מיזוג אוויר',s:'מיני מרכזי · 4 יחידות',sup:'[ספק מיזוג]',w:'3 שנים',tip:'לנקות פילטרים כל 3 חודשים.'},
+   {id:'g2',t:'מים חמים',s:'דוד שמש 150 ליטר + גיבוי חשמלי',sup:'[ספק דודים]',w:'3 שנים',tip:'בחורף להפעיל גיבוי חשמלי עם טיימר.'},
+   {id:'g3',t:'מטבח',s:'ארונות, משטח קוורץ וכיור',sup:'[ספק מטבחים]',w:'שנה',tip:'לנקות את משטח הקוורץ במים וסבון עדין בלבד.'},
+   {id:'g4',t:'חלונות ותריסים',s:'אלומיניום, תריסים חשמליים',sup:'[ספק אלומיניום]',w:'שנתיים',tip:'לנקות מסילות מאבק פעם בחודש.'},
+   {id:'g5',t:'ממ״ד',s:'דלת הדף, חלון ומערכת סינון',sup:'פיקוד העורף',w:'לפי תקן',tip:'לבדוק פעם בחצי שנה שדלת ההדף נסגרת עד הסוף.'}],
+  warranty:[{id:'w1',t:'תקופת בדק כללית',end:'2030-06-01'},{id:'w2',t:'אינסטלציה וחיפויים',end:'2031-06-01'},{id:'w3',t:'רטיבות ואיטום',end:'2036-06-01'}],
+  mgmt:{name:'[חברת הניהול]',phone:'',email:'',hours:'א׳–ה׳ 08:00–17:00'},
+  amenities:['עמדת שמירה מאוישת 24/7','בקרת כניסה ואינטרקום','לובי כניסה ממוזג','בריכת שחייה','סאונה','חדר כושר','טעינה לרכב חשמלי','פינוי אשפה פנאומטי'],
+  host:{name:'אורי',role:'מנהל קשרי הדיירים שלך',hours:'א׳–ה׳ 09:00–18:00',reply:'בתוך יום עבודה'},
+  vpRule:true,
+  log:[{at:'2026-11-24T09:12',who:'מערכת',t:'נועה כהן ביקשה פגישה עם ספק המטבחים'},{at:'2026-11-22T18:40',who:'מערכת',t:'דניאל פרץ שלח שאלה על המפרט'},{at:'2026-11-20T10:05',who:'מערכת',t:'מאיה אברהם ביקשה ביקור באתר'}],
+ }}
+const KEY='pituach-admin-v1';
+let ST=LS.get(KEY);if(!ST||ST.v!==1)ST=seed();
+const save=()=>LS.set(KEY,ST);
+function log(t){ST.log.unshift({at:new Date().toISOString(),who:'אורי',t});ST.log=ST.log.slice(0,300);save()}
+const resOf=id=>ST.residents.find(r=>r.id===id);
+const rname=id=>id?(resOf(id)||{name:'דייר שהוסר'}).name:'כל הפרויקט';
+const floorTxt=r=>+r.floor?'קומה '+r.floor:'קומת הגן';
+function payRows(r){return ST.schedule.map(p=>{const base=r.price*p.pct/100,link=base*(ST.index.cur/ST.index.base-1);return{...p,base,link,total:base+link,paid:!!(p.fixed||r.paid[p.id])}})}
+const nextPay=r=>payRows(r).find(p=>!p.paid);
+const openReq=()=>ST.requests.filter(q=>q.status==='new');
+const openChg=()=>ST.changes.filter(c=>c.status==='review');
+const openTk=()=>ST.tickets.filter(t=>t.step<3);
+const unreadN=()=>Object.values(ST.unread).reduce((a,b)=>a+b,0);
+const pendUpd=()=>ST.updates.filter(u=>u.status==='vp');
+
+/* ================= auth (demo: checked in the browser) ================= */
+const AUTH_KEY='pituach-admin-auth';
+const DEMO={email:'uri@pituach.demo',pass:'Pituach2026!'};
+async function sha(s){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return 'plain:'+s}}
+let AUTH=LS.get(AUTH_KEY)||{email:DEMO.email,hash:null,fails:0,lockUntil:0};
+const saveAuth=()=>LS.set(AUTH_KEY,AUTH);
+const IDLE_MIN=30;let lastAct=Date.now();
+function session(){const s=SS.get('pa-session')||LS.get('pa-remember');return s&&s.exp>Date.now()?s:null}
+function startSession(remember){const s={email:AUTH.email,exp:Date.now()+(remember?7*864e5:12*36e5)};SS.set('pa-session',s);if(remember)LS.set('pa-remember',s)}
+function logout(msg){SS.del('pa-session');try{localStorage.removeItem('pa-remember')}catch(e){}location.hash='';renderLogin(msg)}
+['click','keydown','pointermove'].forEach(e=>addEventListener(e,()=>{lastAct=Date.now()},{passive:true}));
+setInterval(()=>{if(session()&&Date.now()-lastAct>IDLE_MIN*6e4)logout('נותקת אחרי 30 דקות ללא פעילות. אפשר להתחבר שוב.')},30000);
+
+function renderLogin(msg=''){
+ document.title='Pituach Admin Center';
+ const locked=AUTH.lockUntil>Date.now();
+ $('#app').innerHTML=`<main class="login" id="content">
+  <section class="login-form" aria-labelledby="lt"><form class="login-card" id="loginForm" novalidate>
+   <div class="brand"><img class="logo" src="${A.wordmark}" alt="Pituach by the Sea"><img class="logo ofer" src="${A.ofer}" alt="עופר השקעות"></div>
+   <div><h1 id="lt">מרכז הניהול</h1><p class="mut" style="margin-top:6px">ניהול אפליקציית הדיירים של פיתוח על הים: דיירים, מסמכים, תשלומים, בקשות ועדכונים.</p></div>
+   ${msg?`<div class="notice" role="status">${esc(msg)}</div>`:''}
+   <div id="lerr" class="err" role="alert" ${locked?'':'hidden'}>${locked?'יותר מדי ניסיונות כושלים. החשבון נעול ל-5 דקות.':''}</div>
+   <div class="field"><label for="em">דוא״ל</label><input type="email" id="em" autocomplete="username" required dir="ltr" placeholder="name@company.co.il"></div>
+   <div class="field"><label for="pw">סיסמה</label><div class="pw"><input type="password" id="pw" autocomplete="current-password" required dir="ltr"><button type="button" id="pwT" aria-pressed="false" aria-controls="pw">הצגה</button></div></div>
+   <div class="row between"><label class="check"><input type="checkbox" id="rem">זכור אותי במחשב הזה</label><button type="button" class="btn ghost sm" id="forgot">שכחתי סיסמה</button></div>
+   <button class="btn pri wide" type="submit" ${locked?'disabled':''}>${I('lock')}כניסה</button>
+   <div class="notice"><b>גישה מורשית בלבד.</b> כרגע ההרשאה היא למנהל המערכת בלבד.<br><span class="mut">פרטי כניסה לדמו: <span dir="ltr" class="num">${DEMO.email}</span> · סיסמה <span dir="ltr" class="num">${DEMO.pass}</span></span></div>
+  </form></section>
+  <section class="login-art" style="background-image:url(${A.tower_sunset})" aria-hidden="true"><div class="cap"><div class="lat">PITUACH BY THE SEA</div><h2>הבית של הדיירים, בניהול אחד.</h2></div></section>
+ </main>`;
+ $('#em').focus();
+ $('#pwT').onclick=e=>{const p=$('#pw'),on=p.type==='password';p.type=on?'text':'password';e.target.textContent=on?'הסתרה':'הצגה';e.target.setAttribute('aria-pressed',on)};
+ $('#forgot').onclick=()=>{const e=$('#lerr');e.hidden=false;e.className='notice';e.textContent='באפליקציה האמיתית יישלח קישור לאיפוס לדוא״ל המנהל. בדמו: הסיסמה מופיעה למטה.'};
+ $('#loginForm').onsubmit=async ev=>{ev.preventDefault();const em=$('#em').value.trim().toLowerCase(),pw=$('#pw').value,er=$('#lerr');
+  er.className='err';[$('#em'),$('#pw')].forEach(x=>x.removeAttribute('aria-invalid'));
+  if(AUTH.lockUntil>Date.now())return;
+  if(!/^\S+@\S+\.\S+$/.test(em)){er.hidden=false;er.textContent='כתובת הדוא״ל לא תקינה. בדוק שיש בה @ ונקודה.';$('#em').setAttribute('aria-invalid','true');$('#em').focus();return}
+  if(!pw){er.hidden=false;er.textContent='צריך להזין סיסמה.';$('#pw').setAttribute('aria-invalid','true');$('#pw').focus();return}
+  const h=await sha(pw),ok=em===AUTH.email.toLowerCase()&&(AUTH.hash?h===AUTH.hash:pw===DEMO.pass);
+  if(!ok){AUTH.fails=(AUTH.fails||0)+1;if(AUTH.fails>=5){AUTH.lockUntil=Date.now()+5*6e4;AUTH.fails=0}saveAuth();
+   er.hidden=false;er.textContent=AUTH.lockUntil>Date.now()?'יותר מדי ניסיונות כושלים. החשבון נעול ל-5 דקות.':`הדוא״ל או הסיסמה לא נכונים. נותרו ${5-AUTH.fails} ניסיונות.`;$('#pw').value='';$('#pw').focus();return}
+  AUTH.fails=0;saveAuth();startSession($('#rem').checked);log('התחברות למרכז הניהול');boot()}}
+
+/* ================= shell ================= */
+const NAV=[
+ ['','סקירה',[['overview','home','סקירה כללית']]],
+ ['','דיירים',[['residents','users','דיירים ודירות'],['docs','doc','מסמכים'],['payments','card','תשלומים ומדד'],['messages','chat','הודעות']]],
+ ['','שירות',[['requests','inbox','בקשות ופגישות'],['changes','pen','שינויי דיירים'],['defects','tool','ליקויים ובדק'],['suppliers','store','ספקים']]],
+ ['','תוכן באפליקציה',[['construction','crane','שלבי בנייה ועדכונים'],['broadcast','mega','הודעה לכל הדיירים'],['gallery','image','גלריה ומסך הבית'],['homebook','book','מדריך הדירה ואחריות']]],
+ ['','מערכת',[['config','gear','הגדרות והרשאות'],['activity','list','יומן פעולות']]]];
+const BADGE={requests:()=>openReq().length,changes:()=>openChg().length,defects:()=>openTk().length,messages:unreadN,construction:()=>pendUpd().length};
+const VIEW_T={};NAV.forEach(g=>g[2].forEach(n=>VIEW_T[n[0]]=n[2]));
+let route='overview',sub='',ui={};
+function parseHash(){const h=location.hash.slice(1);const m=h.match(/^res-([a-z0-9]+)$/);if(m){route='resident';sub=m[1]}else{route=VIEW_T[h]?h:'overview';sub=''}}
+function shell(){
+ $('#app').innerHTML=`<div class="shell">
+  <nav class="side" id="side" aria-label="ניווט ראשי">
+   <div class="brand"><img class="logo" src="${A.wordmark}" alt="Pituach by the Sea"><span>מרכז הניהול</span></div>
+   <div class="nav" id="nav"></div>
+   <div class="foot"><img class="logo" src="${A.ofer}" alt="עופר השקעות"></div>
+  </nav>
+  <div class="main">
+   <header class="top">
+    <button class="ib menu-btn" id="menuBtn" aria-label="תפריט" aria-controls="side" aria-expanded="false">${I('menu')}</button>
+    <div class="search" role="search"><label for="q" class="sr">חיפוש</label>${I('search')}<input type="search" id="q" placeholder="חיפוש דייר, דירה או מסמך" autocomplete="off" aria-controls="sres" aria-expanded="false"><div class="sres" id="sres" hidden></div></div>
+    <div class="me"><button class="ib" id="themeBtn" aria-label="מצב תצוגה בהיר או כהה">${I('sun')}</button><div class="av" aria-hidden="true">א</div><div class="who"><b>אורי</b><div class="small mut">מנהל מערכת</div></div><button class="btn sm" id="logoutBtn">${I('out')}יציאה</button></div>
+   </header>
+   <main class="content" id="content" tabindex="-1"></main>
+  </div></div>`;
+ $('#menuBtn').onclick=()=>toggleSide();
+ $('#logoutBtn').onclick=()=>{log('יציאה ממרכז הניהול');logout('יצאת ממרכז הניהול.')};
+ $('#themeBtn').onclick=()=>{const r=document.documentElement,cur=r.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.dataset.theme=cur==='dark'?'light':'dark';LS.set('pa-theme',r.dataset.theme)};
+ const q=$('#q');q.oninput=()=>searchRun(q.value);q.onkeydown=e=>{if(e.key==='Escape'){q.value='';searchRun('')}if(e.key==='ArrowDown'){const f=$('#sres a');if(f){e.preventDefault();f.focus()}}};
+ $('#sres').onkeydown=e=>{const a=$$('#sres a'),i=a.indexOf(document.activeElement);if(e.key==='ArrowDown'&&a[i+1]){e.preventDefault();a[i+1].focus()}if(e.key==='ArrowUp'){e.preventDefault();(a[i-1]||q).focus()}if(e.key==='Escape'){q.focus();searchRun('')}};
+ document.addEventListener('click',e=>{if(!e.target.closest('.search'))$('#sres')&&($('#sres').hidden=true)});
+}
+function toggleSide(open){const s=$('#side'),o=open??!s.classList.contains('open');s.classList.toggle('open',o);$('#menuBtn').setAttribute('aria-expanded',o);
+ let sc=$('.scrim');if(o&&!sc){sc=document.createElement('div');sc.className='scrim';sc.onclick=()=>toggleSide(false);document.body.append(sc)}if(!o&&sc)sc.remove()}
+function navHTML(){return NAV.map(g=>`${g[1]!=='סקירה'?`<div class="grp">${g[1]}</div>`:''}${g[2].map(([id,ic,t])=>{const b=BADGE[id]?BADGE[id]():0;
+ return `<a href="#${id}" ${route===id||(route==='resident'&&id==='residents')?'aria-current="page"':''}>${I(ic)}<span>${t}</span>${b?`<span class="badge" aria-label="${b} ממתינים">${b}</span>`:''}</a>`}).join('')}`).join('')}
+function searchRun(v){const box=$('#sres'),q=v.trim().toLowerCase();if(!q){box.hidden=true;$('#q').setAttribute('aria-expanded','false');return}
+ const hits=[...ST.residents.filter(r=>(r.name+r.co+r.apt+r.phone+r.email+' '+r.unit).toLowerCase().includes(q)).map(r=>[`#res-${r.id}`,'users',r.name,r.apt+' · דירה '+r.unit]),
+  ...ST.docs.filter(d=>(d.title+d.file+d.cat).toLowerCase().includes(q)).slice(0,6).map(d=>[`#docs`,'doc',d.title,rname(d.res)+' · '+d.cat]),
+  ...ST.suppliers.filter(s=>(s.name+s.cat).toLowerCase().includes(q)).map(s=>['#suppliers','store',s.name,s.cat])];
+ box.innerHTML=hits.length?hits.map(h=>`<a href="${h[0]}">${I(h[1])}<span class="grow"><b>${esc(h[2])}</b><div class="small mut">${esc(h[3])}</div></span></a>`).join(''):'<div class="mut small" style="padding:10px">לא נמצאו תוצאות</div>';
+ box.hidden=false;$('#q').setAttribute('aria-expanded','true');$$('#sres a').forEach(a=>a.onclick=()=>{box.hidden=true;$('#q').value=''})}
+function go(h){if(location.hash==='#'+h)render();else location.hash=h}
+function render(focus){parseHash();$('#nav').innerHTML=navHTML();const v=VIEWS[route]||VIEWS.overview;$('#content').innerHTML=v();
+ document.title=(route==='resident'?(resOf(sub)||{}).name:VIEW_T[route])+' · Pituach Admin';
+ AFTER.forEach(f=>f());AFTER=[];if(focus){$('#content').focus({preventScroll:true});scrollTo(0,0)}toggleSide(false)}
+let AFTER=[];
+const pageHead=(eye,t,p,acts='')=>`<div class="ph"><div><div class="eyebrow">${eye}</div><h1>${t}</h1>${p?`<p>${p}</p>`:''}</div><div class="row">${acts}</div></div>`;
+const chip=(t,c='')=>`<span class="chip ${c}">${esc(t)}</span>`;
+const resLink=id=>id?`<a href="#res-${id}">${esc(rname(id))}</a>`:'<span class="mut">כל הפרויקט</span>';
+
+/* ================= views ================= */
+const VIEWS={};
+VIEWS.overview=()=>{
+ const due=ST.residents.map(r=>({r,p:nextPay(r)})).filter(x=>x.p).sort((a,b)=>a.p.due.localeCompare(b.p.due));
+ const soon=due.filter(x=>new Date(x.p.due)-new Date()<120*864e5);
+ const tasks=[...openReq().map(q=>({k:REQK[q.kind]+(q.opt?' · '+q.opt:''),t:q.detail,res:q.res,h:'requests',ic:'inbox',d:q.date})),
+  ...openChg().map(c=>({k:'בקשת שינוי',t:c.title,res:c.res,h:'changes',ic:'pen',d:c.date})),
+  ...openTk().map(t=>({k:'ליקוי · '+TSTEPS[t.step],t:t.desc,res:t.res,h:'defects',ic:'tool',d:t.date})),
+  ...Object.entries(ST.unread).filter(e=>e[1]).map(([id,n])=>({k:'הודעה חדשה',t:(ST.threads[id]||[]).filter(m=>!m.me).slice(-1)[0]?.t||'',res:id,h:'messages',ic:'chat',d:''})),
+  ...pendUpd().map(u=>({k:'עדכון ממתין לאישור סמנכ״ל',t:u.title,res:null,h:'construction',ic:'crane',d:u.date}))];
+ const h=new Date().getHours(),gr=h<12?'בוקר טוב':h<17?'צהריים טובים':'ערב טוב';
+ return pageHead('OVERVIEW',`${gr}, אורי`,`${new Date().toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · ${tasks.length?`${tasks.length} דברים מחכים לך`:'אין משימות פתוחות'}`,
+   `<button class="btn" data-act="upload">${I('upload')}העלאת מסמך</button><button class="btn pri" data-act="newUpdate">${I('crane')}פרסום עדכון</button>`)+
+ `<div class="tiles">
+  <a class="tile" href="#requests"><span class="k">ממתינים לטיפול</span><span class="v num">${tasks.length}</span><span class="s">בקשות, שינויים, ליקויים והודעות</span></a>
+  <a class="tile" href="#residents"><span class="k">דיירים באפליקציה</span><span class="v num">${ST.residents.length}</span><span class="s">פיילוט · פיתוח על הים</span></a>
+  <a class="tile" href="#payments"><span class="k">תשלומים ב-4 החודשים הקרובים</span><span class="v num">${soon.length}</span><span class="s num">${nis(soon.reduce((a,x)=>a+x.p.total,0))} כולל הצמדה</span></a>
+  <a class="tile" href="#construction"><span class="k">שלב הבנייה · ${ST.stage+1}/${ST.milestones.length}</span><span class="v" style="font-size:1.5em;padding:6px 0 4px">${esc(ST.milestones[ST.stage].t)}</span><div class="bar" aria-hidden="true">${ST.milestones.map((m,i)=>`<i class="${i<=ST.stage?'on':''}"></i>`).join('')}</div></a>
+ </div>
+ <div class="cols">
+  <section class="panel" aria-labelledby="h-t"><div class="ph2"><h2 id="h-t">דורש טיפול</h2></div>
+   ${tasks.length?`<div class="list">${tasks.map(t=>`<div class="li"><span class="ic">${I(t.ic)}</span><div class="grow"><div class="small mut">${esc(t.k)} · ${resLink(t.res)}${t.d?' · '+fmtD(t.d):''}</div><div>${esc(t.t)}</div></div><a class="btn sm" href="#${t.h}">לטיפול</a></div>`).join('')}</div>`:'<div class="empty">הכול מטופל. אין משימות פתוחות.</div>'}
+  </section>
+  <div style="display:flex;flex-direction:column;gap:22px">
+   <section class="panel" aria-labelledby="h-q"><div class="ph2"><h2 id="h-q">פעולות מהירות</h2></div><div class="list">
+    ${[['upload','upload','העלאת מסמכים','חוזים, תוכניות, קבלות ותעודות'],['broadcast','mega','הודעה לכל הדיירים','נשלחת כהתראה באפליקציה'],['photo','image','צילום חדש מהאתר','נכנס לעדכוני הבנייה'],['index','card','עדכון מדד תשומות הבנייה',`כרגע ${ST.index.cur} · ${esc(ST.index.month)}`]].map(a=>`<button class="li" style="border-inline:0;border-top:0;background:none;text-align:right;width:100%" data-act="${a[0]}"><span class="ic">${I(a[1])}</span><span class="grow"><b style="font-weight:500">${a[2]}</b><div class="small mut">${a[3]}</div></span>${I('chev')}</button>`).join('')}
+   </div></section>
+   <section class="panel" aria-labelledby="h-l"><div class="ph2"><h2 id="h-l">פעילות אחרונה</h2><a class="btn ghost sm" href="#activity">ליומן המלא</a></div><div class="list">
+    ${ST.log.slice(0,5).map(l=>`<div class="li" style="padding:9px 0"><div class="grow"><div>${esc(l.t)}</div><div class="small mut">${esc(l.who)} · ${fmtDT(l.at)}</div></div></div>`).join('')}
+   </div></section>
+  </div>
+ </div>`};
+
+VIEWS.residents=()=>{const f=(ui.rq||'').toLowerCase();const rs=ST.residents.filter(r=>!f||(r.name+r.apt+r.unit+r.co).toLowerCase().includes(f));
+ return pageHead('RESIDENTS','דיירים ודירות','כל רוכש מקבל גישה לאפליקציה ביום החתימה. הפרטים כאן הם מה שהדייר רואה בלשונית "הדירה".',`<button class="btn pri" data-act="addRes">${I('plus')}דייר חדש</button>`)+
+ `<section class="panel"><div class="ph2"><div class="filters"><label class="sr" for="rq">סינון דיירים</label><input type="search" id="rq" placeholder="סינון לפי שם, דירה או מספר" value="${esc(ui.rq||'')}"></div><span class="mut small">${rs.length} דיירים</span></div>
+ <div class="tbl-wrap"><table><caption class="sr">רשימת הדיירים</caption><thead><tr><th scope="col">דייר</th><th scope="col">דירה</th><th scope="col">קומה</th><th scope="col">שטח</th><th scope="col">מחיר</th><th scope="col">התשלום הבא</th><th scope="col">פתוח</th><th scope="col">שלב באפליקציה</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
+ ${rs.map(r=>{const p=nextPay(r),open=ST.requests.filter(q=>q.res===r.id&&q.status==='new').length+ST.changes.filter(c=>c.res===r.id&&c.status==='review').length+ST.tickets.filter(t=>t.res===r.id&&t.step<3).length+(ST.unread[r.id]||0);
+  return `<tr class="click" data-href="#res-${r.id}"><td><a href="#res-${r.id}" class="t">${esc(r.name)}</a>${r.co?`<div class="small mut">ו${esc(r.co)}</div>`:''}</td><td><span class="lat" dir="ltr">${esc(r.apt)}</span><div class="small mut">דירה ${esc(r.unit)} · ${esc(r.type)}</div></td><td>${floorTxt(r)}</td><td class="num">${r.sqm} מ״ר</td><td class="num">${nis(r.price)}</td><td class="num">${p?`${fmtD(p.due)}<div class="small mut">${nis(p.total)}</div>`:'<span class="mut">שולם במלואו</span>'}</td><td>${open?chip(open+' פתוחים','warn'):chip('אין','ok')}</td><td>${chip(APPSTAGE[r.stage],'plain')}</td><td class="act"><span class="ib">${I('chev')}</span></td></tr>`}).join('')}
+ </tbody></table></div></section>`};
+
+VIEWS.resident=()=>{const r=resOf(sub);if(!r)return pageHead('RESIDENT','הדייר לא נמצא','',`<a class="btn" href="#residents">חזרה לרשימה</a>`);
+ const tab=ui.rtab||'info';const tabs=[['info','פרטי הדייר והדירה'],['pay','תשלומים'],['docs','מסמכים'],['req','בקשות ופגישות'],['chg','שינויים'],['tk','ליקויים'],['msg','הודעות']];
+ const cnt={docs:ST.docs.filter(d=>d.res===r.id).length,req:ST.requests.filter(q=>q.res===r.id&&q.status==='new').length,chg:ST.changes.filter(c=>c.res===r.id&&c.status==='review').length,tk:ST.tickets.filter(t=>t.res===r.id&&t.step<3).length,msg:ST.unread[r.id]||0};
+ return `<nav aria-label="פירורי לחם" class="small"><a href="#residents">דיירים ודירות</a> <span class="mut">/ ${esc(r.name)}</span></nav>
+ <section class="panel res-head"><div class="plan" style="background-image:url(${imgUrl(r.plan)})" role="img" aria-label="תוכנית הדירה"></div><div class="grow"><h1>${esc(r.name)}${r.co?` <span class="mut" style="font-size:.6em">ו${esc(r.co)}</span>`:''}</h1><div class="apt">${esc(r.apt)}</div>
+  <div class="facts"><div>דירה<b class="num">${esc(r.unit)}</b></div><div>קומה<b>${floorTxt(r).replace('קומה ','')}</b></div><div>שטח<b class="num">${r.sqm} מ״ר</b></div><div>בחוץ<b>${esc(r.out)}</b></div><div>חדרים<b>${esc(r.beds)}</b></div><div>מחיר<b class="num">${nis(r.price)}</b></div></div></div>
+  <div class="row"><button class="btn" data-act="upload" data-res="${r.id}">${I('upload')}העלאת מסמך</button><button class="btn" data-act="msgRes" data-res="${r.id}">${I('chat')}הודעה</button></div></section>
+ <div class="tabs" role="tablist" aria-label="אזורי הדייר">${tabs.map(([k,t])=>`<button role="tab" id="tab-${k}" aria-selected="${tab===k}" aria-controls="rpanel" data-rtab="${k}">${t}${cnt[k]&&k!=='docs'?`<span class="badge">${cnt[k]}</span>`:''}</button>`).join('')}</div>
+ <section class="panel" id="rpanel" role="tabpanel" aria-labelledby="tab-${tab}">${RTAB[tab](r)}</section>`};
+const fld=(id,label,val,type='text',opt={})=>`<div class="field ${opt.span?'span2':''}"><label for="${id}">${label}${opt.req?' <span aria-hidden="true" style="color:var(--bad)">*</span>':''}</label>${type==='select'?`<select id="${id}" ${opt.req?'required':''}>${opt.options.map(o=>{const[v,t]=Array.isArray(o)?o:[o,o];return `<option value="${esc(v)}" ${String(v)===String(val)?'selected':''}>${esc(t)}</option>`}).join('')}</select>`:type==='textarea'?`<textarea id="${id}" ${opt.req?'required':''}>${esc(val)}</textarea>`:`<input type="${type}" id="${id}" value="${esc(val)}" ${opt.req?'required':''} ${opt.ltr?'dir="ltr"':''} ${opt.attrs||''}>`}${opt.hint?`<span class="hint">${opt.hint}</span>`:''}</div>`;
+const RES_FIELDS=r=>[['f-name','שם הרוכש',r.name,'text',{req:1}],['f-co','רוכש נוסף',r.co],['f-phone','טלפון',r.phone,'tel',{ltr:1}],['f-email','דוא״ל',r.email,'email',{ltr:1,hint:'לכאן נשלח קישור ההצטרפות לאפליקציה'}],
+ ['f-apt','שם הדירה (כפי שמופיע באפליקציה)',r.apt,'text',{req:1,ltr:1}],['f-type','סוג',r.type,'select',{options:['דירת מגורים','דירת גן','מיני פנטהאוז','פנטהאוז']}],['f-unit','מספר דירה',r.unit,'number',{req:1}],['f-floor','קומה',r.floor,'number',{hint:'0 = קומת הגן'}],
+ ['f-sqm','שטח (מ״ר)',r.sqm,'number',{req:1}],['f-out','שטח חוץ',r.out],['f-beds','חדרים',r.beds],['f-dir','כיוונים',r.dir],
+ ['f-price','מחיר בחוזה (₪)',r.price,'number',{req:1,hint:'בסיס לחישוב לוח התשלומים וההצמדה'}],['f-signed','תאריך חתימה',r.signed,'date'],['f-stage','שלב שהדייר רואה באפליקציה',r.stage,'select',{options:Object.entries(APPSTAGE)}]];
+const readRes=()=>({name:$('#f-name').value.trim(),co:$('#f-co').value.trim(),phone:$('#f-phone').value.trim(),email:$('#f-email').value.trim(),apt:$('#f-apt').value.trim().toUpperCase(),type:$('#f-type').value,unit:+$('#f-unit').value,floor:+$('#f-floor').value||0,sqm:+$('#f-sqm').value,out:$('#f-out').value.trim(),beds:$('#f-beds').value.trim(),dir:$('#f-dir').value.trim(),price:+$('#f-price').value,signed:$('#f-signed').value,stage:$('#f-stage').value});
+function validate(scope){let bad=null;$$('[required]',scope).forEach(i=>{const ok=i.value.trim()!==''&&(i.type!=='email'||/^\S+@\S+\.\S+$/.test(i.value));i.setAttribute('aria-invalid',!ok);if(!ok&&!bad)bad=i});if(bad){bad.focus();toast('יש שדות חובה שלא מולאו: '+(bad.labels[0]?.textContent.replace('*','').trim()||''))}return !bad}
+const RTAB={
+ info:r=>`<form id="resForm" novalidate><div class="grid3">${RES_FIELDS(r).map(f=>fld(...f)).join('')}</div>
+  <div class="row" style="margin-top:20px"><button class="btn pri" type="submit">${I('check')}שמירת השינויים</button><button class="btn" type="button" data-act="planUp" data-res="${r.id}">${I('image')}החלפת תמונת התוכנית</button><span class="grow"></span><button class="btn danger" type="button" data-act="delRes" data-res="${r.id}">${I('trash')}הסרת הדייר</button></div><div id="delBox"></div></form>`,
+ pay:r=>{const rows=payRows(r),paid=rows.filter(p=>p.paid).reduce((a,p)=>a+p.total,0),tot=rows.reduce((a,p)=>a+p.total,0);
+  return `<div class="ph2"><h2>לוח התשלומים</h2><span class="mut small num">מדד בסיס ${ST.index.base} · מדד נוכחי ${ST.index.cur} · שולם ${nis(paid)} מתוך ${nis(tot)}</span></div><div class="tbl-wrap"><table><thead><tr><th scope="col">תשלום</th><th scope="col">אחוז</th><th scope="col">מועד</th><th scope="col">קרן</th><th scope="col">הצמדה</th><th scope="col">סה״כ</th><th scope="col">סטטוס</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
+  ${rows.map(p=>`<tr><td class="t">${esc(p.name)}</td><td class="num">${p.pct}%</td><td class="num">${fmtD(p.due)}</td><td class="num">${nis(p.base)}</td><td class="num">${nis(p.link)}</td><td class="num t">${nis(p.total)}</td><td>${p.paid?chip('שולם','ok'):new Date(p.due)<new Date()?chip('באיחור','bad'):chip('עתידי','plain')}</td>
+   <td class="act">${p.fixed?'':p.paid?`<button class="btn sm" data-act="unpay" data-res="${r.id}" data-p="${p.id}">ביטול סימון</button>`:`<button class="btn sm" data-act="remind" data-res="${r.id}" data-p="${p.id}">${I('bell')}תזכורת</button> <button class="btn sm pri" data-act="pay" data-res="${r.id}" data-p="${p.id}">${I('check')}סימון כשולם</button>`}</td></tr>`).join('')}</tbody></table></div>
+  <p class="small mut" style="margin-top:12px">סימון תשלום כשולם מציג לדייר "שולם" באפליקציה. את הקבלה מעלים בלשונית המסמכים, בקטגוריה "תשלומים".</p>`},
+ docs:r=>docTable(ST.docs.filter(d=>d.res===r.id),{res:r.id}),
+ req:r=>reqTable(ST.requests.filter(q=>q.res===r.id),true),
+ chg:r=>chgTable(ST.changes.filter(c=>c.res===r.id),true),
+ tk:r=>tkTable(ST.tickets.filter(t=>t.res===r.id),true),
+ msg:r=>threadHTML(r.id)};
+
+/* ---- documents ---- */
+const typeOf=n=>{const e=(n.split('.').pop()||'').toLowerCase();return ['jpg','jpeg','png','webp','gif'].includes(e)?'img':e==='pdf'?'pdf':e};
+function docTable(list,opt={}){
+ return `${opt.noDrop?'':dropZone(opt.res)}
+ ${list.length?`<div class="tbl-wrap" style="margin-top:16px"><table><thead><tr><th scope="col">מסמך</th><th scope="col">קטגוריה</th>${opt.res?'':'<th scope="col">שיוך</th>'}<th scope="col">תאריך</th><th scope="col">גודל</th><th scope="col">מוצג לדייר</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
+ ${list.map(d=>{const t=typeOf(d.file);return `<tr><td><div class="row" style="flex-wrap:nowrap"><span class="fileic ${t==='img'?'img':''}" ${t==='img'?`style="background-image:url(${imgUrl(d.src)})"`:''} aria-hidden="true">${esc((d.file.split('.').pop()||'').toUpperCase())}</span><div style="min-width:0"><div class="t">${esc(d.title)}</div><div class="small mut" dir="ltr" style="text-align:right;overflow-wrap:anywhere">${esc(d.file)}</div></div></div></td>
+  <td>${chip(d.cat,'plain')}</td>${opt.res?'':`<td>${resLink(d.res)}</td>`}<td class="num">${fmtD(d.date)}</td><td class="num">${d.size?kb(d.size):''}</td>
+  <td><label class="switch"><input type="checkbox" data-vis="${d.id}" ${d.visible?'checked':''} aria-label="להציג את ${esc(d.title)} לדייר באפליקציה"><i></i></label></td>
+  <td class="act"><button class="ib" data-act="view" data-doc="${d.id}" aria-label="צפייה ב${esc(d.title)}" title="צפייה">${I('eye')}</button><button class="ib" data-act="dl" data-doc="${d.id}" aria-label="הורדת ${esc(d.title)}" title="הורדה">${I('dl')}</button><button class="ib" data-act="editDoc" data-doc="${d.id}" aria-label="עריכת פרטי ${esc(d.title)}" title="עריכה">${I('edit')}</button><button class="ib" data-act="delDoc" data-doc="${d.id}" aria-label="מחיקת ${esc(d.title)}" title="מחיקה">${I('trash')}</button></td></tr>
+  <tr hidden id="cf-${d.id}"><td colspan="7"><div class="confirm-bar" role="alert"><span class="grow">למחוק את "${esc(d.title)}"? הדייר לא יראה אותו יותר.</span><button class="btn sm danger" data-act="delDocYes" data-doc="${d.id}">מחיקה</button><button class="btn sm" data-act="delDocNo" data-doc="${d.id}">ביטול</button></div></td></tr>`}).join('')}
+ </tbody></table></div>`:`<div class="empty" style="margin-top:16px">אין עדיין מסמכים${opt.res?' לדייר הזה':' שתואמים לסינון'}.</div>`}`}
+const dropZone=res=>`<div class="drop" data-drop="${res||''}"><span class="ic">${I('upload')}</span><div class="grow"><b>גוררים לכאן קבצים, או בוחרים מהמחשב</b><div class="small mut">PDF, תמונות, Word ו-Excel · עד 20 MB לקובץ · אפשר כמה קבצים יחד</div></div><button class="btn pri" data-act="upload" data-res="${res||''}">${I('upload')}בחירת קבצים</button></div>`;
+VIEWS.docs=()=>{const fc=ui.dcat||'',fr=ui.dres??'',fq=(ui.dq||'').toLowerCase();
+ const list=ST.docs.filter(d=>(!fc||d.cat===fc)&&(fr===''||(fr==='_p'?d.res===null:d.res===fr))&&(!fq||(d.title+d.file).toLowerCase().includes(fq))).sort((a,b)=>b.date.localeCompare(a.date));
+ return pageHead('DOCUMENTS','מסמכים','כל מסמך משויך לדייר או לכל הפרויקט. מה שמסומן "מוצג לדייר" מופיע אצלו באפליקציה, בלשונית המסמכים.')+
+ `<section class="panel"><div class="ph2"><div class="filters">
+  <label class="sr" for="dq">חיפוש מסמך</label><input type="search" id="dq" placeholder="חיפוש לפי שם" value="${esc(ui.dq||'')}">
+  <label class="sr" for="dcat">קטגוריה</label><select id="dcat"><option value="">כל הקטגוריות</option>${DOC_CATS.map(c=>`<option ${c===fc?'selected':''}>${c}</option>`).join('')}</select>
+  <label class="sr" for="dres">שיוך</label><select id="dres"><option value="">כל הדיירים והפרויקט</option><option value="_p" ${fr==='_p'?'selected':''}>כל הפרויקט</option>${ST.residents.map(r=>`<option value="${r.id}" ${fr===r.id?'selected':''}>${esc(r.name)}</option>`).join('')}</select>
+ </div><span class="mut small">${list.length} מסמכים</span></div>${docTable(list)}</section>`};
+let pending=[],upCat='';
+function openUpload(files,res){pending=[...files].filter(f=>{if(f.size>20*1048576){toast(`${f.name} גדול מ-20 MB ולא נוסף`);return false}return true});if(!pending.length)return;
+ const cat=upCat||(pending.every(f=>typeOf(f.name)==='img')?'כללי לפרויקט':'חוזה ורכישה');upCat='';
+ dialog(`<form id="upForm" novalidate><div class="dh"><h2>העלאת ${pending.length>1?pending.length+' קבצים':'מסמך'}</h2><button type="button" class="ib" data-close aria-label="סגירה">${I('x')}</button></div><div class="db">
+  <div class="qlist">${pending.map((f,i)=>`<div class="q"><span class="fileic" aria-hidden="true">${esc((f.name.split('.').pop()||'').toUpperCase())}</span><div class="grow"><div class="field"><label for="ut${i}">כותרת שהדייר יראה</label><input type="text" id="ut${i}" value="${esc(f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' '))}" required></div></div><span class="small mut num">${kb(f.size)}</span></div>`).join('')}</div>
+  <div class="grid2">${fld('u-res','שיוך',res||'','select',{options:[['','כל הפרויקט'],...ST.residents.map(r=>[r.id,r.name+' · דירה '+r.unit])]})}${fld('u-cat','קטגוריה',cat,'select',{options:DOC_CATS})}${fld('u-date','תאריך המסמך',today(),'date')}
+  <div class="field"><span class="lbl">באפליקציה</span><label class="check" style="min-height:44px"><span class="switch"><input type="checkbox" id="u-vis" checked><i></i></span>להציג לדייר מיד</label></div></div>
+  <label class="check"><input type="checkbox" id="u-notify" checked>לשלוח לדייר התראה שנוסף מסמך</label>
+ </div><div class="df"><button class="btn pri" type="submit">${I('upload')}העלאה</button><button class="btn" type="button" data-close>ביטול</button></div></form>`);
+ $('#upForm').onsubmit=async e=>{e.preventDefault();if(!validate($('#upForm')))return;const res=$('#u-res').value||null,cat=$('#u-cat').value,date=$('#u-date').value||today(),vis=$('#u-vis').checked;
+  for(const [i,f] of pending.entries()){const id=uid('d');await FS.put(id,f);ST.docs.push({id,res,cat,title:$('#ut'+i).value.trim(),file:f.name,type:typeOf(f.name),size:f.size,src:'u:'+id,date,visible:vis});if(typeOf(f.name)==='img')await urlOf('u:'+id)}
+  log(`העלאת ${pending.length>1?pending.length+' מסמכים':'"'+$('#ut0').value.trim()+'"'} · ${rname(res)} · ${cat}`);save();closeDlg();toast(pending.length>1?`${pending.length} מסמכים הועלו`:'המסמך הועלה'+(vis?' ומוצג לדייר':''));render()}}
+function pickFiles(res,accept,cb){const i=document.createElement('input');i.type='file';i.multiple=!cb;if(accept)i.accept=accept;i.onchange=()=>{if(i.files.length)cb?cb(i.files[0]):openUpload(i.files,res)};i.click()}
+async function viewDoc(id){const d=ST.docs.find(x=>x.id===id);if(!d)return;const t=typeOf(d.file);
+ dialog(`<div class="dlg"><div class="dh"><div><h2>${esc(d.title)}</h2><div class="small mut">${esc(rname(d.res))} · ${esc(d.cat)} · ${fmtD(d.date)}</div></div><button class="ib" data-close aria-label="סגירה">${I('x')}</button></div>
+  <div class="db"><div class="pv" id="pv"><div class="mut" style="align-self:center">טוען תצוגה…</div></div></div>
+  <div class="df"><button class="btn pri" data-act="dl" data-doc="${d.id}">${I('dl')}הורדה</button><button class="btn" data-close>סגירה</button></div></div>`,'wide');
+ const pv=$('#pv'),b=await blobOf(d.src);if(!b){pv.innerHTML='<div class="empty">הקובץ לא נמצא בדפדפן הזה.</div>';return}
+ if(t==='img'){pv.innerHTML=`<img src="${await urlOf(d.src)}" alt="${esc(d.title)}">`;return}
+ if(t==='pdf'){try{await loadPdf();const pdf=await pdfjsLib.getDocument({data:new Uint8Array(await b.arrayBuffer())}).promise;pv.innerHTML=`<div class="pages" aria-label="תצוגת ${pdf.numPages} עמודים"></div>`;const w=$('.pages',pv);
+  for(let n=1;n<=Math.min(pdf.numPages,12);n++){const pg=await pdf.getPage(n),vp=pg.getViewport({scale:1.6}),c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;c.setAttribute('role','img');c.setAttribute('aria-label','עמוד '+n);c.style.width=Math.min(vp.width/1.6,860)+'px';w.append(c);await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise}
+  if(pdf.numPages>12)w.insertAdjacentHTML('beforeend',`<p class="mut">מוצגים 12 עמודים מתוך ${pdf.numPages}. להורדת המסמך המלא לחצו על "הורדה".</p>`);return}catch(e){}}
+ pv.innerHTML=`<div class="empty" style="align-self:center">אין תצוגה מקדימה לקובץ ${esc(d.file.split('.').pop().toUpperCase())}. אפשר להוריד אותו ולפתוח במחשב.</div>`}
+let pdfP=null;function loadPdf(){if(window.pdfjsLib)return Promise.resolve();if(pdfP)return pdfP;
+ const s=u=>new Promise((res,rej)=>{const e=document.createElement('script');e.src=u;e.onload=res;e.onerror=rej;document.head.append(e)});
+ return pdfP=s('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js').then(()=>s('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'))}
+let DL=null;try{window.claude?.use?.('downloads')?.then(x=>{DL=x}).catch(()=>{})}catch(e){}
+async function download(src,name){const b=await blobOf(src);if(!b){toast('הקובץ לא נמצא');return}
+ if(DL){try{await DL.save({filename:name,data:b});toast('הקובץ נשמר: '+name)}catch(e){if(e&&e.code==='declined')return;toast('לא ניתן להוריד כאן. פתחו את מרכז הניהול בדפדפן במחשב.')}return}
+ const a=document.createElement('a'),u=URL.createObjectURL(b);a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);toast('ההורדה התחילה: '+name)}
+
+/* ---- payments ---- */
+VIEWS.payments=()=>{const all=ST.residents.flatMap(r=>payRows(r).filter(p=>!p.paid).map(p=>({r,p}))).sort((a,b)=>a.p.due.localeCompare(b.p.due));const pctSum=ST.schedule.reduce((a,p)=>a+ +p.pct,0);
+ return pageHead('PAYMENTS','תשלומים ומדד','ההצמדה מחושבת אוטומטית לפי מדד תשומות הבנייה. כשמעדכנים מדד, הסכומים מתעדכנים אצל כל הדיירים.',`<button class="btn pri" data-act="index">${I('card')}עדכון מדד</button>`)+
+ `<div class="tiles"><div class="tile"><span class="k">מדד בסיס (בחוזה)</span><span class="v num">${ST.index.base}</span></div><div class="tile"><span class="k">מדד נוכחי · ${esc(ST.index.month)}</span><span class="v num">${ST.index.cur}</span></div><div class="tile"><span class="k">שיעור ההצמדה</span><span class="v num">${((ST.index.cur/ST.index.base-1)*100).toFixed(2)}%</span></div><div class="tile"><span class="k">תשלומים פתוחים</span><span class="v num">${all.length}</span><span class="s num">${nis(all.reduce((a,x)=>a+x.p.total,0))}</span></div></div>
+ <div class="cols">
+ <section class="panel" aria-labelledby="h-up"><div class="ph2"><h2 id="h-up">התשלומים הבאים</h2></div><div class="tbl-wrap"><table><thead><tr><th scope="col">מועד</th><th scope="col">דייר</th><th scope="col">תשלום</th><th scope="col">סכום כולל הצמדה</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
+  ${all.slice(0,ui.pAll?99:10).map(({r,p})=>`<tr><td class="num">${fmtD(p.due)}${new Date(p.due)<new Date()?' '+chip('באיחור','bad'):''}</td><td>${resLink(r.id)}</td><td>${esc(p.name)}</td><td class="num t">${nis(p.total)}</td><td class="act"><button class="btn sm" data-act="remind" data-res="${r.id}" data-p="${p.id}">${I('bell')}תזכורת</button> <button class="btn sm pri" data-act="pay" data-res="${r.id}" data-p="${p.id}">שולם</button></td></tr>`).join('')}
+ </tbody></table></div>${all.length>10?`<button class="btn ghost sm" style="margin-top:10px" data-act="pAll">${ui.pAll?'הצגת פחות':`הצגת כל ${all.length} התשלומים`}</button>`:''}</section>
+ <section class="panel" aria-labelledby="h-sch"><div class="ph2"><h2 id="h-sch">תבנית לוח התשלומים</h2>${pctSum!==100?chip(`סה״כ ${pctSum}%, צריך 100%`,'bad'):chip('סה״כ 100%','ok')}</div>
+  <form id="schForm"><div class="tbl-wrap"><table><thead><tr><th scope="col">אבן דרך</th><th scope="col">%</th><th scope="col">מועד משוער</th></tr></thead><tbody>
+  ${ST.schedule.map((p,i)=>`<tr><td><label class="sr" for="sn${i}">שם התשלום</label><input type="text" id="sn${i}" value="${esc(p.name)}" ${p.fixed?'disabled':''}></td><td style="width:84px"><label class="sr" for="sp${i}">אחוז</label><input type="number" id="sp${i}" value="${p.pct}" min="0" max="100" ${p.fixed?'disabled':''}></td><td><label class="sr" for="sd${i}">מועד</label><input type="date" id="sd${i}" value="${p.due}" ${p.fixed?'disabled':''}></td></tr>`).join('')}
+  </tbody></table></div><div class="row" style="margin-top:12px"><button class="btn pri" type="submit">שמירת התבנית</button><span class="small mut">תשלומים ששולמו נעולים לעריכה.</span></div></form></section></div>`};
+
+/* ---- requests ---- */
+function reqTable(list,inRes){return list.length?`<div class="tbl-wrap"><table><thead><tr><th scope="col">סוג</th>${inRes?'':'<th scope="col">דייר</th>'}<th scope="col">פרטים</th><th scope="col">מועד מבוקש</th><th scope="col">התקבלה</th><th scope="col">סטטוס</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
+ ${list.map(q=>`<tr><td class="t">${REQK[q.kind]||q.kind}${q.opt?`<div class="small mut">${esc(q.opt)}</div>`:''}</td>${inRes?'':`<td>${resLink(q.res)}</td>`}<td style="max-width:320px">${esc(q.detail)}${q.reply?`<div class="small mut">תשובה: ${esc(q.reply)}</div>`:''}</td><td class="num">${q.when?fmtD(q.when):'—'}${q.time?` · ${esc(q.time)}`:''}</td><td class="num">${fmtD(q.date)}</td><td>${chip(...RSTAT[q.status])}</td>
+ <td class="act">${q.status==='new'?`<button class="btn sm pri" data-act="reqOk" data-q="${q.id}">${q.kind==='design'||q.kind==='special'?'מענה':'אישור ותיאום'}</button> <button class="btn sm" data-act="reqNo" data-q="${q.id}">דחייה</button>`:q.status==='sched'?`<button class="btn sm" data-act="reqDone" data-q="${q.id}">${I('check')}התקיימה</button>`:''}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">אין בקשות.</div>'}
+VIEWS.requests=()=>{const f=ui.rk||'all',fs=ui.rs||'open';const list=ST.requests.filter(q=>(f==='all'||q.kind===f)&&(fs==='all'||(fs==='open'?['new','sched'].includes(q.status):q.status===fs))).sort((a,b)=>(a.status==='new'?0:1)-(b.status==='new'?0:1)||b.date.localeCompare(a.date));
+ const kinds=['all',...Object.keys(REQK).filter(k=>ST.requests.some(q=>q.kind===k))];
+ return pageHead('REQUESTS','בקשות ופגישות','מה שהדיירים מבקשים באפליקציה, בלשונית השירות. אישור ותיאום שולח לדייר הודעה עם המועד והפרטים.',`<button class="btn" data-act="addReq">${I('plus')}בקשה ידנית</button>`)+
+ `<section class="panel"><div class="ph2"><div class="seg" role="group" aria-label="סוג בקשה">${kinds.map(k=>`<button aria-pressed="${f===k}" data-rk="${k}">${k==='all'?'הכול':REQK[k]}</button>`).join('')}</div>
+  <div class="seg" role="group" aria-label="סטטוס">${[['open','פתוחות'],['done','טופלו'],['no','נדחו'],['all','הכול']].map(([k,t])=>`<button aria-pressed="${fs===k}" data-rs="${k}">${t}</button>`).join('')}</div></div>${reqTable(list)}</section>`};
+
+/* ---- changes ---- */
+function chgTable(list,inRes){return list.length?`<div class="tbl-wrap"><table><thead><tr><th scope="col">שינוי</th>${inRes?'':'<th scope="col">דייר</th>'}<th scope="col">תאריך</th><th scope="col">מחיר</th><th scope="col">סטטוס</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
+ ${list.map(c=>`<tr><td class="t">${esc(c.title)}</td>${inRes?'':`<td>${resLink(c.res)}</td>`}<td class="num">${fmtD(c.date)}</td><td class="num">${c.price?nis(c.price):'—'}</td><td>${chip(...CSTAT[c.status])}</td>
+ <td class="act">${c.status==='review'?`<button class="btn sm pri" data-act="quote" data-c="${c.id}">שליחת הצעת מחיר</button> <button class="btn sm" data-act="chgNo" data-c="${c.id}">דחייה</button>`:c.status==='quote'?`<button class="btn sm" data-act="chgYes" data-c="${c.id}">${I('check')}הדייר אישר</button>`:''}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">אין בקשות שינוי.</div>'}
+VIEWS.changes=()=>pageHead('CHANGES','שינויי דיירים','הדייר מבקש באפליקציה, ההנדסה בודקת, ואנחנו שולחים הצעת מחיר. הדייר מאשר בחתימה דיגיטלית.')+`<section class="panel">${chgTable([...ST.changes].sort((a,b)=>b.date.localeCompare(a.date)))}</section>`;
+
+/* ---- defects ---- */
+function tkTable(list,inRes){return list.length?`<div class="tbl-wrap"><table><thead><tr><th scope="col">תחום</th>${inRes?'':'<th scope="col">דייר</th>'}<th scope="col">תיאור</th><th scope="col">דחיפות</th><th scope="col">נפתח</th><th scope="col">מטפל</th><th scope="col">סטטוס</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
+ ${list.map(t=>`<tr><td class="t">${esc(t.cat)}</td>${inRes?'':`<td>${resLink(t.res)}</td>`}<td style="max-width:280px">${esc(t.desc)}</td><td>${t.urgency==='דחופה'?chip('דחופה','bad'):esc(t.urgency)}</td><td class="num">${fmtD(t.date)}</td><td>${esc(t.contractor||'—')}</td><td>${chip(TSTEPS[t.step],t.step>=3?'ok':'info')}</td>
+ <td class="act">${t.step<3?`<button class="btn sm pri" data-act="tkNext" data-t="${t.id}">העברה ל"${TSTEPS[t.step+1]}"</button>`:''}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">אין ליקויים פתוחים.</div>'}
+VIEWS.defects=()=>pageHead('DEFECTS','ליקויים ובדק','פעיל באפליקציה משלב המסירה. הדייר מדווח, הקבלן מטפל, ואנחנו עוקבים עד שהליקוי נסגר. כל שינוי סטטוס מגיע לדייר כהתראה.',`<button class="btn" data-act="addTk">${I('plus')}פתיחת ליקוי</button>`)+
+ `<section class="panel"><div class="ph2"><h2>פתוחים</h2></div>${tkTable(openTk())}</section><section class="panel"><div class="ph2"><h2>טופלו</h2></div>${tkTable(ST.tickets.filter(t=>t.step>=3))}</section>`;
+
+/* ---- messages ---- */
+function threadHTML(id){const th=ST.threads[id]||[];return `<div class="thread" id="thr" aria-live="polite">${th.length?th.map(m=>`<div class="bub ${m.me?'me':''}"><div>${esc(m.t)}</div><div class="tm">${m.me?'אורי':esc(rname(id))} · ${fmtDT(m.at)}</div></div>`).join(''):'<div class="empty">עוד אין הודעות. ההודעה הראשונה שתשלח תופיע אצל הדייר באפליקציה.</div>'}</div>
+ <form class="row" data-thread="${id}" style="margin-top:14px;flex-wrap:nowrap"><label class="sr" for="mt-${id}">הודעה ל${esc(rname(id))}</label><input type="text" id="mt-${id}" placeholder="כתיבת הודעה ל${esc(rname(id))}" autocomplete="off" class="grow"><button class="btn pri" type="submit">שליחה</button></form>`}
+VIEWS.messages=()=>{const cur=ui.mres||Object.keys(ST.unread).find(k=>ST.unread[k])||ST.residents[0]?.id;ui.mres=cur;if(ST.unread[cur]){ST.unread[cur]=0;save()}
+ return pageHead('MESSAGES','הודעות','שיחה אישית עם כל דייר. מה שכותבים כאן מגיע אליו באפליקציה, מ'+esc(ST.host.name)+'.')+
+ `<div class="cols" style="grid-template-columns:minmax(0,300px) minmax(0,1fr)"><section class="panel" style="padding:10px"><div class="list" role="tablist" aria-label="דיירים">${ST.residents.map(r=>{const th=ST.threads[r.id]||[],last=th[th.length-1];
+  return `<button role="tab" aria-selected="${cur===r.id}" class="li" data-mres="${r.id}" style="border-inline:0;border-top:0;background:${cur===r.id?'var(--soft)':'none'};text-align:right;width:100%;padding:10px;border-radius:8px"><span class="av">${esc(r.name[0])}</span><span class="grow"><b style="font-weight:500">${esc(r.name)}</b><div class="small mut" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${last?esc(last.t):'אין הודעות'}</div></span>${ST.unread[r.id]?`<span class="badge">${ST.unread[r.id]}</span>`:''}</button>`}).join('')}</div></section>
+ <section class="panel" role="tabpanel"><div class="ph2"><h2>${esc(rname(cur))}</h2><a class="btn ghost sm" href="#res-${cur}">לכרטיס הדייר</a></div>${threadHTML(cur)}</section></div>`};
+
+/* ---- suppliers ---- */
+VIEWS.suppliers=()=>pageHead('SUPPLIERS','ספקים','הספקים שהדיירים יכולים לתאם איתם פגישה מהאפליקציה. הקטגוריות כאן הן האפשרויות שהדייר בוחר.',`<button class="btn pri" data-act="supEdit">${I('plus')}ספק חדש</button>`)+
+ `<section class="panel"><div class="tbl-wrap"><table><thead><tr><th scope="col">תחום</th><th scope="col">ספק</th><th scope="col">איש קשר</th><th scope="col">טלפון</th><th scope="col">אולם תצוגה</th><th scope="col">פגישות</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
+ ${ST.suppliers.map(s=>{const n=ST.requests.filter(q=>q.kind==='supplier'&&q.opt===s.cat);return `<tr><td>${chip(s.cat,'plain')}</td><td class="t">${esc(s.name)}${s.notes?`<div class="small mut">${esc(s.notes)}</div>`:''}</td><td>${esc(s.contact)}</td><td class="num" dir="ltr" style="text-align:right">${esc(s.phone)}</td><td>${esc(s.address||'—')}</td><td>${n.length?`${n.filter(q=>q.status==='new').length?chip(n.filter(q=>q.status==='new').length+' חדשות','warn'):''} <span class="small mut">${n.length} בסה״כ</span>`:'<span class="mut">—</span>'}</td><td class="act"><button class="ib" data-act="supEdit" data-s="${s.id}" aria-label="עריכת ${esc(s.name)}">${I('edit')}</button><button class="ib" data-act="supDel" data-s="${s.id}" aria-label="הסרת ${esc(s.name)}">${I('trash')}</button></td></tr>`}).join('')}
+ </tbody></table></div><p class="small mut" style="margin-top:12px">שמות הספקים בסוגריים הם מקום שמור. מעדכנים לשמות האמיתיים מתוך הסכמי הספקים של הפרויקט.</p></section>`;
+
+/* ---- construction ---- */
+VIEWS.construction=()=>pageHead('CONSTRUCTION','שלבי בנייה ועדכונים','הדיירים רואים שלבים ולא אחוזים. עדכון שמזכיר מועד, מסירה או אכלוס ממתין לאישור סמנכ״ל מגורים לפני שהוא יוצא.',`<button class="btn" data-act="photo">${I('image')}צילום מהאתר</button><button class="btn pri" data-act="newUpdate">${I('plus')}עדכון חדש</button>`)+
+ `<div class="cols"><section class="panel" aria-labelledby="h-ms"><div class="ph2"><h2 id="h-ms">אבני הדרך</h2><span class="small mut">מסירה משוערת: ${esc(ST.delivery)}</span></div>
+  <fieldset style="border:0;padding:0;margin:0"><legend class="sr">השלב הנוכחי</legend><div class="ms">${ST.milestones.map((m,i)=>`<div class="m ${i<ST.stage?'done':i===ST.stage?'now':''}"><span class="dot">${i<ST.stage?I('check'):''}</span><div><b style="font-weight:500">${esc(m.t)}</b><div class="small mut">${i<ST.stage?'הושלם':i===ST.stage?'בביצוע עכשיו':'צפוי · '+esc(m.d)}</div></div>
+  <label class="check"><input type="radio" name="stage" value="${i}" ${i===ST.stage?'checked':''}> השלב הנוכחי</label></div>`).join('')}</div></fieldset>
+  <p class="small mut" style="margin-top:8px">שינוי השלב מעדכן את מסך הבית של כל הדיירים ושולח להם התראה.</p></section>
+ <section class="panel" aria-labelledby="h-ph"><div class="ph2"><h2 id="h-ph">צילומים מהאתר</h2><button class="btn sm" data-act="photo">${I('upload')}הוספה</button></div><div class="gal" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
+  ${ST.photos.map(p=>`<figure class="gi" style="margin:0"><div class="im" style="background-image:url(${imgUrl(p.src)})" role="img" aria-label="${esc(p.cap)}"></div><figcaption class="bd small"><span>${esc(p.cap)}</span><span class="mut num">${fmtD(p.date)}</span></figcaption></figure>`).join('')}</div></section></div>
+ <section class="panel" aria-labelledby="h-up2"><div class="ph2"><h2 id="h-up2">עדכונים לדיירים</h2></div><div class="list">
+  ${ST.updates.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(u=>`<div class="li" style="align-items:flex-start">${u.img?`<div style="width:120px;aspect-ratio:4/3;border-radius:8px;background:var(--soft) url(${imgUrl(u.img)}) center/cover;flex:none"></div>`:''}<div class="grow"><div class="row"><b style="font-weight:500">${esc(u.title)}</b>${u.status==='pub'?chip('פורסם','ok'):u.status==='vp'?chip('ממתין לאישור סמנכ״ל מגורים','warn'):chip('טיוטה','plain')}</div><p class="mut" style="margin-top:4px">${esc(u.text)}</p><div class="small mut num" style="margin-top:4px">${fmtD(u.date)}</div></div>
+  ${u.status==='vp'?`<button class="btn sm pri" data-act="vpOk" data-u="${u.id}">סמנכ״ל אישר · פרסום</button>`:u.status==='draft'?`<button class="btn sm pri" data-act="pubUpd" data-u="${u.id}">פרסום</button>`:''}</div>`).join('')}</div></section>`;
+
+/* ---- broadcast ---- */
+const BCAT={critical:'חשוב',payments:'תשלומים',construction:'בנייה',community:'קהילה'};
+VIEWS.broadcast=()=>pageHead('BROADCAST','הודעה לכל הדיירים','נשלחת לכל דייר כהודעה אישית ומופיעה בהתראות באפליקציה. הדייר יכול לכבות קטגוריות, חוץ מ"חשוב".')+
+ `<div class="cols"><section class="panel"><form id="bcForm" novalidate><div class="grid2">${fld('bc-title','כותרת','','text',{req:1,span:1})}${fld('bc-text','תוכן ההודעה','','textarea',{req:1,span:1})}
+  ${fld('bc-cat','קטגוריה','construction','select',{options:Object.entries(BCAT)})}${fld('bc-to','נמענים','all','select',{options:[['all','כל הדיירים ('+ST.residents.length+')'],...ST.residents.map(r=>[r.id,r.name])]})}</div>
+  <div id="bcWarn" class="notice" style="margin-top:14px" hidden><b>ההודעה מזכירה מועד או מסירה.</b> היא תישמר כממתינה לאישור סמנכ״ל מגורים ולא תישלח עד שתאושר.</div>
+  <div class="row" style="margin-top:16px"><button class="btn pri" type="submit">${I('mega')}שליחה</button></div></form></section>
+ <section class="panel"><div class="ph2"><h2>נשלחו</h2></div><div class="list">${ST.broadcasts.slice().reverse().map(b=>`<div class="li" style="align-items:flex-start"><span class="ic">${I('mega')}</span><div class="grow"><div class="row"><b style="font-weight:500">${esc(b.title)}</b>${chip(BCAT[b.cat],'plain')}${b.status==='vp'?chip('ממתין לסמנכ״ל','warn'):''}</div><p class="small mut">${esc(b.text)}</p><div class="small mut">${b.to==='all'?'כל הדיירים':esc(rname(b.to))} · ${fmtD(b.date)}</div></div>${b.status==='vp'?`<button class="btn sm pri" data-act="bcOk" data-b="${b.id}">סמנכ״ל אישר · שליחה</button>`:''}</div>`).join('')||'<div class="empty">עוד לא נשלחו הודעות.</div>'}</div></section></div>`;
+
+/* ---- gallery ---- */
+VIEWS.gallery=()=>{const f=ui.gcat||'all';const list=ST.gallery.filter(g=>f==='all'||(f==='hero'?ST.hero.includes(g.id):g.cat===f));
+ return pageHead('GALLERY','גלריה ומסך הבית','התמונות בגלריית ההדמיות של האפליקציה. עד 5 תמונות מסומנות מתחלפות במסך הבית, עם הקווים לדפדוף, לפי הסדר.',`<button class="btn pri" data-act="galUp">${I('upload')}העלאת תמונות</button>`)+
+ `<section class="panel"><div class="ph2"><h2>במסך הבית · ${ST.hero.length}/5</h2><span class="small mut">הראשונה מוצגת קודם. אפשר לשנות סדר עם החצים.</span></div>
+  <ol class="row" style="list-style:none;padding:0;margin:0;gap:12px;align-items:stretch">${ST.hero.map((id,i)=>{const g=ST.gallery.find(x=>x.id===id);if(!g)return '';return `<li style="width:150px;display:flex;flex-direction:column;gap:6px"><div style="aspect-ratio:4/3;border-radius:8px;background:var(--soft) url(${imgUrl(g.src)}) center/cover;position:relative"><span class="badge" style="position:absolute;top:6px;right:6px">${i+1}</span></div><span class="small" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.cap)}</span><div class="row" style="gap:2px"><button class="ib" data-act="heroMv" data-g="${id}" data-d="-1" aria-label="הקדמת ${esc(g.cap)}" ${i?'':'disabled'}>${I('chev').replace('M15 6l-6 6 6 6','M9 6l6 6-6 6')}</button><button class="ib" data-act="heroMv" data-g="${id}" data-d="1" aria-label="הזזת ${esc(g.cap)} אחורה" ${i<ST.hero.length-1?'':'disabled'}>${I('chev')}</button><button class="ib" data-act="heroTog" data-g="${id}" aria-label="הוצאת ${esc(g.cap)} ממסך הבית">${I('x')}</button></div></li>`}).join('')}</ol></section>
+ <section class="panel"><div class="ph2"><div class="seg" role="group" aria-label="סינון">${[['all','הכול'],['hero','במסך הבית'],...Object.entries(GCAT)].map(([k,t])=>`<button aria-pressed="${f===k}" data-gcat="${k}">${t}</button>`).join('')}</div><span class="small mut">${list.length} תמונות</span></div>
+ <div class="gal">${list.map(g=>{const on=ST.hero.includes(g.id);return `<div class="gi"><div class="im" style="background-image:url(${imgUrl(g.src)})" role="img" aria-label="${esc(g.cap)}">${on?`<span class="pos">מסך הבית · ${ST.hero.indexOf(g.id)+1}</span>`:''}</div><div class="bd">
+  <label class="sr" for="gc-${g.id}">כיתוב</label><input type="text" id="gc-${g.id}" value="${esc(g.cap)}" data-gcap="${g.id}">
+  <div class="row between"><label class="sr" for="gk-${g.id}">קטגוריה</label><select id="gk-${g.id}" data-gk="${g.id}" style="width:auto;min-height:34px;padding:4px 8px;font-size:.86em">${Object.entries(GCAT).map(([k,t])=>`<option value="${k}" ${k===g.cat?'selected':''}>${t}</option>`).join('')}</select>
+  <label class="check small"><span class="switch"><input type="checkbox" data-hero="${g.id}" ${on?'checked':''}><i></i></span>מסך הבית</label></div>
+  ${g.src.startsWith('u:')?`<button class="btn sm danger" data-act="galDel" data-g="${g.id}">${I('trash')}הסרה</button>`:''}</div></div>`}).join('')}</div></section>`};
+
+/* ---- home book ---- */
+VIEWS.homebook=()=>pageHead('HOME BOOK','מדריך הדירה ואחריות','התוכן של "מדריך הדירה" ו"ספר הבית" באפליקציה. נפתח לדיירים לקראת המסירה.',`<button class="btn" data-act="upload" data-cat="ספר הבית">${I('upload')}העלאת תעודת אחריות</button>`)+
+ `<section class="panel"><div class="ph2"><h2>מערכות הדירה</h2><button class="btn sm" data-act="guideEdit">${I('plus')}מערכת חדשה</button></div><div class="tbl-wrap"><table><thead><tr><th scope="col">מערכת</th><th scope="col">מפרט</th><th scope="col">ספק</th><th scope="col">אחריות</th><th scope="col">טיפ לדייר</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
+ ${ST.guide.map(g=>`<tr><td class="t">${esc(g.t)}</td><td>${esc(g.s)}</td><td>${esc(g.sup)}</td><td>${esc(g.w)}</td><td class="small" style="max-width:300px">${esc(g.tip)}</td><td class="act"><button class="ib" data-act="guideEdit" data-g="${g.id}" aria-label="עריכת ${esc(g.t)}">${I('edit')}</button><button class="ib" data-act="guideDel" data-g="${g.id}" aria-label="הסרת ${esc(g.t)}">${I('trash')}</button></td></tr>`).join('')}</tbody></table></div></section>
+ <div class="cols even"><section class="panel"><div class="ph2"><h2>תקופות בדק ואחריות</h2></div><form id="wForm"><div class="list">${ST.warranty.map((w,i)=>`<div class="li"><div class="grow"><label for="wt${i}" class="sr">תחום</label><input type="text" id="wt${i}" value="${esc(w.t)}"></div><div style="width:170px"><label for="we${i}" class="sr">סיום</label><input type="date" id="we${i}" value="${w.end}"></div></div>`).join('')}</div><p class="small mut" style="margin:8px 0 12px">המועדים נספרים מיום המסירה. האפליקציה מזכירה לדייר לפני שכל תקופה נגמרת.</p><button class="btn pri" type="submit">שמירה</button></form></section>
+ <section class="panel"><div class="ph2"><h2>חברת הניהול</h2></div><form id="mForm" novalidate><div class="grid2">${fld('m-name','שם החברה',ST.mgmt.name,'text',{span:1})}${fld('m-phone','טלפון',ST.mgmt.phone,'tel',{ltr:1})}${fld('m-email','דוא״ל',ST.mgmt.email,'email',{ltr:1})}${fld('m-hours','שעות פעילות',ST.mgmt.hours,'text',{span:1})}</div><button class="btn pri" type="submit" style="margin-top:14px">שמירה</button></form></section></div>`;
+
+/* ---- config ---- */
+VIEWS.config=()=>pageHead('SETTINGS','הגדרות והרשאות','מי נכנס למרכז הניהול, איך הדיירים פוגשים אותך באפליקציה, וכללי האישור.')+
+ `<div class="cols even"><section class="panel" aria-labelledby="h-host"><div class="ph2"><h2 id="h-host">איש הקשר באפליקציה</h2></div><form id="hostForm" novalidate><div class="grid2">${fld('h-name','שם',ST.host.name,'text',{req:1})}${fld('h-role','תפקיד כפי שהדייר רואה',ST.host.role,'text',{req:1})}${fld('h-hours','שעות מענה',ST.host.hours)}${fld('h-reply','זמן מענה שמוצג לדייר',ST.host.reply)}</div><button class="btn pri" style="margin-top:14px" type="submit">שמירה</button></form></section>
+ <section class="panel" aria-labelledby="h-rule"><div class="ph2"><h2 id="h-rule">כללי אישור</h2></div><label class="check" style="align-items:flex-start"><span class="switch"><input type="checkbox" id="vpRule" ${ST.vpRule?'checked':''}><i></i></span><span>עדכון או הודעה שמזכירים מועד, מסירה או אכלוס ממתינים לאישור סמנכ״ל מגורים<div class="small mut">מומלץ להשאיר פעיל. מונע התחייבות למועדים בלי אישור.</div></span></label>
+  <div class="field" style="margin-top:18px"><label for="deliv">שנת מסירה משוערת שמוצגת לדיירים</label><input type="text" id="deliv" value="${esc(ST.delivery)}" style="max-width:160px"></div></section></div>
+ <section class="panel" aria-labelledby="h-users"><div class="ph2"><h2 id="h-users">משתמשים והרשאות</h2>${chip('כרגע: מנהל מערכת בלבד','info')}</div><div class="tbl-wrap"><table><thead><tr><th scope="col">משתמש</th><th scope="col">מחלקה</th><th scope="col">הרשאה</th><th scope="col">מה רואה</th><th scope="col">מצב</th></tr></thead><tbody>
+  <tr><td><div class="row" style="flex-wrap:nowrap"><span class="av">א</span><div><b style="font-weight:500">אורי</b><div class="small mut" dir="ltr" style="text-align:right">${esc(AUTH.email)}</div></div></div></td><td>מגורים · קשרי דיירים</td><td>${chip('מנהל מערכת','info')}</td><td>הכול, כולל הגדרות והרשאות</td><td>${chip('פעיל','ok')}</td></tr>
+  ${[['מגורים','דיירים, בקשות, הודעות ומסמכים'],['כספים','תשלומים, מדד וקבלות'],['הנדסה','שלבי בנייה, צילומים, שינויים וליקויים'],['סמנכ״ל מגורים','הכול לצפייה, ואישור עדכונים שמזכירים מועד'],['סמנכ״ל הנדסה','שלבי בנייה ועדכונים לאישור']].map(([d,s])=>`<tr><td class="mut">טרם הוגדר</td><td>${d}</td><td>${chip('לפי מחלקה','plain')}</td><td class="small">${s}</td><td><button class="btn sm" disabled title="הזמנת משתמשים נוספים תיפתח בשלב הבא">הזמנה · בשלב הבא</button></td></tr>`).join('')}
+ </tbody></table></div><p class="small mut" style="margin-top:12px">הרשאות לפי מחלקה מוכנות במבנה, ויופעלו אחרי אישור ההנהלה. עד אז רק מנהל המערכת נכנס.</p></section>
+ <div class="cols even"><section class="panel" aria-labelledby="h-pw"><div class="ph2"><h2 id="h-pw">החלפת סיסמה</h2></div><form id="pwForm" novalidate><div class="grid2">${fld('pw-old','סיסמה נוכחית','','password',{req:1,span:1,attrs:'autocomplete="current-password" dir="ltr"'})}${fld('pw-new','סיסמה חדשה','','password',{req:1,attrs:'autocomplete="new-password" dir="ltr" minlength="10"',hint:'לפחות 10 תווים, עם אות גדולה, ספרה ותו מיוחד'})}${fld('pw-new2','אימות הסיסמה החדשה','','password',{req:1,attrs:'autocomplete="new-password" dir="ltr"'})}</div><div id="pwMsg" role="alert" style="margin-top:12px" hidden></div><button class="btn pri" style="margin-top:14px" type="submit">${I('key')}עדכון סיסמה</button></form></section>
+ <section class="panel" aria-labelledby="h-sec"><div class="ph2"><h2 id="h-sec">אבטחה</h2></div><div class="list">
+  <div class="li"><span class="ic">${I('lock')}</span><div class="grow">ניתוק אוטומטי אחרי ${IDLE_MIN} דקות ללא פעילות</div>${chip('פעיל','ok')}</div>
+  <div class="li"><span class="ic">${I('shield')}</span><div class="grow">נעילה ל-5 דקות אחרי 5 ניסיונות כניסה כושלים</div>${chip('פעיל','ok')}</div>
+  <div class="li"><span class="ic">${I('key')}</span><div class="grow">אימות דו־שלבי בקוד לנייד<div class="small mut">יופעל בגרסת הייצור, יחד עם השרת</div></div>${chip('בשלב הפיתוח','plain')}</div></div>
+  <div class="notice" style="margin-top:14px"><b>זה אב טיפוס.</b> הסיסמה והנתונים נשמרים בדפדפן במחשב הזה בלבד. בגרסה האמיתית הכניסה עוברת דרך שרת מאובטח, והקבצים נשמרים בענן של החברה.</div>
+  <div class="row" style="margin-top:14px"><button class="btn danger" data-act="reset">איפוס נתוני הדמו</button></div><div id="resetBox"></div></section></div>`;
+
+/* ---- activity ---- */
+VIEWS.activity=()=>pageHead('ACTIVITY','יומן פעולות','כל פעולה במרכז הניהול נרשמת כאן, עם השעה ומי ביצע.')+
+ `<section class="panel"><div class="tbl-wrap log"><table><thead><tr><th scope="col">מתי</th><th scope="col">מי</th><th scope="col">פעולה</th></tr></thead><tbody>${ST.log.map(l=>`<tr><td class="num" style="white-space:nowrap">${fmtDT(l.at)}</td><td>${esc(l.who)}</td><td>${esc(l.t)}</td></tr>`).join('')}</tbody></table></div></section>`;
+
+/* ================= dialogs ================= */
+let lastFocus=null;
+function dialog(html,cls=''){const d=$('#dlg');lastFocus=document.activeElement;d.className=cls;d.innerHTML=html;d.showModal();const f=$('input:not([type=hidden]),select,textarea',d)||$('[data-close]',d);f&&f.focus()}
+function closeDlg(){const d=$('#dlg');if(d.open)d.close()}
+$('#dlg').addEventListener('close',()=>{lastFocus&&lastFocus.isConnected&&lastFocus.focus()});
+$('#dlg').addEventListener('click',e=>{if(e.target.closest('[data-close]'))closeDlg();if(e.target===$('#dlg'))closeDlg()});
+function formDlg(title,body,submit,onSubmit,cls=''){dialog(`<form id="fdlg" novalidate><div class="dh"><h2>${title}</h2><button type="button" class="ib" data-close aria-label="סגירה">${I('x')}</button></div><div class="db">${body}</div><div class="df"><button class="btn pri" type="submit">${submit}</button><button class="btn" type="button" data-close>ביטול</button></div></form>`,cls);
+ $('#fdlg').onsubmit=e=>{e.preventDefault();if(!validate($('#fdlg')))return;if(onSubmit()!==false){save();closeDlg();render()}}}
+
+/* ================= actions ================= */
+const ACT={
+ upload:(b)=>{upCat=b.dataset.cat||'';pickFiles(b.dataset.res||'')},
+ view:b=>viewDoc(b.dataset.doc),
+ dl:b=>{const d=ST.docs.find(x=>x.id===b.dataset.doc);if(d)download(d.src,d.file.includes('.')?d.file:d.file+'.pdf')},
+ editDoc:b=>{const d=ST.docs.find(x=>x.id===b.dataset.doc);formDlg('עריכת פרטי המסמך',`<div class="grid2">${fld('e-title','כותרת',d.title,'text',{req:1,span:1})}${fld('e-res','שיוך',d.res||'','select',{options:[['','כל הפרויקט'],...ST.residents.map(r=>[r.id,r.name])]})}${fld('e-cat','קטגוריה',d.cat,'select',{options:DOC_CATS})}${fld('e-date','תאריך',d.date,'date')}</div>
+  <div class="field"><span class="lbl">החלפת הקובץ</span><div class="row"><button type="button" class="btn sm" id="e-rep">${I('upload')}בחירת קובץ חדש</button><span class="small mut" id="e-repn">${esc(d.file)}</span></div></div>`,'שמירה',()=>{d.title=$('#e-title').value.trim();d.res=$('#e-res').value||null;d.cat=$('#e-cat').value;d.date=$('#e-date').value;log('עדכון פרטי מסמך: '+d.title);toast('הפרטים נשמרו')});
+  $('#e-rep').onclick=()=>pickFiles(null,null,async f=>{await FS.put(d.id,f);d.src='u:'+d.id;d.file=f.name;d.size=f.size;urlCache.delete('u:'+d.id);if(typeOf(f.name)==='img')await urlOf(d.src);$('#e-repn').textContent=f.name+' · הוחלף';log('החלפת קובץ: '+d.title);save()})},
+ delDoc:b=>{$('#cf-'+b.dataset.doc).hidden=false;$('#cf-'+b.dataset.doc+' .btn').focus()},
+ delDocNo:b=>{$('#cf-'+b.dataset.doc).hidden=true},
+ delDocYes:async b=>{const d=ST.docs.find(x=>x.id===b.dataset.doc);ST.docs=ST.docs.filter(x=>x!==d);if(d.src.startsWith('u:'))await FS.del(d.src.slice(2));log('מחיקת מסמך: '+d.title+' · '+rname(d.res));save();toast('המסמך נמחק');render()},
+ addRes:()=>{const r={name:'',co:'',phone:'',email:'',apt:'',type:'דירת מגורים',unit:'',floor:'',sqm:'',out:'',beds:'',dir:'',price:'',signed:today(),stage:'build'};
+  formDlg('דייר חדש',`<div class="grid2">${RES_FIELDS(r).map(f=>fld(...f)).join('')}</div><label class="check"><input type="checkbox" id="f-inv" checked>לשלוח לדייר הזמנה להצטרף לאפליקציה</label>`,'הוספת הדייר',()=>{const v=readRes();let id=(v.email.split('@')[0]||'r').toLowerCase().replace(/[^a-z0-9]/g,'')||'r';while(resOf(id))id+=Math.floor(Math.random()*9);
+   ST.residents.push({id,...v,plan:'',paid:{}});ST.threads[id]=[];log('הוספת דייר: '+v.name+' · דירה '+v.unit);toast(v.name+' נוסף/ה'+($('#f-inv').checked?' והזמנה נשלחה':''));setTimeout(()=>go('res-'+id))},'wide')},
+ delRes:b=>{$('#delBox').innerHTML=`<div class="confirm-bar" role="alert" style="margin-top:14px"><span class="grow">להסיר את ${esc(resOf(b.dataset.res).name)}? הגישה שלו לאפליקציה תיחסם. המסמכים נשמרים.</span><button class="btn sm danger" type="button" data-act="delResYes" data-res="${b.dataset.res}">הסרה</button><button class="btn sm" type="button" onclick="this.closest('.confirm-bar').remove()">ביטול</button></div>`;$('#delBox .btn').focus()},
+ delResYes:b=>{const r=resOf(b.dataset.res);ST.residents=ST.residents.filter(x=>x!==r);log('הסרת דייר: '+r.name);save();toast(r.name+' הוסר/ה');go('residents')},
+ planUp:b=>pickFiles(null,'image/*',async f=>{const r=resOf(b.dataset.res),id=uid('pl');await FS.put(id,f);r.plan='u:'+id;await urlOf(r.plan);log('החלפת תמונת תוכנית: '+r.name);save();toast('התוכנית הוחלפה');render()}),
+ msgRes:b=>{ui.mres=b.dataset.res;go('messages')},
+ pay:b=>{const r=resOf(b.dataset.res),p=ST.schedule.find(x=>x.id===b.dataset.p);r.paid[p.id]=true;log(`סימון תשלום כשולם: ${p.name} · ${r.name}`);save();toast(`${p.name} של ${r.name} סומן כשולם`);render()},
+ unpay:b=>{const r=resOf(b.dataset.res);delete r.paid[b.dataset.p];log('ביטול סימון תשלום · '+r.name);save();render()},
+ remind:b=>{const r=resOf(b.dataset.res),p=ST.schedule.find(x=>x.id===b.dataset.p);log(`תזכורת תשלום נשלחה: ${p.name} · ${r.name}`);save();toast('התזכורת נשלחה ל'+r.name)},
+ pAll:()=>{ui.pAll=!ui.pAll;render()},
+ index:()=>formDlg('עדכון מדד תשומות הבנייה',`<div class="grid2">${fld('i-cur','המדד החדש',ST.index.cur,'number',{req:1,attrs:'step="0.1" min="50"'})}${fld('i-month','חודש המדד',ST.index.month,'text',{req:1})}</div><p class="small mut">המדד הבסיסי בחוזה: ${ST.index.base}. הסכומים לתשלום יתעדכנו אצל כל הדיירים.</p>`,'עדכון',()=>{const v=+$('#i-cur').value;if(!(v>0))return false;ST.index.cur=v;ST.index.month=$('#i-month').value.trim();log(`עדכון מדד: ${v} · ${ST.index.month}`);toast('המדד עודכן והסכומים חושבו מחדש')}),
+ reqOk:b=>{const q=ST.requests.find(x=>x.id===b.dataset.q),r=resOf(q.res),sup=q.kind==='supplier'?ST.suppliers.find(s=>s.cat===q.opt):null,ans=q.kind==='design'||q.kind==='special';
+  formDlg(ans?'מענה לדייר':`אישור ותיאום · ${REQK[q.kind]}`,`<div class="notice"><b>${esc(r?.name||'')}</b> · ${esc(q.detail)}${q.when?` · מבוקש ${fmtD(q.when)}${q.time?' '+esc(q.time):''}`:''}</div>
+  ${ans?'':`<div class="grid2">${fld('r-date','מועד שנקבע',q.when||'','date',{req:1})}${fld('r-time','שעה',q.time||'','time')}</div>`}
+  ${sup?`<div class="notice">הספק: <b>${esc(sup.name)}</b> · ${esc(sup.contact)} · <span dir="ltr">${esc(sup.phone)}</span>${sup.address?' · '+esc(sup.address):''}</div>`:''}
+  ${fld('r-msg','ההודעה לדייר',ans?'':`${r?r.name.split(' ')[0]+', ':''}${q.kind==='supplier'?`תיאמנו לך פגישה עם ${sup?sup.name:'הספק'}${sup&&sup.address?', '+sup.address:''}.`:'הביקור באתר תואם. נפגש בכניסה לאתר, עם נעליים סגורות.'}`,'textarea',{req:1})}`,ans?'שליחת המענה':'אישור ושליחה לדייר',()=>{
+   q.status=ans?'done':'sched';if(!ans){q.when=$('#r-date').value;q.time=$('#r-time').value}q.reply=$('#r-msg').value.trim();(ST.threads[q.res]||(ST.threads[q.res]=[])).push({me:true,t:q.reply+(ans?'':` המועד: ${fmtD(q.when)}${q.time?' בשעה '+q.time:''}.`),at:new Date().toISOString()});
+   log(`${ans?'מענה':'תיאום'} · ${REQK[q.kind]} · ${r?.name}`);toast(ans?'המענה נשלח לדייר':'אושר. הדייר קיבל הודעה עם המועד')})},
+ reqNo:b=>{const q=ST.requests.find(x=>x.id===b.dataset.q),r=resOf(q.res);formDlg('דחיית הבקשה',fld('n-msg','הסבר לדייר','','textarea',{req:1,hint:'הדייר יראה את ההסבר באפליקציה'}),'דחייה ושליחה',()=>{q.status='no';q.reply=$('#n-msg').value.trim();(ST.threads[q.res]||(ST.threads[q.res]=[])).push({me:true,t:q.reply,at:new Date().toISOString()});log('דחיית בקשה · '+REQK[q.kind]+' · '+r?.name);toast('הבקשה נדחתה והדייר עודכן')})},
+ reqDone:b=>{const q=ST.requests.find(x=>x.id===b.dataset.q);q.status='done';log('סימון כטופל · '+REQK[q.kind]+' · '+rname(q.res));save();toast('סומן שהפגישה התקיימה');render()},
+ addReq:()=>formDlg('בקשה ידנית',`<div class="grid2">${fld('a-res','דייר','','select',{options:ST.residents.map(r=>[r.id,r.name])})}${fld('a-kind','סוג','supplier','select',{options:Object.entries(REQK)})}${fld('a-opt','ספק (לפגישה עם ספק)','','select',{options:[['','—'],...ST.suppliers.map(s=>[s.cat,s.cat])]})}${fld('a-when','מועד מבוקש','','date')}${fld('a-det','פרטים','','textarea',{req:1,span:1})}</div>`,'הוספה',()=>{
+  ST.requests.push({id:uid('q'),res:$('#a-res').value,kind:$('#a-kind').value,opt:$('#a-opt').value,detail:$('#a-det').value.trim(),when:$('#a-when').value,time:'',status:'new',date:today()});log('הוספת בקשה ידנית · '+rname($('#a-res').value));toast('הבקשה נוספה')}),
+ quote:b=>{const c=ST.changes.find(x=>x.id===b.dataset.c);formDlg('שליחת הצעת מחיר',`<div class="notice"><b>${esc(rname(c.res))}</b> · ${esc(c.title)}</div><div class="grid2">${fld('qp','מחיר (₪, כולל מע״מ)',c.price||'','number',{req:1,attrs:'min="0"'})}${fld('qd','תוקף ההצעה','','date')}</div>${fld('qn','הערות ההנדסה','','textarea')}<div class="field"><span class="lbl">קובץ ההצעה (לא חובה)</span><div class="row"><button type="button" class="btn sm" id="qf">${I('upload')}צירוף קובץ</button><span class="small mut" id="qfn">לא צורף</span></div></div>`,'שליחה לדייר לאישור',()=>{
+  c.price=+$('#qp').value;c.status='quote';if(qFile){const id=uid('d');FS.put(id,qFile);ST.docs.push({id,res:c.res,cat:'שינויי דיירים',title:'הצעת מחיר · '+c.title,file:qFile.name,type:typeOf(qFile.name),size:qFile.size,src:'u:'+id,date:today(),visible:true})}qFile=null;log(`הצעת מחיר נשלחה: ${c.title} · ${nis(c.price)} · ${rname(c.res)}`);toast('ההצעה נשלחה. הדייר יאשר בחתימה דיגיטלית')});
+  let qFile=null;$('#qf').onclick=()=>pickFiles(null,null,f=>{qFile=f;$('#qfn').textContent=f.name})},
+ chgNo:b=>{const c=ST.changes.find(x=>x.id===b.dataset.c);c.status='declined';log('דחיית שינוי: '+c.title);save();toast('הבקשה נדחתה');render()},
+ chgYes:b=>{const c=ST.changes.find(x=>x.id===b.dataset.c);c.status='approved';log('הדייר אישר שינוי: '+c.title);save();toast('סומן כמאושר. נשלח להנדסה לביצוע');render()},
+ tkNext:b=>{const t=ST.tickets.find(x=>x.id===b.dataset.t);t.step++;log(`ליקוי "${t.desc}" · ${TSTEPS[t.step]}`);save();toast('הסטטוס עודכן והדייר קיבל התראה');render()},
+ addTk:()=>formDlg('פתיחת ליקוי',`<div class="grid2">${fld('k-res','דייר','','select',{options:ST.residents.map(r=>[r.id,r.name])})}${fld('k-cat','תחום','אינסטלציה','select',{options:['אינסטלציה','חשמל','דלתות וחלונות','ריצוף וחיפוי','מיזוג','איטום ורטיבות','אחר']})}${fld('k-urg','דחיפות','רגילה','select',{options:['רגילה','דחופה']})}${fld('k-con','מטפל','הקבלן הראשי')}${fld('k-desc','תיאור','','textarea',{req:1,span:1})}</div>`,'פתיחה',()=>{ST.tickets.push({id:uid('t'),res:$('#k-res').value,cat:$('#k-cat').value,urgency:$('#k-urg').value,contractor:$('#k-con').value,desc:$('#k-desc').value.trim(),step:0,date:today()});log('פתיחת ליקוי · '+rname($('#k-res').value));toast('הליקוי נפתח')}),
+ supEdit:b=>{const s=b.dataset.s?ST.suppliers.find(x=>x.id===b.dataset.s):{cat:'',name:'',contact:'',phone:'',address:'',notes:''};
+  formDlg(b.dataset.s?'עריכת ספק':'ספק חדש',`<div class="grid2">${fld('s-cat','תחום (מה שהדייר בוחר)',s.cat,'text',{req:1})}${fld('s-name','שם הספק',s.name,'text',{req:1})}${fld('s-contact','איש קשר',s.contact)}${fld('s-phone','טלפון',s.phone,'tel',{ltr:1})}${fld('s-addr','אולם תצוגה',s.address,'text',{span:1})}${fld('s-notes','הערות לתיאום',s.notes,'textarea',{span:1})}</div>`,'שמירה',()=>{
+   Object.assign(s,{cat:$('#s-cat').value.trim(),name:$('#s-name').value.trim(),contact:$('#s-contact').value.trim(),phone:$('#s-phone').value.trim(),address:$('#s-addr').value.trim(),notes:$('#s-notes').value.trim()});if(!b.dataset.s){s.id=uid('s');ST.suppliers.push(s)}log('עדכון ספק: '+s.name);toast('הספק נשמר')})},
+ supDel:b=>{const s=ST.suppliers.find(x=>x.id===b.dataset.s);formDlg('הסרת ספק',`<p>להסיר את ${esc(s.name)}? הדיירים לא יוכלו לבחור יותר "${esc(s.cat)}" בבקשת פגישה.</p>`,'הסרה',()=>{ST.suppliers=ST.suppliers.filter(x=>x!==s);log('הסרת ספק: '+s.name);toast('הספק הוסר')})},
+ photo:()=>pickFiles(null,'image/*',f=>{formDlg('צילום חדש מהאתר',`<div style="aspect-ratio:16/9;border-radius:10px;background:var(--soft) url(${URL.createObjectURL(f)}) center/cover"></div><div class="grid2">${fld('p-cap','כיתוב','','text',{req:1,span:1})}${fld('p-date','תאריך הצילום',today(),'date')}</div><label class="check"><input type="checkbox" id="p-upd">לפרסם גם כעדכון לדיירים</label>`,'הוספה',()=>{
+  const id=uid('ph');FS.put(id,f);const src='u:'+id;urlCache.set(src,URL.createObjectURL(f));ST.photos.unshift({id,cap:$('#p-cap').value.trim(),date:$('#p-date').value,src});
+  if($('#p-upd').checked)ST.updates.push({id:uid('u'),title:$('#p-cap').value.trim(),text:'צילום חדש מהאתר.',img:src,date:today(),status:'pub'});log('צילום חדש מהאתר: '+$('#p-cap').value.trim());toast('הצילום נוסף')})}),
+ newUpdate:()=>{let img=null;formDlg('עדכון חדש לדיירים',`${fld('n-title','כותרת','','text',{req:1})}${fld('n-text','מה קרה באתר','','textarea',{req:1})}<div class="field"><span class="lbl">תמונה</span><div class="row"><button type="button" class="btn sm" id="n-img">${I('image')}בחירת תמונה</button><span class="small mut" id="n-imgn">לא נבחרה</span></div></div><div id="n-warn" class="notice" hidden><b>העדכון מזכיר מועד או מסירה.</b> הוא יישמר כממתין לאישור סמנכ״ל מגורים.</div>`,'פרסום',()=>{
+   const t=$('#n-title').value.trim(),x=$('#n-text').value.trim(),needs=ST.vpRule&&LEGALRX.test(t+' '+x);let src=null;if(img){const id=uid('u');FS.put(id,img);src='u:'+id;urlCache.set(src,URL.createObjectURL(img))}
+   ST.updates.push({id:uid('u'),title:t,text:x,img:src,date:today(),status:needs?'vp':'pub'});log(needs?'עדכון נשמר לאישור סמנכ״ל: '+t:'פרסום עדכון: '+t);toast(needs?'נשמר. ממתין לאישור סמנכ״ל מגורים':'העדכון פורסם לכל הדיירים');if(route!=='construction')setTimeout(()=>go('construction'))});
+  $('#n-img').onclick=()=>pickFiles(null,'image/*',f=>{img=f;$('#n-imgn').textContent=f.name});
+  const chk=()=>{$('#n-warn').hidden=!(ST.vpRule&&LEGALRX.test($('#n-title').value+' '+$('#n-text').value))};$('#n-title').oninput=chk;$('#n-text').oninput=chk},
+ vpOk:b=>{const u=ST.updates.find(x=>x.id===b.dataset.u);u.status='pub';log('סמנכ״ל מגורים אישר · פרסום: '+u.title);save();toast('העדכון פורסם');render()},
+ pubUpd:b=>{const u=ST.updates.find(x=>x.id===b.dataset.u);u.status='pub';save();render()},
+ bcOk:b=>{const x=ST.broadcasts.find(y=>y.id===b.dataset.b);x.status='sent';log('סמנכ״ל מגורים אישר · נשלחה הודעה: '+x.title);save();toast('ההודעה נשלחה');render()},
+ broadcast:()=>go('broadcast'),
+ heroTog:b=>{toggleHero(b.dataset.g,false)},
+ heroMv:b=>{const i=ST.hero.indexOf(b.dataset.g),j=i+ +b.dataset.d;[ST.hero[i],ST.hero[j]]=[ST.hero[j],ST.hero[i]];log('שינוי סדר התמונות במסך הבית');save();render();const n=$(`[data-act=heroMv][data-g="${b.dataset.g}"]:not([disabled])`);n&&n.focus()},
+ galDel:async b=>{const g=ST.gallery.find(x=>x.id===b.dataset.g);ST.gallery=ST.gallery.filter(x=>x!==g);ST.hero=ST.hero.filter(x=>x!==g.id);await FS.del(g.src.slice(2));log('הסרת תמונה מהגלריה: '+g.cap);save();toast('התמונה הוסרה');render()},
+ guideEdit:b=>{const g=b.dataset.g?ST.guide.find(x=>x.id===b.dataset.g):{t:'',s:'',sup:'',w:'',tip:''};formDlg(b.dataset.g?'עריכת מערכת':'מערכת חדשה',`<div class="grid2">${fld('g-t','מערכת',g.t,'text',{req:1})}${fld('g-s','מפרט',g.s)}${fld('g-sup','ספק',g.sup)}${fld('g-w','אחריות',g.w)}${fld('g-tip','טיפ לדייר',g.tip,'textarea',{span:1})}</div>`,'שמירה',()=>{Object.assign(g,{t:$('#g-t').value.trim(),s:$('#g-s').value.trim(),sup:$('#g-sup').value.trim(),w:$('#g-w').value.trim(),tip:$('#g-tip').value.trim()});if(!b.dataset.g){g.id=uid('g');ST.guide.push(g)}log('עדכון מדריך הדירה: '+g.t);toast('נשמר')})},
+ guideDel:b=>{const g=ST.guide.find(x=>x.id===b.dataset.g);formDlg('הסרה ממדריך הדירה',`<p>להסיר את "${esc(g.t)}" ממדריך הדירה?</p>`,'הסרה',()=>{ST.guide=ST.guide.filter(x=>x!==g);log('הסרה ממדריך הדירה: '+g.t)})},
+ reset:()=>{$('#resetBox').innerHTML=`<div class="confirm-bar" role="alert" style="margin-top:12px"><span class="grow">למחוק את כל השינויים והקבצים שהועלו, ולחזור לנתוני הדמו?</span><button class="btn sm danger" data-act="resetYes">איפוס</button><button class="btn sm" onclick="this.closest('.confirm-bar').remove()">ביטול</button></div>`;$('#resetBox .btn').focus()},
+ resetYes:async()=>{for(const d of ST.docs)if(d.src.startsWith('u:'))await FS.del(d.src.slice(2));ST=seed();save();toast('נתוני הדמו אופסו');go('overview')},
+};
+ACT.galUp=()=>{const i=document.createElement('input');i.type='file';i.accept='image/*';i.multiple=true;i.onchange=async()=>{for(const f of i.files){const id=uid('g');await FS.put(id,f);const src='u:'+id;await urlOf(src);ST.gallery.unshift({id,src,cap:f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' '),cat:'bld'})}log(`העלאת ${i.files.length} תמונות לגלריה`);save();toast(i.files.length+' תמונות נוספו. אפשר לערוך כיתוב וקטגוריה');ui.gcat='all';render()};i.click()};
+function toggleHero(id,on){on=on??!ST.hero.includes(id);if(on){if(ST.hero.length>=5){toast('אפשר עד 5 תמונות במסך הבית. הוציאו אחת קודם.');render();return}ST.hero.push(id)}else ST.hero=ST.hero.filter(x=>x!==id);log((on?'הוספה למסך הבית: ':'הוצאה ממסך הבית: ')+(ST.gallery.find(g=>g.id===id)||{}).cap);save();render()}
+
+/* ================= events ================= */
+document.addEventListener('click',e=>{
+ const a=e.target.closest('[data-act]');if(a&&!a.disabled){e.preventDefault();ACT[a.dataset.act]&&ACT[a.dataset.act](a);return}
+ const tr=e.target.closest('tr[data-href]');if(tr&&!e.target.closest('a,button,input,select')){location.hash=tr.dataset.href;return}
+ const rt=e.target.closest('[data-rtab]');if(rt){ui.rtab=rt.dataset.rtab;render();$(`[data-rtab="${ui.rtab}"]`).focus();return}
+ const rk=e.target.closest('[data-rk]');if(rk){ui.rk=rk.dataset.rk;render();$(`[data-rk="${ui.rk}"]`).focus();return}
+ const rs=e.target.closest('[data-rs]');if(rs){ui.rs=rs.dataset.rs;render();$(`[data-rs="${ui.rs}"]`).focus();return}
+ const gc=e.target.closest('[data-gcat]');if(gc){ui.gcat=gc.dataset.gcat;render();$(`[data-gcat="${ui.gcat}"]`).focus();return}
+ const mr=e.target.closest('[data-mres]');if(mr){ui.mres=mr.dataset.mres;render();$(`[data-mres="${ui.mres}"]`).focus();return}
+});
+document.addEventListener('keydown',e=>{const t=e.target;
+ if(t.matches('[role=tab]')&&/Arrow(Left|Right)/.test(e.key)){const tabs=$$('[role=tab]',t.closest('[role=tablist]'));const i=tabs.indexOf(t),n=tabs[(i+(e.key==='ArrowLeft'?1:-1)+tabs.length)%tabs.length];n.focus();n.click();e.preventDefault()}
+ if(t.matches('tr[data-href]')&&e.key==='Enter')location.hash=t.dataset.href;
+ if(e.key==='Escape'&&$('#side')?.classList.contains('open'))toggleSide(false);
+ if(e.key==='Escape'&&!$('#a11yPop').hidden){$('#a11yPop').hidden=true;$('#a11yBtn').setAttribute('aria-expanded','false');$('#a11yBtn').focus()}
+});
+document.addEventListener('change',e=>{const t=e.target;
+ if(t.dataset.vis){const d=ST.docs.find(x=>x.id===t.dataset.vis);d.visible=t.checked;log(`${d.title} · ${t.checked?'מוצג לדייר':'הוסתר מהדייר'}`);save();toast(t.checked?'המסמך מוצג לדייר':'המסמך הוסתר מהדייר')}
+ if(t.dataset.hero)toggleHero(t.dataset.hero,t.checked);
+ if(t.dataset.gk){ST.gallery.find(g=>g.id===t.dataset.gk).cat=t.value;save();toast('הקטגוריה עודכנה')}
+ if(t.dataset.gcap){const g=ST.gallery.find(x=>x.id===t.dataset.gcap);g.cap=t.value.trim();log('עדכון כיתוב: '+g.cap);save();toast('הכיתוב נשמר')}
+ if(t.id==='dcat'){ui.dcat=t.value;render()}if(t.id==='dres'){ui.dres=t.value;render()}
+ if(t.name==='stage'){ST.stage=+t.value;log('עדכון שלב הבנייה: '+ST.milestones[ST.stage].t);save();toast('השלב עודכן אצל כל הדיירים: '+ST.milestones[ST.stage].t);render();$(`input[name=stage][value="${ST.stage}"]`).focus()}
+ if(t.id==='vpRule'){ST.vpRule=t.checked;log('כלל אישור סמנכ״ל: '+(t.checked?'פעיל':'כבוי'));save();toast(t.checked?'הכלל פעיל':'הכלל כובה')}
+ if(t.id==='deliv'){ST.delivery=t.value.trim();log('שנת מסירה משוערת: '+ST.delivery);save();toast('נשמר')}
+});
+let typing;document.addEventListener('input',e=>{const t=e.target;
+ if(t.id==='rq'||t.id==='dq'){clearTimeout(typing);typing=setTimeout(()=>{ui[t.id]=t.value;render();const n=$('#'+t.id);n.focus();n.setSelectionRange(n.value.length,n.value.length)},250)}
+ if(t.id==='bc-title'||t.id==='bc-text'){$('#bcWarn').hidden=!(ST.vpRule&&LEGALRX.test($('#bc-title').value+' '+$('#bc-text').value))}});
+document.addEventListener('submit',e=>{const f=e.target;
+ if(f.id==='resForm'){e.preventDefault();if(!validate(f))return;Object.assign(resOf(sub),readRes());log('עדכון פרטי דייר: '+resOf(sub).name);save();toast('הפרטים נשמרו ויוצגו לדייר באפליקציה');render()}
+ if(f.dataset.thread){e.preventDefault();const id=f.dataset.thread,i=$('input',f),v=i.value.trim();if(!v)return;(ST.threads[id]||(ST.threads[id]=[])).push({me:true,t:v,at:new Date().toISOString()});log('הודעה ל'+rname(id));save();render();const n=$('#mt-'+id);n&&n.focus();const th=$('#thr');th&&(th.scrollTop=th.scrollHeight)}
+ if(f.id==='schForm'){e.preventDefault();ST.schedule.forEach((p,i)=>{if(p.fixed)return;p.name=$('#sn'+i).value.trim();p.pct=+$('#sp'+i).value;p.due=$('#sd'+i).value});log('עדכון תבנית לוח התשלומים');save();toast('התבנית נשמרה');render()}
+ if(f.id==='bcForm'){e.preventDefault();if(!validate(f))return;const t=$('#bc-title').value.trim(),x=$('#bc-text').value.trim(),needs=ST.vpRule&&LEGALRX.test(t+' '+x);ST.broadcasts.push({id:uid('b'),title:t,text:x,cat:$('#bc-cat').value,to:$('#bc-to').value,date:today(),status:needs?'vp':'sent'});log(needs?'הודעה נשמרה לאישור סמנכ״ל: '+t:'נשלחה הודעה: '+t);save();toast(needs?'נשמרה. ממתינה לאישור סמנכ״ל מגורים':'ההודעה נשלחה');render()}
+ if(f.id==='wForm'){e.preventDefault();ST.warranty.forEach((w,i)=>{w.t=$('#wt'+i).value.trim();w.end=$('#we'+i).value});log('עדכון תקופות בדק');save();toast('נשמר')}
+ if(f.id==='mForm'){e.preventDefault();Object.assign(ST.mgmt,{name:$('#m-name').value.trim(),phone:$('#m-phone').value.trim(),email:$('#m-email').value.trim(),hours:$('#m-hours').value.trim()});log('עדכון פרטי חברת הניהול');save();toast('נשמר')}
+ if(f.id==='hostForm'){e.preventDefault();if(!validate(f))return;Object.assign(ST.host,{name:$('#h-name').value.trim(),role:$('#h-role').value.trim(),hours:$('#h-hours').value.trim(),reply:$('#h-reply').value.trim()});log('עדכון איש הקשר באפליקציה');save();toast('נשמר. הדיירים יראו את השינוי באפליקציה')}
+ if(f.id==='pwForm'){e.preventDefault();pwChange()}
+});
+async function pwChange(){const m=$('#pwMsg'),o=$('#pw-old').value,n=$('#pw-new').value,n2=$('#pw-new2').value;m.hidden=false;m.className='err';
+ const ok=AUTH.hash?(await sha(o))===AUTH.hash:o===DEMO.pass;
+ if(!ok){m.textContent='הסיסמה הנוכחית לא נכונה.';$('#pw-old').focus();return}
+ if(n.length<10||!/[A-Z]/.test(n)||!/\d/.test(n)||!/[^A-Za-z0-9]/.test(n)){m.textContent='הסיסמה החדשה צריכה לפחות 10 תווים, אות גדולה באנגלית, ספרה ותו מיוחד.';$('#pw-new').focus();return}
+ if(n!==n2){m.textContent='שתי הסיסמאות החדשות לא זהות.';$('#pw-new2').focus();return}
+ AUTH.hash=await sha(n);saveAuth();log('החלפת סיסמה');m.className='notice';m.textContent='הסיסמה עודכנה. בכניסה הבאה משתמשים בסיסמה החדשה.';$('#pwForm').reset()}
+/* drag and drop */
+document.addEventListener('dragover',e=>{const d=e.target.closest('.drop');if(d){e.preventDefault();d.classList.add('over')}});
+document.addEventListener('dragleave',e=>{const d=e.target.closest('.drop');if(d&&!d.contains(e.relatedTarget))d.classList.remove('over')});
+document.addEventListener('drop',e=>{const d=e.target.closest('.drop');if(!d)return;e.preventDefault();d.classList.remove('over');if(e.dataTransfer.files.length)openUpload(e.dataTransfer.files,d.dataset.drop)});
+addEventListener('dragover',e=>e.preventDefault());addEventListener('drop',e=>e.preventDefault());
+
+/* ================= accessibility menu ================= */
+const A11Y=LS.get('pa-a11y')||{size:'',contrast:false,motion:false};
+function applyA11y(){const r=document.documentElement;r.dataset.size=A11Y.size;r.dataset.contrast=A11Y.contrast?'high':'';r.style.setProperty('--underline',A11Y.links?'underline':'none');document.body.classList.toggle('links',!!A11Y.links);LS.set('pa-a11y',A11Y)}
+function a11yPop(){const p=$('#a11yPop');p.innerHTML=`<h2 style="font-size:1.1em">נגישות</h2>
+ <div class="field"><span class="lbl" id="fsl">גודל טקסט</span><div class="seg" role="group" aria-labelledby="fsl">${[['','רגיל'],['l','גדול'],['xl','גדול מאוד']].map(([k,t])=>`<button aria-pressed="${A11Y.size===k}" data-fs="${k}">${t}</button>`).join('')}</div></div>
+ <label class="check"><span class="switch"><input type="checkbox" id="a-con" ${A11Y.contrast?'checked':''}><i></i></span>ניגודיות גבוהה</label>
+ <label class="check"><span class="switch"><input type="checkbox" id="a-lnk" ${A11Y.links?'checked':''}><i></i></span>הדגשת קישורים</label>
+ <button class="btn sm" id="a-rst">איפוס הגדרות</button><p class="small mut">ניווט מלא במקלדת: Tab למעבר, Enter לבחירה, Esc לסגירה.</p>`;
+ $$('[data-fs]',p).forEach(b=>b.onclick=()=>{A11Y.size=b.dataset.fs;applyA11y();a11yPop();$(`[data-fs="${A11Y.size}"]`).focus()});
+ $('#a-con').onchange=e=>{A11Y.contrast=e.target.checked;applyA11y()};$('#a-lnk').onchange=e=>{A11Y.links=e.target.checked;applyA11y()};$('#a-rst').onclick=()=>{A11Y.size='';A11Y.contrast=false;A11Y.links=false;applyA11y();a11yPop()}}
+$('#a11yBtn').onclick=()=>{const p=$('#a11yPop'),o=p.hidden;p.hidden=!o;$('#a11yBtn').setAttribute('aria-expanded',o);if(o){a11yPop();$('button',p).focus()}};
+document.head.insertAdjacentHTML('beforeend','<style>body.links a{text-decoration:underline!important;text-underline-offset:3px}</style>');
+
+/* ================= boot ================= */
+async function boot(){await FS.ready;await warmImages();shell();render(true)}
+addEventListener('hashchange',()=>{if(session())render(true)});
+(function init(){const th=LS.get('pa-theme');if(th)document.documentElement.dataset.theme=th;applyA11y();if(session())boot();else renderLogin()})();
+</script>
+</body>
+</html>

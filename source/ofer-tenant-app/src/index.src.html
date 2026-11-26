@@ -1,0 +1,1324 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="theme-color" content="#FAF9F6">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pituach by the Sea · אפליקציית הדיירים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300..700&family=Heebo:wght@300..700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#2E2D2A;--navy2:#47453F;--sand:#FAF9F6;--sand2:#E8EDF6;--paper:#FFFFFF;
+  --gold:#C9D6EA;--gold-d:#3F5A85;--ink:#2E2D2A;--mut:#666A73;--line:#E1E4EA;
+  --ok:#3F6B58;--warn:#2F4670;--info:#3F5A85;--bg:#DFE6F1;
+  --fs:15px;--serif:'Frank Ruhl Libre',Georgia,serif;--lat:'Cormorant Garamond','Frank Ruhl Libre',Georgia,serif;
+  --r:3px;
+}
+:root[data-contrast="high"]{--mut:#33363D;--line:#9AA1AE;--gold-d:#243A5E}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);font-family:'Heebo',Arial,sans-serif;font-weight:300;color:var(--ink);font-size:var(--fs);line-height:1.55;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+b{font-weight:500}
+svg{stroke-width:1.35}
+.serif{font-family:var(--serif)}
+.stage{min-height:100%;display:flex;align-items:center;justify-content:center;gap:56px;padding:24px}
+.aside-info{max-width:300px}
+.aside-info h1{font-family:var(--serif);font-weight:300;font-size:36px;line-height:1.15;margin-bottom:14px}
+.aside-info p{color:var(--mut);margin-bottom:12px}
+.aside-info .of{width:112px;margin-bottom:26px;display:block}
+.phone{width:400px;height:830px;max-height:calc(100vh - 48px);background:var(--sand);border-radius:46px;box-shadow:0 0 0 9px #1f1e1b,0 40px 90px #2e2d2a40;overflow:hidden;position:relative;display:flex;flex-direction:column}
+@media (max-width:760px){.stage{padding:0;display:block}.aside-info{display:none}.phone{width:100%;height:100dvh;max-height:none;border-radius:0;box-shadow:none}}
+/* header */
+.top{background:var(--sand);padding:14px 20px 0;padding-top:max(14px,env(safe-area-inset-top));position:relative;z-index:3}
+.top-row{display:flex;align-items:center;justify-content:space-between;gap:10px;direction:ltr;height:44px}
+.marks{display:flex;align-items:center;gap:10px;direction:ltr}
+.marks .wm{height:25px}.marks .bd{height:19px}
+.icon-btn{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;position:relative;color:var(--ink)}
+.icon-btn:hover{background:#2e2d2a0a}
+.icon-btn .dot{position:absolute;top:8px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--gold-d);border:1.5px solid var(--sand)}
+.demo-strip{display:flex;align-items:center;gap:12px;margin-top:10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:0 2px}
+.demo-strip .lbl{font-size:9.5px;letter-spacing:2px;color:var(--mut);direction:ltr}
+.stage-switch{flex:1;display:flex;justify-content:space-between}
+.stage-switch button{padding:9px 2px;font-size:12.5px;color:var(--mut);border-bottom:1.5px solid transparent;margin-bottom:-1px}
+.stage-switch button.on{color:var(--ink);font-weight:500;border-color:var(--ink)}
+/* content */
+main{flex:1;overflow-y:auto;padding:0 20px 104px;scroll-behavior:smooth}
+.screen{display:none;animation:fade .35s ease}
+.screen.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h2.title{font-family:var(--serif);font-weight:300;font-size:34px;line-height:1.15;margin:28px 0 20px}
+h3.sub{font-size:11.5px;font-weight:500;letter-spacing:1.6px;color:var(--mut);margin:34px 0 14px;display:flex;align-items:center;gap:12px}
+h3.sub:after{content:"";flex:1;height:1px;background:var(--line)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:12px}
+.card.dark{background:var(--navy);color:var(--sand);border-color:var(--navy)}
+.card.hero{border:0;padding:0;overflow:hidden;background:var(--navy) center/cover;color:#fff;min-height:300px;display:flex;flex-direction:column;justify-content:flex-end}
+.card.hero .in{padding:80px 20px 20px;background:linear-gradient(#1f1e1b00,#1f1e1bcc 60%)}
+.card.hero .mut{color:#E6EAF1}.card.hero .kicker{color:#DCE6F5}
+.card.img{padding:0;overflow:hidden}.card.img>img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover}.card.img .in{padding:18px 20px 20px}
+.row{display:flex;align-items:center;gap:12px}
+.between{justify-content:space-between}
+.mut{color:var(--mut)}.dark .mut{color:#D9DEE8}
+.small{font-size:13px}
+.big{font-family:var(--serif);font-size:38px;font-weight:300;line-height:1.05}
+.kicker{font-size:11px;font-weight:500;color:var(--gold-d);letter-spacing:1.4px}
+.dark .kicker{color:var(--gold)}
+.latin{font-size:10.5px;letter-spacing:2.4px;color:var(--mut);direction:ltr;text-align:right;font-weight:400}
+.lat{font-family:var(--lat);direction:ltr}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 20px;border-radius:var(--r);background:var(--navy);color:#fff;font-weight:400;font-size:14px;letter-spacing:.6px;transition:opacity .2s}
+.btn:hover{opacity:.88}
+.btn.gold{background:var(--gold);color:var(--ink)}
+.btn.ghost{background:transparent;border:1px solid #2e2d2a55;color:var(--ink)}
+.card.hero .btn.gold,.hero-full .btn.gold{background:#fff;color:var(--ink)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.chip{display:inline-block;font-size:11.5px;font-weight:400;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--mut);white-space:nowrap;background:var(--paper)}
+.chip.ok{border-color:#3f6b5855;color:var(--ok)}
+.chip.warn{background:var(--warn);border-color:var(--warn);color:#fff}
+.chip.info,.chip.gold{background:var(--sand2);border-color:var(--sand2);color:var(--gold-d)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.list-item{display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--line)}
+.list-item:last-child{border-bottom:0;padding-bottom:2px}.list-item:first-child{padding-top:2px}
+.list-item .grow{flex:1;min-width:0}
+.ic-round{width:38px;height:38px;border-radius:50%;background:var(--sand2);display:grid;place-items:center;flex:none;color:var(--ink)}
+.bar{height:2px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ink)}
+.dark .bar,.card.hero .bar,.hero-full .bar{background:#ffffff40}.dark .bar i,.card.hero .bar i,.hero-full .bar i{background:#fff}
+.seg{display:flex;gap:22px;margin-bottom:20px;overflow-x:auto;border-bottom:1px solid var(--line);scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{padding:10px 0;font-size:14px;color:var(--mut);white-space:nowrap;border-bottom:1.5px solid transparent;margin-bottom:-1px}
+.seg button.on{color:var(--ink);font-weight:500;border-color:var(--ink)}
+.pane{display:none}.pane.on{display:block;animation:fade .3s ease}
+.tl{position:relative;padding-right:24px}
+.tl:before{content:"";position:absolute;right:4px;top:8px;bottom:8px;width:1px;background:var(--line)}
+.tl-item{position:relative;padding:0 0 22px}
+.tl-item:last-child{padding-bottom:0}
+.tl-item:before{content:"";position:absolute;right:-24px;top:7px;width:9px;height:9px;border-radius:50%;background:var(--paper);border:1px solid #2e2d2a66}
+.tl-item.done:before{background:var(--ink);border-color:var(--ink)}
+.tl-item.now:before{background:var(--gold-d);border-color:var(--gold-d);box-shadow:0 0 0 5px #C9D6EA}
+.hscroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory;margin:0 -20px;padding:0 20px 6px;scrollbar-width:none}
+.hscroll::-webkit-scrollbar{display:none}
+.hscroll>*{flex:0 0 78%;scroll-snap-align:center}
+.upd{background:var(--sand2);aspect-ratio:16/10;display:grid;place-items:center;border-radius:var(--r);margin-bottom:12px}
+.upd img{width:54px;opacity:.5}
+/* home */
+.hero-full{margin:0 -20px;min-height:350px;background:var(--navy) center/cover;color:#fff;display:flex;flex-direction:column;justify-content:flex-end}
+.hero-full .in{padding:84px 24px 24px;background:linear-gradient(#1f1e1b00,#1f1e1bd0 62%)}
+.hero-full .latin{color:#E6EAF1;text-align:right}
+.greet{font-family:var(--serif);font-weight:300;font-size:40px;line-height:1.1;margin:8px 0 10px}
+.hero-full p{color:#EDF0F5;font-size:15px}
+.hero-stat{display:flex;align-items:flex-end;justify-content:space-between;margin:14px 0 10px}
+.hero-stat .big{font-size:46px}
+.next{display:flex;align-items:center;gap:16px;background:var(--sand2);margin:0 -20px;padding:20px 24px}
+.next .grow{flex:1}
+.rows{margin-top:6px}
+.rowlink{display:flex;align-items:center;gap:16px;width:100%;text-align:right;padding:18px 0;border-bottom:1px solid var(--line)}
+.rowlink .grow{flex:1}.rowlink b{display:block;font-size:15.5px;font-weight:400}
+.rowlink>svg:first-child{color:var(--ink);flex:none}
+.rowlink .chev{color:#9aa0ab}
+.person{display:flex;align-items:center;gap:14px}
+.person .av{width:52px;height:52px;border-radius:50%;background:var(--sand2);display:grid;place-items:center;font-family:var(--serif);font-size:20px;color:var(--gold-d);flex:none}
+.svc{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.svc button{background:var(--paper);padding:22px 16px;text-align:right;display:flex;flex-direction:column;gap:10px;min-height:118px}
+.svc button b{font-weight:400;font-size:15px}.svc button svg{color:var(--gold-d)}
+.back{display:inline-flex;align-items:center;gap:4px;color:var(--mut);font-size:13px;margin-top:20px}
+.back svg{transform:scaleX(-1)}
+/* tabbar */
+nav.tabs{position:absolute;bottom:0;left:0;right:0;background:#fffffff2;backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;padding:8px 10px max(12px,env(safe-area-inset-bottom))}
+nav.tabs button{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:6px 0 2px;font-size:10.5px;letter-spacing:.3px;color:#8a8f99;position:relative}
+nav.tabs button.on{color:var(--ink);font-weight:500}
+nav.tabs button.on:before{content:"";position:absolute;top:-9px;width:22px;height:1.5px;background:var(--ink)}
+.fab{display:none}
+/* sheet */
+.sheet-wrap{position:absolute;inset:0;background:#1f1e1b66;display:none;z-index:20;align-items:flex-end;backdrop-filter:blur(3px)}
+.sheet-wrap.on{display:flex}
+.sheet{background:var(--sand);width:100%;max-height:90%;border-radius:18px 18px 0 0;padding:12px 24px 30px;overflow-y:auto;animation:up .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes up{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
+.grab{width:36px;height:3px;border-radius:9px;background:#2e2d2a33;margin:0 auto 18px}
+.sheet h3{font-family:var(--serif);font-weight:300;font-size:28px;line-height:1.15;margin-bottom:16px}
+label.f{display:block;font-size:11px;font-weight:500;letter-spacing:1.2px;color:var(--mut);margin:18px 0 8px}
+.input{width:100%;padding:13px 14px;border-radius:var(--r);border:1px solid var(--line);background:var(--paper);font-weight:300}
+.input:focus{outline:0;border-color:var(--ink)}
+textarea.input{min-height:92px;resize:vertical}
+.opt-row{display:flex;flex-wrap:wrap;gap:8px}
+.opt{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--paper);font-size:13.5px}
+.opt.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+canvas.sign{width:100%;height:150px;background:var(--paper);border:1px dashed #2e2d2a55;border-radius:var(--r);touch-action:none}
+.toast{position:absolute;top:14px;left:16px;right:16px;background:var(--navy);color:#fff;padding:14px 18px;border-radius:var(--r);font-size:13.5px;z-index:40;box-shadow:0 14px 40px #0003;transform:translateY(calc(-100% - 60px));transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.toast.on{transform:none}
+.chat{display:flex;flex-direction:column;gap:10px;min-height:240px;max-height:44vh;overflow-y:auto;padding:4px 0 12px}
+.msg{max-width:84%;padding:11px 15px;border-radius:14px;font-size:14.5px}
+.msg.bot{background:var(--paper);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:3px}
+.msg.me{background:var(--navy);color:#fff;align-self:flex-end;border-bottom-right-radius:3px}
+.sugs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.sugs button{font-size:12.5px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--paper)}
+.switch{width:44px;height:26px;border-radius:999px;background:#cfd4dd;position:relative;flex:none;transition:background .2s}
+.switch:after{content:"";position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:right .2s}
+.switch.on{background:var(--ink)}.switch.on:after{right:21px}
+.switch.locked{opacity:.5;cursor:not-allowed}
+.steps{display:flex;gap:4px;margin:14px 0 6px}
+.steps i{flex:1;height:2px;background:var(--line)}
+.steps i.on{background:var(--ink)}
+.stars button{font-size:24px;color:#cfd4dd}
+.stars button.on{color:var(--gold-d)}
+.empty{text-align:center;color:var(--mut);padding:26px 0}
+.plan{background:#fff;border-radius:var(--r);overflow:auto;border:1px solid var(--line)}.plan img{display:block;width:100%}.plan.zoom img{width:220%}
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:4px}.gal.full img{border-radius:0}.gal img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:var(--r);display:block}.gal img.wide{grid-column:1/-1;aspect-ratio:16/10}
+.splash{position:absolute;inset:0;z-index:60;background:var(--sand);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;transition:opacity .9s}
+.splash.off{opacity:0;pointer-events:none}
+.splash .bd{width:112px;animation:rise 1.2s ease both}.splash .wm{width:200px;animation:rise 1.2s .25s ease both}.splash .em{width:140px;opacity:.7;animation:rise 1.2s .5s ease both}.splash .of{width:84px;position:absolute;bottom:46px;opacity:.85}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}}
+details summary::-webkit-details-marker{display:none}
+:focus-visible{outline:2px solid var(--gold-d);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---- Aman-like restraint ---- */
+main{padding:0 26px 96px}
+h2.title{text-align:center;font-size:30px;margin:40px 0 28px;letter-spacing:.5px}
+h2.title:before{content:attr(data-k);display:block;font-family:'Heebo',sans-serif;font-size:10px;letter-spacing:3.2px;color:var(--mut);margin-bottom:12px;direction:ltr}
+h3.sub{justify-content:center;margin:46px 0 8px;letter-spacing:2.4px;font-size:11px}
+h3.sub:after{display:none}
+.card{background:none;border:0;border-top:1px solid var(--line);border-radius:0;padding:24px 0;margin:0}
+h3.sub+.card,h2.title+.card{border-top:0}
+.card.dark{background:none;color:var(--ink);text-align:center}
+.card.dark .mut{color:var(--mut)}.card.dark .kicker{color:var(--mut)}
+.card.dark .bar{background:var(--line)}.card.dark .bar i{background:var(--ink)}
+.card.dark .big{font-size:44px;margin-top:6px}
+.card.hero,.card.img{border:0;margin:0 -26px}
+.card.img .in{padding:22px 26px 6px}
+.card.hero .in{padding:90px 26px 26px;text-align:center}
+.card details,details.card{padding:20px 0}
+.kicker{color:var(--mut);letter-spacing:2px;font-size:10.5px}
+.btn{background:none;color:var(--ink);border:1px solid var(--ink);padding:13px 26px;letter-spacing:1.4px;font-size:13px;border-radius:0}
+.btn:hover{background:var(--ink);color:#fff;opacity:1}
+.btn.gold{background:var(--ink);color:#fff}
+.btn.ghost{border:0;border-bottom:1px solid var(--ink);padding:4px 0;letter-spacing:1px}
+.btn.ghost:hover{background:none;color:var(--ink);opacity:.6}
+.card.hero .btn.gold,.hero-full .btn.gold{background:none;border-color:#fff;color:#fff}
+.chip,.chip.ok,.chip.info,.chip.gold,.chip.warn{background:none;border:0;padding:0;font-size:11px;letter-spacing:1.2px;color:var(--mut);border-radius:0}
+.chip.warn{color:var(--ink);font-weight:500;border-bottom:1px solid var(--ink)}
+.chip.ok{color:var(--ok)}
+.ic-round{display:none}
+.seg{justify-content:flex-start;gap:26px;margin:0 -26px 8px;padding:0 26px}
+.seg button{font-size:13px;letter-spacing:.6px}
+.hero-full{margin:0 -26px;min-height:470px}
+.hero-full .in{text-align:center;padding:120px 30px 34px}
+.hero-full .latin{text-align:center;letter-spacing:3.2px}
+.greet{font-size:36px;margin:12px 0 10px}
+.hero-stat{justify-content:center;gap:18px;align-items:baseline;margin-top:22px}
+.hero-stat .big{font-size:40px}
+.next{background:none;margin:0;padding:30px 0;flex-direction:column;text-align:center;gap:16px;border-bottom:1px solid var(--line)}
+.rowlink{padding:22px 0}
+.rowlink>svg:first-child{display:none}
+.rowlink b{font-family:var(--serif);font-weight:300;font-size:20px}
+.person{flex-direction:column;text-align:center;gap:10px}
+.person .av{background:none;border:1px solid var(--line);width:58px;height:58px}
+.person+.row{justify-content:center;gap:34px!important}.person+.row .btn{flex:none!important}
+.svc{grid-template-columns:1fr;border:0;background:none;gap:0}
+.svc button{min-height:0;padding:20px 0;border-bottom:1px solid var(--line);background:none;flex-direction:row;align-items:center}
+.svc button svg{display:none}.svc button b{font-family:var(--serif);font-weight:300;font-size:20px}
+.upd{background:var(--sand2)}
+nav.tabs{padding:0 14px max(10px,env(safe-area-inset-bottom));background:var(--sand)}
+nav.tabs button{padding:17px 0 13px;font-size:12px;letter-spacing:.8px}
+nav.tabs button svg{display:none}
+nav.tabs button.on:before{top:-1px;width:26px;height:1px}
+.demo-strip{border-top:0}
+.role{font-size:11px;letter-spacing:.6px;color:var(--gold-d);border-bottom:1px solid currentColor;padding:1px 0;white-space:nowrap}
+.phone[data-role=dev] nav.tabs,.phone[data-role=dev] .stage-switch{display:none}
+.phone[data-role=dev] .screen{display:none!important}.phone[data-role=dev] #s-dev{display:block!important}
+.phone[data-role=dev] .demo-strip{justify-content:space-between;padding:9px 2px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}
+.kpis>div{padding:22px 0;text-align:center;border-bottom:1px solid var(--line)}
+.kpis>div:nth-child(odd){border-left:1px solid var(--line)}
+.task{padding:20px 0;border-bottom:1px solid var(--line)}
+.task .row{margin-top:10px;gap:22px}
+
+/* ---- usability + imagery ---- */
+nav.tabs button svg{display:block;width:21px;height:21px}
+nav.tabs button{padding:11px 0 8px;font-size:10.5px;gap:5px}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:22px 0 20px;border-bottom:1px solid var(--line)}
+.quick button{display:flex;flex-direction:column;align-items:center;gap:9px;font-size:12px;padding:6px 0;min-height:64px}
+.quick .ci{width:50px;height:50px;border-radius:50%;border:1px solid var(--line);background:var(--paper);display:grid;place-items:center;transition:background .2s}
+.quick button:hover .ci{background:var(--sand2)}
+.strip{display:flex;gap:10px;overflow-x:auto;margin:0 -26px;padding:0 26px 4px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.strip figure{flex:0 0 82%;scroll-snap-align:center;margin:0}
+.strip img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.strip figcaption,.cap{font-size:12px;color:var(--mut);margin-top:8px;text-align:center;letter-spacing:.4px}
+.full{margin:0 -26px}.full img{width:100%;display:block}
+.homecard{display:flex;gap:16px;align-items:center;width:100%;text-align:right;padding:22px 0;border-bottom:1px solid var(--line)}
+.homecard img{width:96px;height:96px;object-fit:contain;background:#fff;border:1px solid var(--line);flex:none}
+.homecard .lat{font-size:19px;letter-spacing:.6px;line-height:1.2;text-align:right;display:block}
+.who{display:flex;align-items:center;gap:14px;width:100%;text-align:right;padding:16px 0;border-bottom:1px solid var(--line)}
+.who .av{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-family:var(--serif);font-size:17px;flex:none}
+.who.on .av{background:var(--ink);color:#fff;border-color:var(--ink)}
+.who .grow{flex:1;min-width:0}.who .lat{font-size:15px;letter-spacing:.4px;display:block;text-align:right}
+.upd.ph{background:none;aspect-ratio:auto}.upd.ph img{width:100%;opacity:1;aspect-ratio:16/10;object-fit:cover;display:block}
+
+/* ---- softer, friendlier ---- */
+:root{--r:14px;--sh:0 1px 2px #2e2d2a0a,0 10px 28px #2e2d2a0f;--mut:#5F636C}
+body{font-weight:400;font-size:15.5px}
+main{padding:0 20px 104px}
+button{transition:transform .15s ease,background .2s,opacity .2s}
+button:active{transform:scale(.97)}
+.card{background:var(--paper);border:0;border-radius:20px;padding:20px;margin:0 0 14px;box-shadow:var(--sh)}
+.card.dark{background:var(--paper)}
+.card.hero,.card.img{margin:0 0 14px;border-radius:20px}
+.card.img .in{padding:18px 20px 20px}
+.btn{border-radius:999px;border:0;background:var(--sand2);color:var(--ink);padding:13px 24px;letter-spacing:.3px;font-size:14.5px;font-weight:500}
+.btn:hover{background:#dbe3f1;color:var(--ink)}
+.btn.gold{background:var(--ink);color:#fff}.btn.gold:hover{background:#45433e;color:#fff}
+.btn.ghost{border:0;background:none;color:var(--gold-d);padding:8px 4px;text-decoration:underline;text-underline-offset:4px;letter-spacing:0}
+.card.hero .btn.gold,.hero-full .btn.gold{background:#fff;color:var(--ink);border:0}
+.chip,.chip.info,.chip.gold{background:var(--sand2);border:0;padding:4px 11px;border-radius:999px;font-size:12px;letter-spacing:0;color:var(--gold-d)}
+.chip.ok{background:#E3EFE9;color:var(--ok);padding:4px 11px;border-radius:999px;font-size:12px;letter-spacing:0}
+.chip.warn{background:var(--ink);color:#fff;border:0;padding:4px 11px;border-radius:999px;font-size:12px;letter-spacing:0;font-weight:400}
+.hero-full{margin:0 -20px;border-radius:0 0 30px 30px;overflow:hidden;min-height:440px}
+.next{background:var(--sand2);border:0;border-radius:20px;margin:16px 0 0;padding:18px 20px;flex-direction:row;text-align:right;gap:14px}
+.quick{border:0;padding:20px 0 6px}
+.quick .ci{width:56px;height:56px;border:0;background:var(--paper);box-shadow:var(--sh);color:var(--gold-d)}
+.homecard{background:var(--paper);border:0;border-radius:20px;padding:14px;box-shadow:var(--sh);margin-top:14px}
+.homecard img{border-radius:12px;border:0;background:var(--sand)}
+.rows{background:var(--paper);border-radius:20px;box-shadow:var(--sh);padding:2px 18px;margin-top:14px}
+.rowlink{padding:17px 0}.rowlink:last-child{border-bottom:0}
+.rowlink>svg:first-child{display:block;color:var(--gold-d)}
+.rowlink b{font-family:'Heebo',sans-serif;font-weight:500;font-size:15.5px}
+.strip{margin:0 -20px;padding:0 20px 4px;gap:12px}.strip img{border-radius:18px;cursor:zoom-in}
+.strip figcaption{text-align:right;font-size:13px}
+.full{margin:0}.full img{border-radius:18px}
+.gal{gap:8px}.gal img,.gal.full img{border-radius:14px;cursor:zoom-in}
+.plan{border-radius:18px;border:0;box-shadow:var(--sh)}
+.input{border-radius:14px;padding:14px 16px;font-weight:400}
+.sheet{border-radius:28px 28px 0 0;padding:12px 22px 30px}
+.toast{border-radius:16px}
+.kpis{border:0;gap:10px}
+.kpis>div,.kpis>div:nth-child(odd),.kpis>button{background:var(--paper);border:0;border-radius:18px;box-shadow:var(--sh);padding:18px 8px;text-align:center}
+.task{background:var(--paper);border:0;border-radius:18px;box-shadow:var(--sh);padding:16px 18px;margin-bottom:10px}
+.task .row{flex-wrap:wrap;gap:8px;margin-top:12px}
+.task .btn{padding:9px 16px;font-size:13.5px}
+.who{padding:14px 0}.who:last-child{border-bottom:0}
+.who .av{background:var(--sand2);border:0;color:var(--gold-d)}
+.group{background:var(--paper);border-radius:20px;box-shadow:var(--sh);padding:4px 18px;margin-bottom:14px}
+.svc{grid-template-columns:1fr 1fr;gap:10px}
+.svc button{background:var(--paper);border:0;border-radius:18px;box-shadow:var(--sh);padding:18px 16px;flex-direction:column;align-items:flex-start;min-height:112px}
+.svc button svg{display:block;color:var(--gold-d)}.svc button b{font-family:'Heebo',sans-serif;font-weight:500;font-size:15px}
+.person .av{background:var(--sand2);border:0}
+.upd,.upd.ph img{border-radius:16px}
+nav.tabs{background:#fffffff5;backdrop-filter:blur(14px);padding:0 10px max(10px,env(safe-area-inset-bottom))}
+nav.tabs button.on svg{color:var(--gold-d)}
+nav.tabs button.on:before{display:none}
+h2.title{margin:34px 0 22px}
+h3.sub{margin:34px 0 14px;justify-content:flex-start;font-size:12px;letter-spacing:1.2px}
+.seg{margin:0 -20px 16px;padding:0 20px}
+.hscroll{margin:0 -20px;padding:0 20px 6px}
+.opt{padding:9px 16px}
+/* dev */
+nav.tabs.devnav{display:none}
+.phone[data-role=dev] nav.tabs.devnav{display:flex}
+.phone[data-role=dev] nav.tabs:not(.devnav){display:none}
+.range{width:100%;accent-color:var(--ink);height:28px}
+.pay-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}.pay-row:last-child{border-bottom:0}
+.thumb{width:100%;max-height:170px;object-fit:cover;border-radius:14px;margin-top:10px;display:none}
+.link{color:var(--gold-d);text-decoration:underline;text-underline-offset:4px;font-size:14px}
+/* lightbox */
+.lb{position:absolute;inset:0;z-index:80;background:#151412f2;display:none;flex-direction:column;color:#fff;touch-action:pan-y}
+.lb.on{display:flex;animation:fade .25s ease}
+.lb-top{display:flex;justify-content:space-between;align-items:center;padding:max(16px,env(safe-area-inset-top)) 18px 10px;font-size:13px;letter-spacing:1px}
+.lb-top button,.lb-nav button{width:44px;height:44px;border-radius:50%;background:#ffffff1f;color:#fff;display:grid;place-items:center}
+.lb-img{flex:1;display:flex;align-items:center;justify-content:center;min-height:0;padding:0 0}
+.lb-img img{max-width:100%;max-height:100%;object-fit:contain;animation:fade .3s ease}
+.lb-bot{padding:14px 18px max(22px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;gap:12px}
+.lb-nav{display:flex;gap:10px;direction:ltr}
+.gridg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.gridg img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:14px;display:block;cursor:zoom-in}.gridg img:nth-child(5n+1){grid-column:1/-1;aspect-ratio:16/10}
+
+/* ---- review fixes ---- */
+.toast{top:auto;bottom:92px;transform:translateY(40px);opacity:0;pointer-events:none;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .3s;text-align:center}
+.toast.on{transform:none;opacity:1}
+.role{padding:8px 4px;margin:-4px 0;border-bottom:0;text-decoration:underline;text-underline-offset:4px;font-size:12px}
+.seg{gap:0;justify-content:space-between}
+.seg button{font-size:14px;padding:12px 2px}
+.title-row{position:relative}
+.title-row .doclink{position:absolute;left:0;bottom:6px;font-size:13px;color:var(--gold-d);padding:8px 0;text-decoration:underline;text-underline-offset:4px}
+.person{flex-direction:row;text-align:right;gap:14px}
+.person .av{width:48px;height:48px;font-size:19px}
+.person .acts{display:flex;gap:8px;margin-inline-start:auto}
+.person .acts button{width:44px;height:44px;border-radius:50%;background:var(--sand2);color:var(--gold-d);display:grid;place-items:center}
+.sheet-x{position:sticky;top:0;float:left;width:40px;height:40px;border-radius:50%;background:#2e2d2a0d;display:grid;place-items:center;z-index:2;margin-top:-6px}
+.locked{text-align:center;padding:30px 20px}
+.locked svg{color:var(--gold-d);margin-bottom:10px}
+nav.tabs button{position:relative}
+.badge{position:absolute;top:6px;inset-inline-start:calc(50% + 6px);min-width:17px;height:17px;border-radius:9px;background:var(--ink);color:#fff;font-size:10.5px;display:grid;place-items:center;padding:0 5px;font-weight:500}
+.badge[hidden]{display:none}
+.allok{font-size:12.5px;color:var(--gold-d);text-decoration:underline;text-underline-offset:3px;padding:6px 0}
+img[data-g]:focus-visible{outline-offset:-3px}
+
+/* ---- project line ---- */
+:root{--navy:#46453D;--ink:#3A3933;--navy2:#5A594F;--sand:#FCF9F8;--bg:#DDE5F0}
+.btn.gold{background:var(--navy)}.btn.gold:hover{background:#5A594F}
+.opt.on,.chip.warn,.badge,.switch.on,.who.on .av{background:var(--navy);border-color:var(--navy)}
+.toast{background:var(--navy)}
+.welc{font-family:var(--lat);font-style:italic;font-size:17px;letter-spacing:.4px;color:#fff;direction:ltr}
+.hero-full .latin{letter-spacing:5px;font-size:12px;margin-top:2px;color:#fff}
+.hero-full .aptline{font-size:10px;letter-spacing:2.6px;opacity:.85;margin-top:8px;direction:ltr}
+.hero-full .in{background:linear-gradient(#1f1e1b00,#2a2924d9 60%)}
+h2.title:before{letter-spacing:4px}
+.foot{background:var(--navy);color:#fff;margin:40px -20px -104px;padding:44px 24px 150px;text-align:center}
+.foot img{filter:brightness(0) invert(1)}
+.foot .bd{width:64px;opacity:.9}.foot .em{width:150px;margin:18px auto 30px;display:block;opacity:.85}.foot .of{width:86px;opacity:.8}
+.about-q{font-family:var(--lat);font-style:italic;font-size:20px;line-height:1.45;text-align:center;padding:22px 6px;color:var(--ink)}
+.bld{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.bld figure{margin:0}.bld img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:14px;display:block;cursor:zoom-in}
+.bld figcaption{font-size:10px;letter-spacing:2.4px;text-align:center;margin-top:8px;direction:ltr}
+.dark-card{background:var(--navy);color:#fff;border-radius:20px;padding:26px 22px;margin-bottom:14px;text-align:center}
+.dark-card .latin{color:#fff;text-align:center;opacity:.8}.dark-card img{filter:brightness(0) invert(1);width:92px;margin:16px auto;display:block}
+.dark-card p{font-size:14px;line-height:1.7;opacity:.92}
+/* ---- floating accessibility button ---- */
+.a11y-fab{position:absolute;z-index:15;inset-inline-end:0;top:46%;width:36px;height:40px;background:#2F5FB3;color:#fff;display:grid;place-items:center;border-radius:12px 0 0 12px;box-shadow:0 4px 14px #0003}
+[dir=ltr] .a11y-fab{border-radius:12px 0 0 12px}
+[dir=rtl] .a11y-fab{border-radius:0 12px 12px 0}
+.a11y-fab svg{stroke-width:1.8}
+main,.sheet{zoom:var(--z,1)}
+.sizer{display:flex;align-items:center;gap:10px}
+.sizer button{width:46px;height:46px;border-radius:50%;background:var(--sand2);font-size:18px;font-weight:500}
+.sizer span{min-width:54px;text-align:center}
+:root[data-gray="1"] .phone{filter:grayscale(1)}
+:root[data-links="1"] button.link,:root[data-links="1"] .btn.ghost,:root[data-links="1"] .role,:root[data-links="1"] .doclink,:root[data-links="1"] .allok{font-weight:700;text-decoration:underline;text-decoration-thickness:2px}
+:root[data-links="1"] :focus-visible{outline:3px solid #2F5FB3;outline-offset:3px}
+:root[data-motion="1"] *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+:root[data-contrast="high"]{--mut:#26282D;--line:#8E95A3;--gold-d:#1C3260;--sand2:#D5DEEE;--ink:#111}
+:root[data-contrast="high"] .hero-full .in{background:linear-gradient(#0000,#000000f2 45%)}
+/* ---- LTR (English) ---- */
+[dir=ltr]{--serif:'Cormorant Garamond','Frank Ruhl Libre',Georgia,serif}
+[dir=ltr] h2.title,[dir=ltr] .greet,[dir=ltr] .sheet h3,[dir=ltr] .big,[dir=ltr] .aside-info h1{font-weight:400;letter-spacing:.2px}
+[dir=ltr] .greet{font-size:38px}
+[dir=ltr] h2.title:before{display:none}
+[dir=ltr] [style*="text-align:right"]{text-align:left!important}
+[dir=ltr] [style*="text-align:left"]{text-align:right!important}
+[dir=ltr] .latin,[dir=ltr] .lat,[dir=ltr] .who,[dir=ltr] .rowlink,[dir=ltr] .homecard,[dir=ltr] .svc button,[dir=ltr] .strip figcaption,[dir=ltr] .who .lat,[dir=ltr] .homecard .lat{text-align:left}
+[dir=ltr] .hero-full .latin,[dir=ltr] .dark-card .latin{text-align:center}
+[dir=ltr] svg.chv{transform:scaleX(-1)}
+[dir=ltr] .back svg.chv{transform:none}
+[dir=ltr] .tl{padding-right:0;padding-left:24px}[dir=ltr] .tl:before{right:auto;left:4px}[dir=ltr] .tl-item:before{right:auto;left:-24px}
+[dir=ltr] .switch:after{right:21px}[dir=ltr] .switch.on:after{right:3px}
+[dir=ltr] .sheet-x{float:right}
+[dir=ltr] .title-row .doclink{left:auto;right:0}
+[dir=ltr] .icon-btn .dot{right:9px}
+[dir=ltr] h3.sub{letter-spacing:2.2px;text-transform:uppercase;font-size:11px}
+[dir=ltr] .kicker{text-transform:uppercase}
+[dir=ltr] nav.tabs button{letter-spacing:.2px}
+[dir=ltr] .stage-switch button{font-size:12px}
+
+/* ---- pilot scope ---- */
+.scope{font-size:12px;color:var(--gold-d);text-decoration:underline;text-underline-offset:4px;padding:8px 4px;margin:-4px 0;white-space:nowrap}
+.phone[data-scope=pilot] .stage-switch{display:none}
+.phone[data-scope=pilot] .demo-strip{justify-content:space-between;padding:9px 2px}
+.phone[data-scope=full] .demo-strip .lbl{display:none}
+.phone[data-scope=pilot] #aptSeg [data-pane=handover],.phone[data-scope=pilot] #aptSeg [data-pane=guide]{display:none}
+.phone[data-scope=pilot] .seg{justify-content:flex-start;gap:28px}
+.phone[data-role=dev] #scopeBtn{display:none}
+.chat .empty{margin:auto}
+.wide-only{display:none}
+.dcols{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:0 12px}
+table.tbl{width:100%;border-collapse:collapse;background:var(--paper);border-radius:18px;overflow:hidden;box-shadow:var(--sh)}
+.tbl th{font-size:11px;letter-spacing:1.2px;color:var(--mut);font-weight:500;text-align:start;padding:14px 16px;border-bottom:1px solid var(--line)}
+.tbl td{padding:14px 16px;border-bottom:1px solid var(--line);text-align:start;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tbody tr{cursor:pointer}.tbl tbody tr:hover{background:var(--sand)}
+.tbl .lat{font-size:14px}
+.rolebar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.pend{border:1px dashed #46453d66;border-radius:18px;padding:16px 18px;margin-bottom:10px}
+/* ---- developer view on a wide screen ---- */
+@media (min-width:900px){
+  .stage:has(.phone[data-role=dev]) .aside-info{display:none}
+  .phone[data-role=dev]{width:min(1180px,calc(100vw - 48px));height:min(880px,calc(100vh - 48px));border-radius:22px;box-shadow:0 0 0 1px var(--line),0 30px 80px #2e2d2a26;display:grid;grid-template-columns:216px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+  .phone[data-role=dev] .top{grid-column:1/-1;padding:14px 28px 0}
+  .phone[data-role=dev] nav.tabs.devnav{position:static;grid-column:1;grid-row:2;flex-direction:column;justify-content:flex-start;gap:4px;padding:18px 12px;border-top:0;border-inline-end:1px solid var(--line);background:var(--sand)}
+  .phone[data-role=dev] nav.tabs.devnav button{flex:none;flex-direction:row;justify-content:flex-start;gap:12px;padding:12px 14px;font-size:14.5px;border-radius:12px;letter-spacing:0}
+  .phone[data-role=dev] nav.tabs.devnav button.on{background:var(--sand2)}
+  .phone[data-role=dev] nav.tabs.devnav .badge{position:static;margin-inline-start:auto}
+  .phone[data-role=dev] main{grid-column:2;grid-row:2;padding:0 34px 40px}
+  .phone[data-role=dev] h2.title{text-align:start;margin-top:28px}
+  .phone[data-role=dev] .kpis{grid-template-columns:repeat(4,1fr)}
+  .phone[data-role=dev] .svc{grid-template-columns:repeat(4,1fr)}
+  .phone[data-role=dev] .wide-only{display:block}.phone[data-role=dev] .narrow-only{display:none}
+  .phone[data-role=dev] .sheet-wrap{align-items:center;justify-content:center}
+  .phone[data-role=dev] .sheet{max-width:560px;border-radius:24px;max-height:86%}
+  .phone[data-role=dev] .toast{max-width:440px;margin-inline:auto}
+  .phone[data-role=dev] .cap2{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;align-items:start}
+}
+
+/* milestone tracker instead of percentages */
+.ms{display:flex;gap:5px;margin:12px 0 8px}
+.ms i{flex:1;height:5px;border-radius:9px;background:var(--line)}
+.ms i.done{background:var(--ink)}.ms i.now{background:var(--gold-d)}
+.hero-full.hs{position:relative;background:var(--navy)}
+.hs-track{position:absolute;inset:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.hs-track::-webkit-scrollbar{display:none}
+.hs-s{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;background:center/cover}
+.hero-full.hs .in{position:relative;pointer-events:none}.hero-full.hs .in :is(button,a){pointer-events:auto}
+.hs-lines{position:absolute;top:16px;left:0;right:0;z-index:2;display:flex;justify-content:center;gap:6px;padding:0 20px}
+.hs-lines button{width:26px;height:20px;padding:0;border:0;background:none;display:flex;align-items:center;cursor:pointer}
+.hs-lines button i{display:block;width:100%;height:2px;border-radius:2px;background:#ffffff66;transition:background .3s,height .3s}
+.hs-lines button.on i{background:#fff;height:3px}
+.hs-cap{position:absolute;top:40px;left:0;right:0;z-index:2;text-align:center;font-size:10px;letter-spacing:2.2px;color:#ffffffd9;text-shadow:0 1px 6px #0006;pointer-events:none}
+.hero-full .ms i{background:#ffffff40}.hero-full .ms i.done{background:#fff}.hero-full .ms i.now{background:#C9D6EA}
+.stagenum{font-size:12px;letter-spacing:2px;opacity:.85}
+.stagebig{font-family:var(--serif);font-weight:300;font-size:34px;line-height:1.15}
+
+/* calmer money figures */
+#s-money .big{font-size:27px!important}
+#s-money .list-item b,#s-money .list-item .grow+div b{font-size:14px!important;font-weight:500}
+#s-money .card .row b{font-size:15px}
+
+/* contract viewer + downloads */
+.doc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 20px;max-height:52vh;overflow:auto;font-size:13.5px;line-height:1.7;color:#2b2b2b}
+.doc h4{font-family:var(--serif);font-size:20px;font-weight:500;text-align:center;margin-bottom:2px}
+.doc .stamp{text-align:center;font-size:11px;letter-spacing:1.5px;color:#8a5a36;margin-bottom:14px}
+.doc h5{font-size:13.5px;font-weight:600;margin:14px 0 4px}
+.doc table{width:100%;border-collapse:collapse;margin:6px 0;font-size:12.5px}
+.doc td,.doc th{border-bottom:1px solid #e6e6e6;padding:5px 4px;text-align:start}
+.doc .sig{display:flex;justify-content:space-between;gap:16px;margin-top:22px}
+.doc .sig div{flex:1;border-top:1px solid #999;padding-top:6px;text-align:center;font-size:12px}
+.dlrow{display:flex;gap:8px;margin-top:12px}.dlrow .btn{flex:1}
+.dlnote{font-size:12.5px;color:var(--mut);text-align:center;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="aside-info">
+    <img class="of" data-a="ofer" alt="Ofer Investments">
+    <div class="kicker" style="color:#3F5A85">אב טיפוס · דמו</div>
+    <h1>אפליקציית הדיירים של Pituach by the Sea</h1>
+    <p>אב טיפוס אינטראקטיבי לפי מצגת החזון, במיתוג הפרויקט: אפליקציה אחת שמלווה את הדייר בזמן הבנייה, במסירה ואחרי הכניסה.</p>
+    <p>לכל דייר הדירה שלו: אפשר להחליף דייר דרך סמל הפרופיל. התצוגה נפתחת כפיילוט של שלב הבנייה; ״החזון המלא״ מציג גם את המסירה והחיים בבניין, ועברו ל״תצוגת יזם״ כדי לראות את הצד של החברה. כל הנתונים לדוגמה, והפעולות נשמרות רק בדפדפן הזה.</p>
+    <button class="btn ghost" id="resetBtn">איפוס נתוני הדמו</button>
+  </div>
+
+  <div class="phone" id="phone">
+    <div class="splash" id="splash"><img class="bd" data-a="bird" alt=""><img class="wm" data-a="wordmark" alt="Pituach by the Sea"><img class="em" data-a="embrace" alt="Embrace Life"><img class="of" data-a="ofer" alt="Ofer Investments"></div>
+    <header class="top">
+      <div class="top-row">
+        <button class="icon-btn" aria-label="הגדרות" data-open="settings"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
+        <div class="marks"><img class="bd" data-a="bird" alt=""><img class="wm" data-a="wordmark" alt="Pituach by the Sea"></div>
+        <button class="icon-btn" aria-label="התראות" data-open="notifs"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot" id="notifDot"></span></button>
+      </div>
+      <div class="demo-strip"><span class="lbl">DEMO</span><button class="role" id="roleBtn"></button><button class="scope" id="scopeBtn"></button>
+        <div class="stage-switch" role="tablist" aria-label="שלב הדייר בדמו">
+          <button data-stage="build">בזמן הבנייה</button>
+          <button data-stage="handover">מסירה</button>
+          <button data-stage="after">אחרי הכניסה</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- HOME -->
+      <section class="screen" id="s-home"></section>
+      <!-- APARTMENT -->
+      <section class="screen" id="s-apt">
+        <div class="title-row"><h2 class="title" data-k="MY APARTMENT">הדירה שלי</h2><button class="doclink" data-goto="docs">מסמכים</button></div>
+        <div class="seg" id="aptSeg">
+          <button data-pane="progress">התקדמות</button>
+          <button data-pane="plan">תוכנית</button>
+          <button data-pane="changes">שינויים</button>
+          <button data-pane="handover">מסירה</button>
+          <button data-pane="guide">מדריך</button>
+        </div>
+        <div class="pane" id="p-progress"></div>
+        <div class="pane" id="p-plan"></div>
+        <div class="pane" id="p-changes"></div>
+        <div class="pane" id="p-handover"></div>
+        <div class="pane" id="p-guide"></div>
+      </section>
+      <!-- MONEY -->
+      <section class="screen" id="s-money"></section>
+      <!-- DOCS -->
+      <section class="screen" id="s-docs"></section>
+      <!-- SERVICE -->
+      <section class="screen" id="s-service"></section>
+      <!-- MORE -->
+      <section class="screen" id="s-more"></section>
+      <section class="screen" id="s-dev"></section>
+    </main>
+
+    
+    <nav class="tabs" aria-label="ניווט ראשי">
+      <button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21H3z"/><path d="M9 21v-6h6v6"/></svg>בית</button>
+      <button data-tab="apt"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2"/></svg>הדירה</button>
+      <button data-tab="money"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>תשלומים</button>
+      <button data-tab="service"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h18M5 18a7 7 0 0 1 14 0M12 8V6M10 6h4"/></svg>שירות</button>
+      <button data-tab="more"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg><span id="moreLbl">מועדון</span></button>
+    </nav>
+    <nav class="tabs devnav" aria-label="ניווט יזם">
+      <button data-dvtab="over"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.500"/><rect x="13" y="3" width="8" height="5" rx="1.500"/><rect x="13" y="11" width="8" height="10" rx="1.500"/><rect x="3" y="14" width="8" height="7" rx="1.500"/></svg>סקירה</button>
+      <button data-dvtab="inbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h5l1.500 3h5L16 13h5M5 5h14l2 8v6H3v-6z"/></svg>פניות<span class="badge" id="inboxBadge" hidden></span></button>
+      <button data-dvtab="people"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="9" cy="8" r="3.500"/><path d="M2.500 20c.8-3.500 3.300-5 6.500-5s5.700 1.500 6.500 5M16 4.700a3.500 3.500 0 0 1 0 6.600M18.500 15.500c1.700.7 2.700 2.200 3 4.500"/></svg>דיירים</button>
+      <button data-dvtab="money"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>גבייה</button>
+      <button data-dvtab="proj"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9l8-6 8 6v12M9 21v-6h6v6"/></svg>פרויקט</button>
+    </nav>
+    <button class="a11y-fab" data-open="a11y" aria-label="תפריט נגישות"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.500" r="1.800"/><path d="M5 8.500c4.500 1.200 9.500 1.200 14 0M12 9.500v5M12 14.500l-3.500 6M12 14.500l3.500 6"/></svg></button>
+    <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="גלריית הדמיות">
+      <div class="lb-top"><button id="lbClose" aria-label="סגירה"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button><span id="lbCount"></span></div>
+      <div class="lb-img"><img id="lbImg" alt=""></div>
+      <div class="lb-bot"><span id="lbCap"></span><div class="lb-nav"><button id="lbPrev" aria-label="הקודמת"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg></button><button id="lbNext" aria-label="הבאה"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></button></div></div>
+    </div>
+
+    <div class="sheet-wrap" id="sheetWrap"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+    <div class="toast" id="toast" role="status"></div>
+  </div>
+</div>
+
+<script>
+/*__ASSETS__*/
+/* ---------- helpers ---------- */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const nis=n=>'₪'+Math.round(n).toLocaleString('en-US');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDate=d=>new Date(d).toLocaleDateString(LOC,{day:'numeric',month:'long',year:'numeric'});
+const ICON={
+  key:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></svg>',
+  wave:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M2 9c2.5-2.5 5-2.5 7.500 0s5 2.500 7.500 0 3.500-2 5-1M2 15c2.500-2.500 5-2.500 7.500 0s5 2.500 7.500 0 3.500-2 5-1"/></svg>',
+  box:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/></svg>',
+  star:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.200 5.800L20 9.500l-4.500 3.900L17 19.500 12 16.300 7 19.500l1.500-6.100L4 9.500l5.800-.7z"/></svg>',
+  chat:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+  swatch:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><circle cx="17" cy="17" r="4"/></svg>',
+  pin:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.200 7-11a7 7 0 1 0-14 0c0 4.800 7 11 7 11z"/><circle cx="12" cy="10" r="2.500"/></svg>',
+  doc:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>',
+  cam:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
+  card:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>',
+  pen:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+  cal:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+  tool:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg>',
+  book:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg>',
+  bell:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/></svg>',
+  shield:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  users:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2M16 3.1a4 4 0 0 1 0 7.8M21 21v-2a4 4 0 0 0-3-3.9"/></svg>',
+  phone:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>',
+  check:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>',
+  chev:'<svg class="chv" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>',
+  gift:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 21V7"/></svg>',
+};
+
+/* ---------- state ---------- */
+const KEY='tenant-app-demo-v13';
+const DEFAULT={
+  stage:'build',tab:'home',
+  readNotifs:[],
+  paid:{}, // payment id -> true
+  changes:[
+    {id:'c1',title:'הזזת נקודת חשמל בסלון',price:1450,status:'approved',date:'2026-06-02'},
+    {id:'c2',title:'החלפת ריצוף במקלחת להדר',price:3900,status:'quote',date:'2026-10-20'},
+  ],
+  appt:null,
+  protocol:{},
+  protocolSigned:false,
+  tickets:[
+    {id:'t1',cat:'אינסטלציה',desc:'טפטוף קל מתחת לכיור במטבח',urgency:'רגילה',step:3,date:'2026-10-28',rating:0},
+    {id:'t2',cat:'דלתות וחלונות',desc:'תריס בחדר השינה נתקע באמצע',urgency:'רגילה',step:1,date:'2026-11-10',rating:0},
+  ],
+  prefs:{critical:true,payments:true,construction:true,community:true,marketing:false},
+  big:false,contrast:false,
+  posts:[
+    {who:'ועד הבית',text:'אסיפת דיירים ראשונה ביום ראשון ב-19:30 בלובי. נבחר נציגות ונדבר על חברת הניהול.',time:'לפני יומיים'},
+    {who:'דנה, דירה 17',text:'מישהו מכיר הובלות טובות? מתכננים להיכנס בסוף החודש.',time:'לפני 3 ימים'},
+  ],
+  chat:[],
+  requests:[],parcel:true,news:[],role:'res',rid:'noa',store:{},a11y:{z:0},lang:'he',scope:'pilot',devRole:'admin',pending:[],thread:[],msgs:[],proj:{stage:0},devTab:'over',
+};
+let S;
+try{S=Object.assign(structuredClone(DEFAULT),JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){S=structuredClone(DEFAULT)}
+/* ---------- language ---------- */
+const LANG=S.lang==='en'?'en':'he', LOC=LANG==='en'?'en-US':'he-IL';
+document.documentElement.lang=LANG;document.documentElement.dir=LANG==='en'?'ltr':'rtl';
+const EN=/*__EN__*/{};
+const EX=EN.x||{}, FR=Object.assign({},...Object.entries(EX).filter(e=>e[0].length>=8).map(e=>({[e[0]]:e[1]})),EN.f||{});
+const ENK=Object.keys(FR).sort((a,b)=>b.length-a.length), HEB=/[\u0590-\u05FF]/, trc=new Map();
+function tr(t){if(!HEB.test(t))return t;let c=trc.get(t);if(c!==undefined)return c;const k=t.trim();let out;
+  if(EX[k]!==undefined)out=t.replace(k,EX[k]);else if(FR[k]!==undefined)out=t.replace(k,FR[k]);else{out=t;for(const h of ENK){if(out.includes(h)){out=out.split(h).join(FR[h]);if(!HEB.test(out))break}}}
+  trc.set(t,out);return out}
+function trNode(n){if(n.nodeType===3){const v=n.nodeValue;if(HEB.test(v)){const o=tr(v);if(o!==v)n.nodeValue=o}}
+  else if(n.nodeType===1&&n.nodeName!=='SCRIPT'&&n.nodeName!=='STYLE'){for(const a of ['placeholder','aria-label','alt','title','data-toast']){const v=n.getAttribute(a);if(v&&HEB.test(v))n.setAttribute(a,tr(v))}for(const c of n.childNodes)trNode(c)}}
+if(LANG==='en'){document.title='Pituach by the Sea · Residents App';trNode(document.body);
+  new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')trNode(m.target);else if(m.type==='attributes'){const v=m.target.getAttribute(m.attributeName);if(v&&HEB.test(v))m.target.setAttribute(m.attributeName,tr(v))}else m.addedNodes.forEach(trNode)}}).observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['alt','placeholder','aria-label','data-toast']})}
+
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+/* ---------- demo data ---------- */
+const BASE_INDEX=104.6, CUR_INDEX=108.3;
+const PAYMENTS=[
+  {id:'p1',name:'מקדמה בחתימה',pct:10,due:'2026-02-15',fixed:true},
+  {id:'p2',name:'תשלום שני',pct:15,due:'2026-09-01',fixed:true},
+  {id:'p3',name:'סיום חפירה ודיפון',pct:15,due:'2027-03-01'},
+  {id:'p4',name:'סיום שלד',pct:20,due:'2027-12-01'},
+  {id:'p5',name:'גמרים ומערכות',pct:20,due:'2028-10-01'},
+  {id:'p6',name:'יתרה במסירה',pct:20,due:'2029-06-01'},
+];
+let NOW_STAGE='';const DELIVERY='2029';
+function syncProj(){NOW_STAGE=MILESTONES[S.proj.stage].t}
+const msBar=()=>`<div class="ms">${MILESTONES.map((m,i)=>`<i class="${i<S.proj.stage?'done':i===S.proj.stage?'now':''}"></i>`).join('')}</div>`;
+const stageOf=()=>`שלב ${S.proj.stage+1} מתוך ${MILESTONES.length}`;
+const MILESTONES=[
+  {t:'חפירה ודיפון',d:'בביצוע'},
+  {t:'יסודות ומרתפים',d:'צפוי · 2027'},
+  {t:'שלד הבניין',d:'צפוי · 2027'},
+  {t:'מעטפת וחזיתות',d:'צפוי · 2028'},
+  {t:'גמרים, מטבחים ומערכות',d:'צפוי · 2028'},
+  {t:'פיתוח, לובי ומסירה',d:'צפוי · 2029'},
+];
+const PHOTOS=[
+  {cap:'עבודות החפירה והדיפון, מבט מלמעלה',date:'אוגוסט 2026',img:'site'},
+  {cap:'התקדמות החפירה בצד הצפוני',date:'10 בנובמבר 2026'},
+  {cap:'השלמת קירות הדיפון בצד המערבי',date:'27 באוקטובר 2026'},
+  {cap:'הצבת עגורן שני באתר',date:'14 באוקטובר 2026'},
+];
+const RES=[
+  {id:'noa',name:'נועה',apt:'THE SOUTH WEST APT',floor:5,sqm:140,out:'מרפסת 27 מ״ר',beds:'3 + ממ״ד',dir:'דרום־מערב, לים',plan:'plan_sw',co:'איתי',price:9650000,hero:{build:'tower_hero',handover:'sea_sunset',after:'dusk'},gal:['walk','stone','kitchen','shelf','feet','terrace'],unit:18},
+  {id:'yonatan',name:'יונתן',apt:'THE SEAGAL',sub:'PENTHOUSE',floor:12,sqm:370,out:'מרפסות 125 מ״ר',beds:'4 + חדר עבודה',dir:'קומה מלאה, 360° לים ולעיר',plan:'plan_seagal',co:'שירה',price:41000000,hero:{build:'ph_day',handover:'terrace',after:'dusk'},gal:['terrace','walk','dusk','dining','stone','sofa'],unit:46},
+  {id:'maya',name:'מאיה',apt:'THE NORTH WEST SEA VIEW PENTHOUSE',sub:'PENTHOUSE',floor:11,sqm:239,out:'מרפסות 108 מ״ר',beds:'3 + ממ״ד',dir:'צפון־מערב, לים',plan:'plan_ph',price:24500000,hero:{build:'ph_day',handover:'sea_sunset',after:'terrace'},gal:['walk','terrace','sofa','stone','dining','dusk'],unit:44},
+  {id:'daniel',name:'דניאל',apt:'THE NORTH EAST MINI PENTHOUSE',sub:'MINI PENTHOUSE',floor:10,sqm:156,out:'מרפסת 42 מ״ר',beds:'3 + ממ״ד',dir:'צפון־מזרח',plan:'plan_mini',co:'רוני',price:12800000,hero:{build:'tower_sunset',handover:'sea_sunset',after:'dining'},gal:['sofa','kitchen','dining','shelf','feet','terrace'],unit:41},
+  {id:'tamar',name:'תמר',apt:'THE SOUTH EAST GARDEN APT',sub:'GARDEN',floor:0,sqm:116,out:'גינה 48 מ״ר',beds:'2 + ממ״ד',dir:'דרום־מזרח, לגינה',plan:'plan_garden',price:8200000,hero:{build:'garden',handover:'green',after:'pool'},gal:['green','pool','throw','kitchen','shelf','feet'],unit:2},
+];
+const PER=['thread','msgs','stage','tab','readNotifs','paid','changes','appt','protocol','protocolSigned','tickets','requests','parcel','chat'];
+const cur=()=>RES.find(r=>r.id===S.rid)||RES[0];
+const floorTxt=r=>r.floor?'קומה '+r.floor:'קומת הגן';
+function freshState(id){const d=structuredClone(DEFAULT),o={};PER.forEach(k=>o[k]=d[k]);
+  if(id==='yonatan'){o.changes=[{id:'c9',title:'הוספת בר יין מובנה בסלון',price:0,status:'review',date:'2026-11-05'}]}
+  if(id==='maya'){o.changes=[];o.requests=[{kind:'visit',title:'ביקור באתר',detail:'סיור מלווה בשלב החפירה · 15 בדצמבר'}]}
+  if(id==='daniel'){o.changes=[]}
+  if(id==='tamar'){o.changes=[{id:'c7',title:'ברז גינה נוסף',price:900,status:'quote',date:'2026-11-02'}]}
+  return o}
+function stateOf(id){if(id===S.rid){const o={};PER.forEach(k=>o[k]=S[k]);return o}return S.store[id]||(S.store[id]=freshState(id))}
+function switchRes(id){if(id===S.rid)return;S.store[S.rid]=stateOf(S.rid);const n=stateOf(id);delete S.store[id];S.rid=id;Object.assign(S,structuredClone(n));save()}
+const HOST={name:'אורי',role:'מנהל קשרי הדיירים שלך'};
+const DOCS=[
+  {cat:'חוזה ורכישה',items:[['חוזה מכר חתום','פברואר 2026'],['מפרט טכני מלא','פברואר 2026'],['תוכנית הדירה','פברואר 2026'],['ערבות חוק מכר · תשלום 2','ספטמבר 2026']]},
+  {cat:'תשלומים',items:[['קבלה · תשלום 2','ספטמבר 2026'],['דוח הצמדה למדד · רבעון 3','אוקטובר 2026']]},
+  {cat:'שינויי דיירים',items:[['הצעת מחיר · ריצוף מקלחת','אוקטובר 2026'],['אישור שינוי · נקודת חשמל','ספטמבר 2026']]},
+  {cat:'מסירה ואחריות',items:[['מדריך הדירה','יעודכן לקראת המסירה'],['תעודות אחריות ספקים','יעודכן לקראת המסירה']]},
+];
+const PROTOCOL={
+  'סלון ומטבח':['ריצוף ללא סדקים','חלונות ותריסים נפתחים','ארונות מטבח ומגירות','נקודות חשמל ותקשורת'],
+  'חדרי שינה':['דלתות וידיות','תריסים חשמליים','מיזוג בכל חדר'],
+  'חדרי רחצה':['ברזים ולחץ מים','ניקוז ללא הצפה','חיפוי ואיטום'],
+  'מרפסת וממ״ד':['מעקה ואיטום מרפסת','דלת וחלון הדף בממ״ד','סינון אוויר בממ״ד'],
+};
+const SLOTS=['יום ב׳ · 14.6.2029 · 09:00','יום ב׳ · 14.6.2029 · 11:30','יום ג׳ · 15.6.2029 · 10:00','יום ד׳ · 16.6.2029 · 13:00','יום ה׳ · 17.6.2029 · 09:00'];
+const GUIDE=[
+  {t:'מיזוג אוויר',s:'מיני מרכזי · 4 יחידות',sup:'[ספק מיזוג]',w:'3 שנים',tip:'לנקות פילטרים כל 3 חודשים. אין לחסום את פתח היחידה במרפסת השירות.'},
+  {t:'מים חמים',s:'דוד שמש 150 ליטר + גיבוי חשמלי',sup:'[ספק דודים]',w:'3 שנים',tip:'בחורף להפעיל את הגיבוי החשמלי כשעה לפני מקלחת, עם טיימר.'},
+  {t:'מטבח',s:'ארונות, משטח קוורץ וכיור',sup:'[ספק מטבחים]',w:'שנה',tip:'לנקות את משטח הקוורץ במים וסבון עדין בלבד. להימנע מסירים חמים ישירות על המשטח.'},
+  {t:'חלונות ותריסים',s:'אלומיניום, תריסים חשמליים',sup:'[ספק אלומיניום]',w:'שנתיים',tip:'לנקות מסילות מאבק פעם בחודש. תריס שנתקע: לא להמשיך ללחוץ, לפתוח קריאת שירות.'},
+  {t:'ממ״ד',s:'דלת הדף, חלון ומערכת סינון',sup:'פיקוד העורף',w:'לפי תקן',tip:'לבדוק פעם בחצי שנה שדלת ההדף נסגרת עד הסוף ושהחלון נפתח בקלות.'},
+];
+const AMEN=['עמדת שמירה מאוישת 24/7','בקרת כניסה ואינטרקום בכניסות','לובי כניסה מעוצב וממוזג','בריכת שחייה','סאונה','חדר כושר מאובזר','תשתית טעינה לרכב חשמלי בחניון','מערכת פנאומטית לפינוי אשפה'];
+const WARRANTY=[
+  {t:'תקופת בדק כללית',end:'2030-06-01'},
+  {t:'אינסטלציה וחיפויים',end:'2031-06-01'},
+  {t:'רטיבות ואיטום',end:'2036-06-01'},
+];
+const BENEFITS=[
+  {t:'10% בחנויות הבית והעיצוב',p:'בקניוני עופר · עד סוף השנה',tag:'למעבר דירה'},
+  {t:'חניה חינם בקניון השכונתי',p:'שעתיים בכל ביקור, לדיירי הפרויקט',tag:'קבוע'},
+  {t:'ערב פתיחה לדיירים',p:'אירוע היכרות בלובי הקניון · דצמבר',tag:'אירוע'},
+  {t:'חבר מביא חבר',p:'מכירים מישהו שמחפש דירה? הטבה לשניכם בפרויקט הבא',tag:'הפניה'},
+];
+const STEPS=['התקבל','הועבר לקבלן','בטיפול','טופל'];
+const NOTIFS=()=>{
+  const n=[...S.msgs.map(x=>({id:'m'+x.id,kind:'personal',t:esc(x.t),d:'הודעה אישית מ'+HOST.name})),...S.news.map(x=>({id:'u'+x.id,kind:x.kind,t:esc(x.t),d:'עכשיו'})),
+    {id:'n1',kind:'critical',t:'תזכורת: התשלום הבא ב-1 במרץ',d:'לפני שעה'},
+    {id:'n2',kind:'construction',t:'עדכון מהאתר: התקדמות עבודות החפירה',d:'לפני 4 ימים'},
+    {id:'n3',kind:'community',t:'אסיפת דיירים ביום ראשון',d:'לפני יומיים'},
+    {id:'n4',kind:'marketing',t:'חדש בספר הבית: תעודות האחריות של המטבח',d:'לפני שבוע'},
+  ];
+  return n.filter(x=>S.prefs[x.kind]!==false||x.kind==='critical');
+};
+
+/* ---------- money calc ---------- */
+const D=id=>id===S.rid?S:stateOf(id);
+function payRows(id=S.rid){
+  const price=RES.find(r=>r.id===id).price, o=D(id);
+  return PAYMENTS.map(p=>{
+    const base=price*p.pct/100;
+    const link=base*(CUR_INDEX/BASE_INDEX-1);
+    const paid=p.fixed||o.paid[p.id];
+    return {...p,base,link,total:base+link,paid};
+  });
+}
+function nextPayment(id=S.rid){return payRows(id).find(r=>!r.paid)}
+
+/* ---------- render: home ---------- */
+function greeting(){const h=new Date().getHours();return h<5?'לילה טוב':h<12?'בוקר טוב':h<17?'צהריים טובים':h<21?'ערב טוב':'לילה טוב'}
+function rowlink(target,icon,title,sub){const a=target.startsWith('open:')?`data-open="${target.slice(5)}"`:`data-goto="${target}"`;
+  return `<button class="rowlink" ${a}>${ICON[icon]}<span class="grow"><b>${title}</b><span class="small mut">${sub}</span></span><span class="chev">${ICON.chev}</span></button>`}
+function personCard(){return `<div class="card"><div class="person"><div class="av">${HOST.name[0]}</div><div><b>${HOST.name}</b><div class="small mut">${HOST.role}</div></div><div class="acts"><button aria-label="הודעה ל${HOST.name}" data-open="chat">${ICON.chat}</button><button aria-label="שיחה עם ${HOST.name}" data-toast="בגרסה המלאה: חיוג ישיר ל${HOST.name}">${ICON.phone}</button></div></div></div>`}
+const HERO_MORE=['sea_sunset','tower_sunset','aerial','lobby_desk','pool_in','terrace'];
+function heroSlides(r,st){const ks=[r.hero[st],...HERO_MORE.filter(k=>k!==r.hero[st])].slice(0,5);const cap=k=>(GALLERY.find(g=>g[0]===k)||[0,''])[1];
+  return `<div class="hs-track" aria-label="תמונות הפרויקט, החליקו לתמונה הבאה" tabindex="0">${ks.map((k,i)=>`<div class="hs-s" role="img" aria-label="${cap(k)}" data-cap="${i?cap(k):''}" style="background-image:url(${A[k]})"></div>`).join('')}</div>
+  <div class="hs-lines" role="tablist">${ks.map((k,i)=>`<button role="tab" data-hs="${i}" class="${i?'':'on'}" aria-label="תמונה ${i+1} מתוך ${ks.length}" aria-selected="${!i}"><i></i></button>`).join('')}</div><div class="hs-cap"></div>`}
+function hsSync(t){const w=t.clientWidth||1,i=Math.round(Math.abs(t.scrollLeft)/w),h=t.parentNode;
+  h.querySelectorAll('.hs-lines button').forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-selected',j===i)});
+  const s=t.children[i];h.querySelector('.hs-cap').textContent=s?s.dataset.cap:''}
+function hsGo(t,i){const n=t.children.length;i=(i+n)%n;const rtl=getComputedStyle(t).direction==='rtl';t.scrollTo({left:(rtl?-1:1)*i*t.clientWidth,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})}
+document.addEventListener('scroll',e=>{const t=e.target;if(t.classList&&t.classList.contains('hs-track')){t._u=Date.now();clearTimeout(t._sy);t._sy=setTimeout(()=>hsSync(t),60)}},true);
+document.addEventListener('click',e=>{const b=e.target.closest('[data-hs]');if(!b)return;const t=b.closest('.hs').querySelector('.hs-track');t._u=Date.now();hsGo(t,+b.dataset.hs)});
+document.addEventListener('keydown',e=>{const t=e.target;if(!t.classList||!t.classList.contains('hs-track')||!/Arrow(Left|Right)/.test(e.key))return;e.preventDefault();const i=Math.round(Math.abs(t.scrollLeft)/t.clientWidth),rtl=getComputedStyle(t).direction==='rtl';hsGo(t,i+((e.key==='ArrowLeft')===rtl?1:-1))});
+setInterval(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches||document.hidden)return;const t=document.querySelector('#s-home.on .hs-track, #s-home:not([hidden]) .hs-track');if(!t||!t.offsetParent||Date.now()-(t._u||0)<9000)return;const i=Math.round(Math.abs(t.scrollLeft)/t.clientWidth);t._auto=1;hsGo(t,i+1)},6500);
+function renderHome(){
+  const r=cur(), np=nextPayment(), st=S.stage, quote=S.changes.find(c=>c.status==='quote'), openT=S.tickets.filter(t=>t.step<3).length;
+  const msg={build:'הבית שלך נבנה, על קו הים של הרצליה פיתוח.',handover:S.appt?`פגישת המסירה שלך: ${esc(S.appt)}`:'הבית מוכן. נשאר רק לבחור מתי לקבל את המפתח.',after:'ברוכים הבאים הביתה.'}[st];
+  const stat=st==='build'?`<div style="margin-top:16px"><div class="stagenum">${stageOf()} · שלבי הבנייה</div><div class="stagebig">${NOW_STAGE}</div>${msBar()}</div>`:'';
+  let next;
+  if(st==='build'&&quote)next=['הצעת מחיר ממתינה לאישורך',esc(quote.title)+' · '+nis(quote.price),'לאישור',`data-sign="${quote.id}"`];
+  else if(st==='build'&&np)next=['התשלום הבא',fmtDate(np.due)+' · '+nis(np.total),'לתשלום','data-goto="money"'];
+  else if(st==='handover')next=S.appt?['פרוטוקול המסירה','בדיקה לפי חדרים וחתימה דיגיטלית','לפרוטוקול','data-goto="apt:handover"']:['פגישת המסירה','בחרו מועד שנוח לכם','בחירת מועד','data-open="slots"'];
+  else if(st==='after'&&S.parcel)next=['חבילה ממתינה בלובי','התקבלה היום ב-11:20','אספתי','data-parcel="1"'];
+  else next=['הכול מסודר','אין פעולות שמחכות לך',null,''];
+  const quick=[['data-goto="money"','card','תשלומים'],['data-goto="docs"','doc','מסמכים'],st==='build'?['data-goto="apt:changes"','pen','שינויים']:st==='handover'?['data-goto="apt:handover"','key','מסירה']:['data-open="ticket"','tool','תקלה'],['data-open="chat"','chat','הודעה']];
+  $('#s-home').innerHTML=`
+    <div class="hero-full hs">${heroSlides(r,st)}<div class="in"><div class="welc">Welcome to</div><div class="latin">SEA HOUSE</div><div class="aptline">${r.apt}</div><h1 class="greet">${greeting()}, ${r.name}</h1><p>${msg}</p>${stat}</div></div>
+    <div class="next"><div class="grow"><div class="kicker">${next[0]}</div><div style="margin-top:6px;font-size:16px">${next[1]}</div></div>${next[2]?`<button class="btn gold" ${next[3]}>${next[2]}</button>`:''}</div>
+    <div class="quick">${quick.map(q=>`<button ${q[0]}><span class="ci">${ICON[q[1]]}</span>${q[2]}</button>`).join('')}</div>
+    <button class="homecard" data-goto="apt:plan"><img src="${A[r.plan]}" alt=""><span class="grow" style="flex:1"><span class="kicker">הדירה שלי</span><span class="lat">${r.apt}</span><span class="small mut">${floorTxt(r)} · ${r.sqm} מ״ר</span></span><span class="chev" style="color:#9aa0ab">${ICON.chev}</span></button>
+    ${st==='build'?`<h3 class="sub">מהאתר</h3><button class="full" data-goto="apt:progress" style="display:block;width:100%"><img src="${A.site}" alt="${PHOTOS[0].cap}"></button><p class="cap">${PHOTOS[0].cap} · ${PHOTOS[0].date}</p>`:''}
+    <h3 class="sub">הודעות</h3>
+    <div class="card">${NOTIFS().slice(0,2).map(n=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${n.t}</b><div class="small mut">${n.d}</div></div>${n.kind==='critical'?'<span class="chip warn">חשוב</span>':n.kind==='personal'?'<span class="chip">אישי</span>':''}</div>`).join('')}</div>
+    <div class="rows">${rowlink("open:about","pin","על הפרויקט","המיקום, הבניינים וההדמיות")}</div>`;
+}
+
+/* ---------- render: apartment ---------- */
+function renderProgress(){
+  $('#p-progress').innerHTML=`
+    <div class="row between" style="align-items:flex-end"><div><div class="kicker">${stageOf()} · השלב הנוכחי</div><div class="stagebig" style="font-size:38px;margin-top:6px">${NOW_STAGE}</div></div><span class="chip ok">לפי לוח הזמנים</span></div>
+    ${msBar()}
+    <h3 class="sub">עדכונים מהאתר</h3>
+    <div class="hscroll">${[...S.news.filter(x=>x.kind==='construction').map(x=>({cap:x.t,date:'עכשיו',src:x.img,nophoto:!x.img})),...PHOTOS].map(p=>`<div>${p.src||p.img?`<div class="upd ph"><img src="${p.src||A[p.img]}" alt="${esc(p.cap)}"></div>`:`<div class="upd"><img src="${A.bird}" alt=""></div>`}<b style="font-size:14.5px">${esc(p.cap)}</b><div class="small mut">${p.date}${p.src||p.img?' · צילום מהאתר':p.nophoto?'':' · כאן יופיעו תמונות ווידאו מהאתר'}</div></div>`).join('')}</div>
+    <h3 class="sub">אבני דרך</h3>
+    <div class="tl">${MILESTONES.map((m,i)=>`<div class="tl-item ${i===S.proj.stage?'now':i<S.proj.stage?'done':''}"><b>${m.t}</b><div class="small mut">${i===S.proj.stage?'בביצוע':i<S.proj.stage?'הושלם':m.d}</div></div>`).join('')}</div>
+    <p class="small mut" style="margin-top:22px">מועדים עתידיים הם הערכה בלבד. מועד המסירה המחייב הוא זה שבחוזה.</p>`;
+}
+function renderChanges(){
+  const lbl={approved:['אושר','ok'],quote:['ממתין לאישורך','warn'],review:['בבדיקה','info'],rejected:['לא אושר','']};
+  $('#p-changes').innerHTML=`
+    <div class="card"><p class="small mut">אפשר להגיש בקשות לשינויים עד תחילת עבודות הגמר בקומה שלך. כל שינוי מאושר בחתימה דיגיטלית ומופיע בתיק הדירה.</p>
+    <button class="btn block" style="margin-top:12px" data-open="newChange">בקשת שינוי חדשה</button></div>
+    <div class="card">${S.changes.map(c=>`<div class="list-item"><span class="ic-round">${ICON.pen}</span><div class="grow"><b style="font-size:14.5px">${esc(c.title)}</b><div class="small mut">${c.price?nis(c.price)+' · ':''}${fmtDate(c.date)}</div></div>${c.status==='quote'?`<button class="btn gold" style="padding:7px 12px;font-size:13px" data-sign="${c.id}">לאישור</button>`:`<span class="chip ${lbl[c.status][1]}">${lbl[c.status][0]}</span>`}</div>`).join('')}</div>`;
+}
+function renderHandover(){
+  if(S.stage==='build'){$('#p-handover').innerHTML=`<div class="card locked">${ICON.key}<div><b>המסירה תיפתח כשהדירה תהיה מוכנה</b></div><p class="small mut" style="margin-top:6px">לקראת המסירה תוכלו לבחור כאן מועד, לעבור על הדירה חדר אחר חדר ולחתום על הפרוטוקול מהטלפון.</p><p class="small mut" style="margin-top:10px">מועד המסירה לפי החוזה: ${DELIVERY}</p></div>`;return}
+  const items=Object.values(PROTOCOL).flat().length;
+  const checked=Object.values(S.protocol).filter(v=>v).length;
+  const issues=Object.entries(S.protocol).filter(([k,v])=>v==='issue');
+  $('#p-handover').innerHTML=`
+    <div class="card"><div class="kicker">פגישת מסירה</div>
+    ${S.appt?`<div class="row between" style="margin-top:8px"><b>${esc(S.appt)}</b><button class="btn ghost" style="padding:7px 12px;font-size:13px" data-open="slots">שינוי</button></div><p class="small mut" style="margin-top:6px">נציג המסירה ייפגש איתכם בדירה. מומלץ להגיע עם האפליקציה פתוחה על הפרוטוקול.</p>`
+    :`<p class="small mut" style="margin:6px 0 12px">בחרו מועד שנוח לכם מתוך המועדים הפנויים.</p><button class="btn block" data-open="slots">בחירת מועד</button>`}</div>
+    <h3 class="sub">פרוטוקול מסירה דיגיטלי</h3>
+    <div class="card"><div class="row between"><b>${checked} מתוך ${items} נבדקו</b>${issues.length?`<span class="chip warn">${issues.length} ליקויים</span>`:''}</div><div class="bar" style="margin-top:8px"><i style="width:${checked/items*100}%"></i></div></div>
+    ${Object.entries(PROTOCOL).map(([room,list])=>`<div class="card"><div class="row between"><b>${room}</b>${S.protocolSigned?'':`<button class="allok" data-allok="${room}">הכול תקין</button>`}</div>${list.map(it=>{const k=room+'|'+it,v=S.protocol[k];return `<div class="list-item"><div class="grow" style="font-size:14.5px">${it}</div><div class="row" style="gap:6px"><button class="opt ${v==='ok'?'on':''}" data-proto="${esc(k)}" data-v="ok" ${S.protocolSigned?'disabled':''}>תקין</button><button class="opt ${v==='issue'?'on':''}" data-proto="${esc(k)}" data-v="issue" style="${v==='issue'?'background:var(--warn);border-color:var(--warn)':''}" ${S.protocolSigned?'disabled':''}>ליקוי</button></div></div>`}).join('')}</div>`).join('')}
+    ${S.protocolSigned?`<div class="card" style="border-color:var(--ok)"><b style="color:var(--ok)">הפרוטוקול נחתם</b><p class="small mut">עותק נשמר במסמכים. ${issues.length?'הליקויים נפתחו אוטומטית כקריאות שירות.':''}</p></div>`
+    :`<button class="btn gold block" ${checked<items?'disabled':''} data-open="signProtocol">${checked<items?'יש לבדוק את כל הסעיפים לפני חתימה':'חתימה על הפרוטוקול'}</button>`}`;
+}
+function renderGuide(){
+  $('#p-guide').innerHTML=`
+    <div class="card img"><img src="${A.lobby_desk}" alt=""><div class="in"><div class="kicker">תעודת הזהות של הדירה</div><p style="margin-top:6px;line-height:1.5">כל המערכות, הוראות השימוש, הספקים והאחריות של הדירה במקום אחד.</p></div></div>
+    ${GUIDE.map((g,i)=>`<details class="card"><summary class="row between" style="cursor:pointer;list-style:none"><div><b>${g.t}</b><div class="small mut">${g.s}</div></div><span class="chip">אחריות ${g.w}</span></summary>
+      <p style="margin:12px 0 10px;line-height:1.55;font-size:14.5px">${g.tip}</p>
+      <div class="row between small"><span class="mut">ספק: ${g.sup}</span><button class="btn ghost" style="padding:6px 10px;font-size:13px" data-toast="בגרסה המלאה הכפתור יחייג לספק">${ICON.phone} חיוג</button></div></details>`).join('')}
+    <h3 class="sub">מתקני הבניין</h3>
+    <div class="card img"><img src="${A.pool_in}" alt=""><div class="in">${AMEN.map(a=>`<div class="list-item" style="padding:9px 0"><span style="color:var(--gold-d)">${ICON.check}</span><div class="grow" style="font-size:14.5px">${a}</div></div>`).join('')}<p class="small mut" style="margin-top:8px">לפי מפרט הבניין בחוברת השיווק.</p></div></div>
+    <h3 class="sub">תזכורות בדק ואחריות</h3>
+    <div class="card">${WARRANTY.map(w=>`<div class="list-item"><span class="ic-round">${ICON.shield}</span><div class="grow"><b style="font-size:14.5px">${w.t}</b><div class="small mut">בתוקף עד ${fmtDate(w.end)}</div></div></div>`).join('')}
+    <p class="small mut" style="margin-top:8px">התקופות כאן לדוגמה. התקופות המחייבות מופיעות בחוזה ובחוק המכר.</p></div>`;
+}
+function renderPlan(){
+  const r=cur();
+  $('#p-plan').innerHTML=`
+    <div style="text-align:center;padding:14px 0 22px"><div class="latin" style="text-align:center">SEA HOUSE · ${r.floor?'FLOOR '+r.floor:'GARDEN FLOOR'}</div><div class="lat" style="font-size:27px;line-height:1.15;margin:10px 0 0;letter-spacing:1px">${r.apt}</div></div>
+    <div class="kpis"><div><div class="big" style="font-size:30px">${r.sqm}</div><div class="kicker">מ״ר</div></div><div><div style="font-size:17px;padding:7px 0">${r.out}</div><div class="kicker">בחוץ</div></div><div><div style="font-size:17px;padding:7px 0">${r.beds}</div><div class="kicker">חדרי שינה</div></div><div><div style="font-size:15px;padding:8px 6px">${r.dir}</div><div class="kicker">כיוון</div></div></div>
+    ${r.co?`<p class="small mut" style="text-align:center;margin-top:14px">בעלי הדירה: ${r.name} ו${r.co} · לשניהם גישה מלאה לאפליקציה</p>`:''}
+    <div class="plan" id="planBox" style="margin-top:24px"><img src="${A[r.plan]}" alt="תוכנית הדירה ${r.apt}"></div>
+    <div class="row between" style="margin:10px 0 4px"><span class="small mut">תוכנית מתוך חוברת השיווק</span><button class="btn ghost" id="planZoom">הגדלה</button></div>
+    <div class="card" style="margin-top:10px"><b>לשליחה למעצבת או לאדריכל</b><p class="small mut" style="margin-top:4px">התוכנית עם פרטי הדירה, בקובץ אחד.</p>
+    <div class="dlrow"><button class="btn gold" data-save="planpdf">הורדה כ-PDF</button><button class="btn" data-save="planimg">הורדה כתמונה</button></div></div>
+    <h3 class="sub">הדמיות</h3>
+    <div class="gal full">${r.gal.map((g,i)=>galImg(g,i%3===0?'wide':'')).join('')}</div>
+    <button class="btn block" style="margin-top:12px" data-open="gallery">לכל הדמיות הפרויקט</button>
+    <p class="small mut" style="margin-top:14px;text-align:center">התוכניות וההדמיות להמחשה בלבד. המחייב הוא המפרט ותוכניות המכר שצורפו לחוזה.</p>`;
+  $('#planZoom').onclick=e=>{const z=$('#planBox').classList.toggle('zoom');e.target.textContent=z?'הקטנה':'הגדלה'};
+}
+function renderApt(){renderProgress();renderPlan();renderChanges();renderHandover();renderGuide()}
+
+/* ---------- render: money ---------- */
+function renderMoney(){
+  const rows=payRows();
+  const paidSum=rows.filter(r=>r.paid).reduce((a,r)=>a+r.total,0);
+  const left=rows.filter(r=>!r.paid).reduce((a,r)=>a+r.total,0);
+  const np=nextPayment();
+  $('#s-money').innerHTML=`<h2 class="title" data-k="PAYMENTS">תשלומים</h2>
+    <div class="card dark"><div class="kicker">שולם עד היום</div><div class="big">${nis(paidSum)}</div>
+      <div class="bar" style="margin:10px 0"><i style="width:${paidSum/(paidSum+left)*100}%"></i></div>
+      <div class="row between small"><span class="mut">מחיר הדירה ${nis(cur().price)}</span><span class="mut">נותר ${nis(left)}</span></div></div>
+    <div class="card"><div class="row between"><b>הצמדה למדד תשומות הבנייה</b><button class="small" style="color:var(--gold-d);font-weight:700" data-open="indexInfo">מה זה?</button></div>
+      <div class="grid2" style="margin-top:10px"><div><div class="small mut">מדד בסיס</div><b>${BASE_INDEX}</b></div><div><div class="small mut">מדד אחרון</div><b>${CUR_INDEX} <span class="chip warn">+${((CUR_INDEX/BASE_INDEX-1)*100).toFixed(1)}%</span></b></div></div></div>
+    <h3 class="sub">לוח תשלומים</h3>
+    <div class="card">${rows.map(r=>`<div class="list-item"><span class="ic-round" style="${r.paid?'background:#DCEFE4;color:var(--ok)':''}">${r.paid?ICON.check:ICON.card}</span><div class="grow"><b style="font-size:14.5px">${r.name}</b><div class="small mut">${fmtDate(r.due)} · ${r.pct}%</div></div><div style="text-align:left"><b>${nis(r.total)}</b><div>${r.paid?'<span class="chip ok">שולם</span>':np&&r.id===np.id?`<button class="btn gold" style="padding:5px 10px;font-size:12.5px;margin-top:3px" data-pay="${r.id}">לתשלום</button>`:'<span class="chip">עתידי</span>'}</div></div></div>`).join('')}</div>
+    <p class="small mut">הסכומים לדוגמה. סכום ההצמדה הסופי מחושב לפי המדד הידוע ביום התשלום.</p>`;
+}
+
+/* ---------- render: docs ---------- */
+function renderDocs(){
+  const extra=S.protocolSigned?[['פרוטוקול מסירה חתום','עכשיו']]:[];
+  $('#s-docs').innerHTML=`<button class="back" data-goto="apt">${ICON.chev} הדירה שלי</button><h2 class="title" data-k="DOCUMENTS" style="margin-top:14px">מסמכים</h2>
+    <input class="input" id="docSearch" placeholder="חיפוש מסמך" aria-label="חיפוש מסמך" style="margin-bottom:12px">
+    <div id="docList">${DOCS.map(g=>{const items=g.cat==='מסירה ואחריות'?[...extra,...g.items]:g.items;return `<h3 class="sub">${g.cat}</h3><div class="card">${items.map(d=>`<button class="list-item" style="width:100%;text-align:right" data-doc="${esc(d[0])}"><span class="ic-round">${ICON.doc}</span><div class="grow"><b style="font-size:14.5px">${d[0]}</b><div class="small mut">${d[1]}</div></div>${ICON.chev}</button>`).join('')}</div>`}).join('')}</div>`;
+  $('#docSearch').oninput=e=>{const q=e.target.value.trim();$$('#docList [data-doc]').forEach(b=>b.style.display=!q||b.dataset.doc.includes(q)?'':'none')};
+}
+
+/* ---------- render: service ---------- */
+const REQ={
+  guest:{t:'אורח מגיע',i:'key',sub:'דרך חברת הניהול, הלובי יקבל את פניו',f:[['שם האורח','text','name'],['תאריך','date','date'],['שעה משוערת','time','time']],ok:'הלובי עודכן. האורח יתקבל בשמו.'},
+  amenity:{t:'הזמנת מתקן',i:'wave',sub:'דרך חברת הניהול: בריכה, סאונה או חדר כושר',opts:['בריכה','סאונה','חדר כושר'],f:[['תאריך','date','date'],['שעה','time','time']],ok:'ההזמנה התקבלה. אישור יגיע בהתראה.'},
+  visit:{t:'ביקור באתר',i:'pin',sub:'סיור מלווה, בתיאום מראש',f:[['תאריך מועדף','date','date']],ok:'הבקשה התקבלה. נחזור אליך לתיאום הסיור.'},
+  design:{t:'שאלה על המפרט',i:'swatch',sub:'חומרים, גמרים ותוכנית הדירה',f:[],ok:'השאלה התקבלה. נחזור אליך עם תשובה מהצוות.'},
+  move:{t:'תיאום מעבר',i:'box',sub:'מעלית שירות, חניה למובילים',f:[['תאריך המעבר','date','date']],ok:'תיאום המעבר התקבל. נשריין מעלית שירות.'},
+  supplier:{t:'פגישה עם ספק',i:'cal',sub:'מטבחים, כלים סניטריים, ריצוף ואלומיניום',optsLabel:'הספק',opts:['מטבחים','כלים סניטריים','ריצוף וחיפויים','אלומיניום ודלתות'],f:[['תאריך מועדף','date','date'],['שעה','time','time']],ok:'הבקשה נשלחה. נתאם מול הספק ונאשר לך את המועד.'},
+  special:{t:'בקשה אישית',i:'star',sub:'כל דבר אחר, נטפל בזה',f:[],ok:'הבקשה התקבלה. '+'נחזור אליך בהקדם.'},
+};
+function renderService(){
+  const st=S.stage, kinds={build:['supplier','visit','design','special'],handover:['visit','move','special'],after:['guest','amenity','special']}[st];
+  const open=S.tickets.filter(t=>t.step<3), closed=S.tickets.filter(t=>t.step>=3);
+  const tk=t=>`<div class="card"><div class="row between"><div><b>${esc(t.cat)}</b><div class="small mut">${fmtDate(t.date)}</div></div><span class="chip ${t.step>=3?'ok':'info'}">${STEPS[t.step]}</span></div>
+    <p style="margin:12px 0 0;font-size:14.5px">${esc(t.desc)}</p>
+    <div class="steps">${STEPS.map((_,i)=>`<i class="${i<=t.step?'on':''}"></i>`).join('')}</div>
+    <div class="row between small mut"><span>נפתחה</span><span>טופלה</span></div>
+    ${t.img?`<img src="${t.img}" alt="תמונה מצורפת" style="width:100%;border-radius:3px;margin-top:12px;max-height:180px;object-fit:cover">`:''}
+    ${t.step>=3?`<div class="row between" style="margin-top:12px"><span class="small mut">${t.rating?'תודה על הדירוג':'איך היה הטיפול?'}</span><div class="stars">${[1,2,3,4,5].map(n=>`<button aria-label="${n} כוכבים" data-rate="${t.id}" data-n="${n}" class="${n<=t.rating?'on':''}">★</button>`).join('')}</div></div>`
+    :`<button class="back" style="margin-top:12px" data-advance="${t.id}">דמו: קידום הסטטוס</button>`}</div>`;
+  $('#s-service').innerHTML=`<h2 class="title" data-k="PERSONAL SERVICE">שירות אישי</h2>
+    <p class="mut" style="margin:-12px 0 12px;text-align:center">צוות אחד, אנושי, שמכיר אותך ואת הבית. אפשר לבקש כל דבר.</p>
+    ${personCard()}
+    ${st==='after'&&S.parcel?`<div class="next" style="margin-bottom:12px"><div class="grow"><div class="kicker">חבילה ממתינה בלובי</div><div style="margin-top:3px">התקבלה היום ב-11:20</div></div><button class="btn" data-parcel="1">אספתי</button></div>`:''}
+    <h3 class="sub">מה אפשר לסדר לך</h3>
+    <div class="svc">${kinds.map(k=>`<button data-req="${k}">${ICON[REQ[k].i]}<span><b>${REQ[k].t}</b><br><span class="small mut">${REQ[k].sub}</span></span></button>`).join('')}<button data-open="chat">${ICON.chat}<span><b>הודעה ל${HOST.name}</b><br><span class="small mut">מענה אנושי, בדרך כלל באותו יום</span></span></button></div>
+    ${S.requests.length?`<h3 class="sub">הבקשות שלי</h3><div class="card">${S.requests.map(r=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${esc(r.title)}</b><div class="small mut">${esc(r.detail)}</div></div>${r.done?'<span class="chip ok">אושרה</span>':'<span class="chip info">התקבלה</span>'}</div>`).join('')}</div>`:''}
+    ${st==='build'?'':`<h3 class="sub">ליקויים ובדק</h3>
+    <p class="small mut" style="margin-bottom:10px">מדווחים כאן, הקבלן מטפל, ואנחנו עוקבים עד שהליקוי נסגר.</p>
+    <button class="btn block" data-open="ticket" style="margin-bottom:10px">דיווח על ליקוי</button>
+    <p class="small mut" style="margin-bottom:16px">דחוף? הצפה, חשמל או דלת שלא נפתחת: <button style="color:var(--gold-d);font-weight:500;text-decoration:underline" data-toast="בגרסה המלאה: חיוג למוקד החירום, 24/7">מוקד חירום 24/7</button></p>
+    ${open.length?open.map(tk).join(''):'<div class="empty">אין קריאות פתוחות</div>'}
+    ${closed.length?`<h3 class="sub">טופלו</h3>${closed.map(tk).join('')}`:''}`}`;
+}
+
+/* ---------- render: more (club/community) ---------- */
+const ROAD=[['sea_sunset','מסירה דיגיטלית','זימון למסירה, פרוטוקול לפי חדרים ותיעוד במקום אחד','שלב 2'],['lobby_desk','מדריך הדירה','מערכות, ספקים, תעודות אחריות ותזכורות בדק','שלב 2'],['pool_in','חברת הניהול באפליקציה','היכרות לפני האכלוס: אנשי קשר, נהלים ומתקני הבניין','שלב 2'],['stone','ספר הבית הדיגיטלי','תיק הדירה המלא: שינויים, חומרים ואחריות, עובר לבעלים הבאים','שלב 3'],['garden','שנה ראשונה מלווה','תזכורת לפני שכל תקופת בדק נגמרת','שלב 3']];
+function renderMore(){
+  if(S.scope==='pilot'){$('#s-more').innerHTML=`<h2 class="title" data-k="ROADMAP">בהמשך</h2><p class="mut" style="text-align:center;margin:-10px 0 20px">הפיילוט מתמקד בשלב הבנייה. אלה היכולות שיתווספו בשלבים הבאים.</p>${ROAD.map(x=>`<div class="card img"><img src="${A[x[0]]}" alt=""><div class="in"><div class="row between"><b>${x[1]}</b><span class="chip">${x[3]}</span></div><p class="small mut" style="margin-top:6px">${x[2]}</p></div></div>`).join('')}<button class="btn gold block" data-scope="full">להצגת החזון המלא</button>`;return}
+  const r=cur(),o=S;const ch=S.changes.filter(c=>c.status==='approved');
+  $('#s-more').innerHTML=`<h2 class="title" data-k="HOME BOOK">ספר הבית</h2>
+    <div class="card hero" style="background-image:url(${A.stone});min-height:240px"><div class="in"><div class="kicker">ספר הבית הדיגיטלי</div><div class="big" style="margin:6px 0;font-size:26px">כל מה שצריך לדעת על הבית, במקום אחד</div><p class="mut" style="font-size:14.5px">השינויים, החומרים והאחריות. כשמוכרים, התיק עובר לבעלים הבאים.</p></div></div>
+    <div class="card">${[['שינויים שאושרו',ch.length?ch.map(c=>esc(c.title)).join(' · '):'אין עדיין'],['חומרים וגמרים','ריצוף, חיפויים, מטבח וכלים סניטריים, לפי המפרט'],['מערכות ואחריות','מיזוג, מים חמים, אלומיניום וממ״ד, עם תעודות האחריות'],['פרוטוקול המסירה',S.protocolSigned?'נחתם ונשמר':'יתווסף במסירה']].map(x=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${x[0]}</b><div class="small mut">${x[1]}</div></div></div>`).join('')}</div>
+    <button class="btn block" data-toast="בגרסה המלאה: שיתוף התיק עם קונה, בהרשאה שלך">העברת התיק לבעלים הבאים</button>
+    <h3 class="sub">שנה ראשונה מלווה</h3>
+    <div class="card">${WARRANTY.map(w=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${w.t}</b><div class="small mut">בתוקף עד ${fmtDate(w.end)} · נזכיר לך חודש לפני</div></div></div>`).join('')}</div>
+    <h3 class="sub">לוח הבניין</h3>
+    <div class="card"><textarea class="input" id="postText" placeholder="כתבו הודעה לשכנים" aria-label="הודעה לשכנים" style="min-height:64px"></textarea><button class="btn block" style="margin-top:8px" id="postBtn">פרסום</button></div>
+    ${S.posts.map(p=>`<div class="card"><div class="row between"><b>${esc(p.who)}</b><span class="small mut">${esc(p.time)}</span></div><p style="margin-top:6px;font-size:14.5px;line-height:1.5">${esc(p.text)}</p></div>`).join('')}`;
+  $('#postBtn').onclick=()=>{const t=$('#postText').value.trim();if(!t)return;S.posts.unshift({who:cur().name+', דירה '+cur().unit,text:t,time:'עכשיו'});save();renderMore();toast('ההודעה פורסמה בלוח הבניין')};
+}
+
+/* ---------- developer view ---------- */
+const stageName=s=>({build:'בזמן הבנייה',handover:'מסירה',after:'אחרי הכניסה'}[s]);
+function devTasks(){const out=[];RES.forEach(r=>{const o=D(r.id);
+  const th=o.thread||[];if(th.length&&th[th.length-1].me)out.push({r,type:'msg',k:'הודעה מהדייר',t:th[th.length-1].t,acts:[['מענה',`reply:${r.id}`,1]]});
+  o.changes.filter(c=>c.status==='review').forEach(c=>out.push({r,type:'change',k:'בקשת שינוי',t:c.title,acts:[['הצעת מחיר',`quote:${r.id}:${c.id}`,1],['דחייה',`reject:${r.id}:${c.id}`]]}));
+  o.requests.forEach((q,i)=>{if(!q.done)out.push({r,type:'req',k:q.title,t:q.detail||'ללא פרטים',acts:[['אישור',`okreq:${r.id}:${i}`,1]]})});
+  if(o.stage!=='build')o.tickets.filter(t=>t.step<3).forEach(t=>out.push({r,type:'ticket',k:'קריאת שירות · '+STEPS[t.step],t:t.cat+': '+t.desc,acts:[['קידום ל״'+STEPS[t.step+1]+'״',`adv:${r.id}:${t.id}`,1]]}));
+  });return out}
+const taskCard=t=>`<div class="task"><div class="row between"><span class="kicker">${esc(t.k)}</span><button class="link" data-dv="open:${t.r.id}">${t.r.name}</button></div><div style="margin-top:6px">${esc(t.t)}</div><div class="row">${t.acts.map(a=>`<button class="btn ${a[2]?'gold':''}" data-dv="${a[1]}">${a[0]}</button>`).join('')}</div></div>`;
+let inboxF='all', newsImg=null;
+const DROLES=[['admin','סמנכ״ל'],['service','מגורים'],['finance','כספים'],['legal','הנדסה']];
+const DTABS={admin:['over','inbox','people','money','proj'],service:['over','inbox','people'],finance:['over','people','money'],legal:['over','proj']};
+const canLegal=()=>S.devRole==='admin';
+const LEGALRX=/מסיר|מועד|תאריך|אכלוס|טופס 4|handover|deliver|date|move.?in/i;
+function renderDev(){
+  if(!DTABS[S.devRole].includes(S.devTab))S.devTab='over';
+  const tasks=devTasks(), tab=S.devTab;
+  const tot=RES.reduce((a,r)=>{const rows=payRows(r.id);a.all+=rows.reduce((x,y)=>x+y.total,0);a.paid+=rows.filter(y=>y.paid).reduce((x,y)=>x+y.total,0);return a},{all:0,paid:0});
+  $$('.devnav button').forEach(b=>{b.classList.toggle('on',b.dataset.dvtab===tab);b.hidden=!DTABS[S.devRole].includes(b.dataset.dvtab)});
+  const bd=$('#inboxBadge');bd.hidden=!tasks.length;bd.textContent=tasks.length;
+  let h='';
+  if(tab==='over'){
+    const quotes=RES.reduce((a,r)=>a+D(r.id).changes.filter(c=>c.status==='quote').length,0);
+    h=`<h2 class="title" data-k="DEVELOPER">מרכז הבקרה</h2>
+    <div class="rolebar"><span class="kicker">הרשאות לפי תפקיד</span><div class="opt-row">${DROLES.map(x=>`<button class="opt ${S.devRole===x[0]?'on':''}" data-dv="role:${x[0]}">${x[1]}</button>`).join('')}</div></div>
+    <div class="kpis">
+      <button data-dvtab="inbox"><div class="big">${tasks.length}</div><div class="kicker">ממתינים לטיפול</div></button>
+      <button data-dvtab="people"><div class="big">${RES.length}</div><div class="kicker">דיירים</div></button>
+      <button data-dvtab="money"><div class="big">₪${(tot.paid/1e6).toFixed(1)}M</div><div class="kicker">נגבה עד היום</div></button>
+      <button data-dvtab="proj"><div class="big" style="font-size:30px;line-height:1.25;padding:6px 0">${NOW_STAGE}</div><div class="kicker">שלב הבנייה · ${S.proj.stage+1}/${MILESTONES.length}</div></button>
+    </div>
+    <h3 class="sub">דורש טיפול</h3>
+    ${tasks.length?`<div class="dcols">${tasks.slice(0,3).map(taskCard).join('')}</div>`+(tasks.length>3?`<button class="btn block" data-dvtab="inbox">לכל ${tasks.length} הפניות</button>`:''):'<div class="card empty">אין פניות פתוחות. הכול מטופל.</div>'}
+    <h3 class="sub">פעולות מהירות</h3>
+    <div class="svc"><button data-dvtab="proj">${ICON.cam}<span><b>פרסום עדכון</b><br><span class="small mut">טקסט ותמונה מהאתר</span></span></button><button data-dv="broadcast">${ICON.bell}<span><b>הודעה לכל הדיירים</b><br><span class="small mut">נשלחת כהודעה אישית</span></span></button><button data-dvtab="money">${ICON.card}<span><b>תזכורות תשלום</b><br><span class="small mut">${RES.filter(r=>nextPayment(r.id)).length} תשלומים קרובים</span></span></button><button data-open="gallery">${ICON.book}<span><b>הדמיות הפרויקט</b><br><span class="small mut">${GALLERY.length} תמונות</span></span></button></div>
+    <h3 class="sub">מצב הדיירים</h3>
+    <div class="group">${[['הצעות מחיר שמחכות לחתימה',quotes],['פגישות מסירה שנקבעו',RES.filter(r=>D(r.id).appt).length],['פרוטוקולים חתומים',RES.filter(r=>D(r.id).protocolSigned).length],['עדכונים שפורסמו',S.news.length],['ממתינים לאישור סמנכ״ל',S.pending.length]].map(x=>`<div class="list-item"><div class="grow">${x[0]}</div><b>${x[1]}</b></div>`).join('')}</div>`;
+  }
+  if(tab==='inbox'){
+    const F=[['all','הכול'],['msg','הודעות'],['change','שינויים'],['req','בקשות'],['ticket','קריאות']], list=tasks.filter(t=>inboxF==='all'||t.type===inboxF);
+    h=`<h2 class="title" data-k="INBOX">פניות</h2>
+    <div class="opt-row" style="margin-bottom:16px">${F.map(f=>`<button class="opt ${inboxF===f[0]?'on':''}" data-dv="filter:${f[0]}">${f[1]} · ${f[0]==='all'?tasks.length:tasks.filter(t=>t.type===f[0]).length}</button>`).join('')}</div>
+    ${list.length?`<div class="dcols">${list.map(taskCard).join('')}</div>`:'<div class="card empty">אין פניות בקטגוריה הזו</div>'}`;
+  }
+  if(tab==='people'){
+    h=`<h2 class="title" data-k="RESIDENTS">דיירים</h2>
+    <div class="wide-only"><input class="input" id="resSearch" placeholder="חיפוש לפי שם או דירה" aria-label="חיפוש דייר" style="max-width:340px;margin-bottom:14px">
+    <table class="tbl"><thead><tr><th>דייר</th><th>דירה</th><th>קומה</th><th>שלב</th><th>שולם</th><th>התשלום הבא</th><th>פניות</th></tr></thead><tbody>${RES.map(r=>{const n=tasks.filter(t=>t.r.id===r.id).length,rows=payRows(r.id),np=nextPayment(r.id),pd=rows.filter(x=>x.paid).reduce((a,x)=>a+x.total,0)/rows.reduce((a,x)=>a+x.total,0);return `<tr data-dv="open:${r.id}"><td><b>${r.name}</b>${r.co?`<div class="small mut">ו${r.co}</div>`:''}</td><td><span class="lat">${r.apt}</span></td><td>${r.floor||'גן'}</td><td>${stageName(D(r.id).stage)}</td><td>${Math.round(pd*100)}%</td><td>${np?nis(np.total)+`<div class="small mut">${fmtDate(np.due)}</div>`:'הכול שולם'}</td><td>${n?`<span class="chip warn">${n}</span>`:'<span class="mut">0</span>'}</td></tr>`}).join('')}</tbody></table></div>
+    <div class="group narrow-only">${RES.map(r=>{const n=tasks.filter(t=>t.r.id===r.id).length;return `<button class="who" data-dv="open:${r.id}"><span class="av">${r.name[0]}</span><span class="grow"><b>${r.name}</b><span class="lat small mut">${r.apt}</span><span class="small mut">${floorTxt(r)} · ${stageName(D(r.id).stage)}</span></span>${n?`<span class="chip warn">${n}</span>`:''}<span style="color:#9aa0ab">${ICON.chev}</span></button>`}).join('')}</div>`;
+  }
+  if(tab==='money'){
+    h=`<h2 class="title" data-k="COLLECTION">גבייה</h2>
+    <div class="card" style="text-align:center"><div class="kicker">נגבה עד היום</div><div class="big" style="margin-top:6px">${nis(tot.paid)}</div><div class="bar" style="margin:14px 0 10px"><i style="width:${tot.paid/tot.all*100}%"></i></div><div class="small mut">מתוך ${nis(tot.all)} · ${Math.round(tot.paid/tot.all*100)}%</div></div>
+    <h3 class="sub">התשלום הבא של כל דייר</h3>
+    <div class="group">${RES.map(r=>{const np=nextPayment(r.id);return `<div class="pay-row"><div style="flex:1;min-width:0"><b>${r.name}</b><div class="small mut">${np?esc(np.name)+' · '+fmtDate(np.due):'הכול שולם'}</div>${np?`<div style="margin-top:2px">${nis(np.total)}</div>`:''}</div>${np?`<div style="display:flex;flex-direction:column;gap:6px"><button class="btn gold" style="padding:8px 14px;font-size:13px" data-dv="paid:${r.id}:${np.id}">התקבל</button><button class="btn" style="padding:8px 14px;font-size:13px" data-dv="remind:${r.id}">תזכורת</button></div>`:'<span class="chip ok">שולם</span>'}</div>`}).join('')}</div>
+    <p class="small mut">הסכומים כוללים הצמדה למדד ${CUR_INDEX} (בסיס ${BASE_INDEX}).</p>`;
+  }
+  if(tab==='proj'){
+    h=`<h2 class="title" data-k="PROJECT">הפרויקט</h2>
+    <div class="card"><div class="row between"><b>אבני הדרך של הבנייה</b><span class="small mut">${stageOf()}</span></div>
+      ${msBar()}
+      <label class="f" style="margin-top:8px">השלב הנוכחי</label><div class="opt-row">${MILESTONES.map((m,i)=>`<button class="opt ${i===S.proj.stage?'on':''}" data-dv="pstage:${i}">${m.t}</button>`).join('')}</div>
+      <p class="small mut" style="margin-top:12px">בחירת שלב מעדכנת מיד את מסך הבית ואת אבני הדרך אצל כל הדיירים.</p></div>
+    ${S.pending.length?`<h3 class="sub">ממתין לאישור סמנכ״ל</h3>${S.pending.map(n=>`<div class="pend"><div class="kicker">${n.kind==='construction'?'עדכון בנייה':'הודעה כללית'} · מזכיר מועד או מסירה</div><div style="margin-top:6px">${esc(n.t)}</div><div class="row" style="margin-top:12px;gap:8px;flex-wrap:wrap">${canLegal()?`<button class="btn gold" style="padding:9px 16px;font-size:13.5px" data-dv="legalok:${n.id}">אישור ופרסום</button>`:'<span class="small mut">רק סמנכ״ל יכול לאשר</span>'}<button class="btn" style="padding:9px 16px;font-size:13.5px" data-dv="legalno:${n.id}">ביטול</button></div></div>`).join('')}`:''}
+    <h3 class="sub">פרסום עדכון</h3>
+    <div class="card"><div class="opt-row" id="newsKind"><button class="opt on" data-nk="construction">עדכון בנייה</button><button class="opt" data-nk="community">הודעה כללית</button></div>
+      <textarea class="input" id="newsText" style="margin-top:12px" placeholder="למשל: הושלמה יציקת תקרת המרתף העליון" aria-label="תוכן העדכון"></textarea>
+      <label class="btn block" style="margin-top:10px;cursor:pointer">${ICON.cam} צירוף תמונה מהאתר<input type="file" accept="image/*" id="newsImg" hidden></label><img class="thumb" id="newsPrev" alt="">
+      <p class="small mut" style="margin:10px 0 12px">עדכון שמזכיר מועד או מסירה לא מתפרסם מיד: הוא עובר קודם לאישור סמנכ״ל.</p>
+      <button class="btn gold block" id="newsSend">פרסום לכל הדיירים</button></div>
+    ${S.news.length?`<h3 class="sub">פורסמו</h3><div class="group">${S.news.map(n=>`<div class="list-item"><div class="grow">${esc(n.t)}<div class="small mut">${n.kind==='construction'?'עדכון בנייה':'הודעה כללית'}${n.img?' · עם תמונה':''}</div></div><button class="link" data-dv="delnews:${n.id}">הסרה</button></div>`).join('')}</div>`:''}
+    <h3 class="sub">הדמיות</h3>
+    <div class="strip">${GALLERY.slice(0,6).map(g=>`<figure style="flex-basis:60%">${galImg(g[0])}</figure>`).join('')}</div>
+    <button class="btn block" style="margin-top:12px" data-open="gallery">לכל ההדמיות</button>`;
+  }
+  $('#s-dev').innerHTML=h;
+  const rs=$('#resSearch');if(rs)rs.oninput=()=>{const q=rs.value.trim().toLowerCase();$$('.tbl tbody tr').forEach(tr=>tr.style.display=!q||tr.innerText.toLowerCase().includes(q)?'':'none')};
+  if(tab==='proj'){
+    let nk='construction';
+    $$('[data-nk]').forEach(b=>b.onclick=()=>{nk=b.dataset.nk;$$('[data-nk]').forEach(x=>x.classList.toggle('on',x===b))});
+    $('#newsImg').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),k=Math.min(1,800/im.width);c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);newsImg=c.toDataURL('image/jpeg',.7);$('#newsPrev').src=newsImg;$('#newsPrev').style.display='block'};im.src=rd.result};rd.readAsDataURL(f)};
+    $('#newsSend').onclick=()=>{const t=$('#newsText').value.trim();if(!t){$('#newsText').focus();return}const item={id:Date.now(),kind:nk,t,img:newsImg};newsImg=null;
+      if(LEGALRX.test(t)){S.pending.unshift(item);save();renderAll();toast('העדכון מזכיר מועד או מסירה, ולכן נשלח לאישור סמנכ״ל לפני פרסום.')}
+      else{S.news.unshift(item);save();renderAll();toast('פורסם. העדכון מופיע עכשיו אצל כל הדיירים.')}};
+  }
+}
+function resSheet(id){
+  const r=RES.find(x=>x.id===id), o=D(id), np=nextPayment(id), rows=payRows(id), paid=rows.filter(x=>x.paid).reduce((a,x)=>a+x.total,0), all=rows.reduce((a,x)=>a+x.total,0), n=devTasks().filter(t=>t.r.id===id).length;
+  openSheet(`<div class="latin">SEA HOUSE · ${r.floor?'FLOOR '+r.floor:'GARDEN FLOOR'}</div><h3 style="margin-top:6px">${r.name}</h3>
+    <div class="row" style="gap:14px;margin-bottom:6px"><img src="${A[r.plan]}" alt="" style="width:84px;height:84px;object-fit:contain;background:#fff;border-radius:12px"><div><div class="lat" style="font-size:17px;line-height:1.2;text-align:right">${r.apt}</div><div class="small mut">${r.sqm} מ״ר · ${r.out}</div><div class="small mut">${nis(r.price)}</div></div></div>
+    <label class="f">שלב הדייר</label><div class="opt-row">${['build','handover','after'].map(s=>`<button class="opt ${o.stage===s?'on':''}" data-dv="rstage:${id}:${s}">${stageName(s)}</button>`).join('')}</div>
+    <label class="f">תשלומים</label><div class="group" style="box-shadow:none;border:1px solid var(--line)"><div class="list-item"><div class="grow">שולם</div><b>${Math.round(paid/all*100)}%</b></div><div class="list-item"><div class="grow">התשלום הבא<div class="small mut">${np?fmtDate(np.due):''}</div></div><b>${np?nis(np.total):'הכול שולם'}</b></div></div>
+    ${np?`<div class="row" style="gap:8px"><button class="btn gold" style="flex:1" data-dv="paid:${id}:${np.id}">סימון כהתקבל</button><button class="btn" style="flex:1" data-dv="remind:${id}">שליחת תזכורת</button></div>`:''}
+    <label class="f">מצב</label><div class="group" style="box-shadow:none;border:1px solid var(--line)">${[['פניות פתוחות',n],['פגישת מסירה',o.appt||'טרם נקבעה'],['פרוטוקול מסירה',o.protocolSigned?'נחתם':'טרם נחתם'],['שינויים מאושרים',o.changes.filter(c=>c.status==='approved').length]].map(x=>`<div class="list-item"><div class="grow">${x[0]}</div><span>${esc(x[1])}</span></div>`).join('')}</div>
+    <label class="f" for="pm">הודעה אישית ל${r.name}</label><textarea class="input" id="pm" placeholder="למשל: המעצבת פנויה לפגישה ביום שלישי"></textarea>
+    <button class="btn block" style="margin-top:10px" id="pmSend">שליחה</button>
+    <button class="btn gold block" style="margin-top:10px" data-dv="enter:${id}">כניסה לאפליקציה כ${r.name}</button>`,sh=>{
+    $('#pmSend',sh).onclick=()=>{const t=$('#pm',sh).value.trim();if(!t){$('#pm',sh).focus();return}sendMsg(id,t);closeSheet();toast('ההודעה נשלחה ל'+r.name)};
+  });
+}
+function sendMsg(id,t){const o=D(id);(o.thread=o.thread||[]).push({me:false,t});(o.msgs=o.msgs||[]).unshift({id:Date.now()+Math.floor(Math.random()*999),t});save();renderAll()}
+function devAct(a){
+  const [act,id,arg]=a.split(':'), o=id&&RES.some(r=>r.id===id)?D(id):null, r=RES.find(x=>x.id===id), keep=()=>{const y=$('#main').scrollTop;save();renderAll();$('#main').scrollTop=y};
+  if(act==='filter'){inboxF=id;renderDev()}
+  else if(act==='role'){S.devRole=id;save();renderDev();toast('תפקיד: '+DROLES.find(x=>x[0]===id)[1])}
+  else if(act==='legalok'){const i=S.pending.findIndex(n=>String(n.id)===id);if(i>=0){S.news.unshift(S.pending.splice(i,1)[0]);keep();toast('אושר ופורסם לכל הדיירים.')}}
+  else if(act==='legalno'){S.pending=S.pending.filter(n=>String(n.id)!==id);keep()}
+  else if(act==='reply'){const th=o.thread.slice(-4);
+    openSheet(`<h3>מענה ל${r.name}</h3><div class="chat" style="min-height:0;max-height:30vh">${th.map(m=>`<div class="msg ${m.me?'bot':'me'}">${esc(m.t)}</div>`).join('')}</div><textarea class="input" id="rp" placeholder="כתבו תשובה" aria-label="תשובה"></textarea><button class="btn gold block" style="margin-top:12px" id="rpSend">שליחה</button>`,sh=>{$('#rpSend',sh).onclick=()=>{const t=$('#rp',sh).value.trim();if(!t){$('#rp',sh).focus();return}closeSheet();sendMsg(id,t);toast('התשובה נשלחה ל'+r.name)}})}
+  else if(act==='open')resSheet(id);
+  else if(act==='quote'){const c=o.changes.find(x=>x.id===arg);
+    openSheet(`<h3>הצעת מחיר ל${r.name}</h3><p class="mut">${esc(c.title)}</p><label class="f" for="qPrice">מחיר כולל מע״מ, בשקלים</label><input class="input" id="qPrice" type="number" inputmode="numeric" min="0" placeholder="2500"><button class="btn gold block" style="margin-top:20px" id="qSend">שליחה לאישור</button>`,sh=>{$('#qSend',sh).onclick=()=>{const v=+$('#qPrice',sh).value;if(!(v>0)){$('#qPrice',sh).focus();return}c.price=v;c.status='quote';closeSheet();keep();toast('ההצעה נשלחה ל'+r.name+' לאישור בחתימה דיגיטלית.')}})}
+  else if(act==='reject'){o.changes.find(x=>x.id===arg).status='rejected';sendMsg(id,'בקשת השינוי לא אושרה. נשמח להסביר ולהציע חלופה.');keep();toast('הבקשה נדחתה, ו'+r.name+' קיבל/ה הודעה.')}
+  else if(act==='okreq'){o.requests[+arg].done=true;keep();toast('הבקשה אושרה, והעדכון נשלח ל'+r.name+'.')}
+  else if(act==='adv'){const k=o.tickets.find(x=>x.id===arg);k.step=Math.min(3,k.step+1);keep();toast('סטטוס: '+STEPS[k.step])}
+  else if(act==='paid'){o.paid[arg]=true;closeSheet();keep();toast('התשלום של '+r.name+' סומן כהתקבל.')}
+  else if(act==='remind'){const np=nextPayment(id);sendMsg(id,'תזכורת: '+np.name+' ב-'+fmtDate(np.due)+', בסך '+nis(np.total)+'.');toast('תזכורת נשלחה ל'+r.name)}
+  else if(act==='rstage'){if(id===S.rid){closeSheet();setStage(arg)}else{o.stage=arg;save();renderAll();resSheet(id)}toast(r.name+': '+stageName(arg))}
+  else if(act==='enter'){closeSheet();switchRes(id);if(S.scope==='pilot')S.stage='build';S.role='res';setStage(S.stage);go('home');applyRole();toast('מחוברים כ'+cur().name)}
+  else if(act==='pstage'){S.proj.stage=+id;keep();toast('השלב הנוכחי: '+MILESTONES[+id].t)}
+  else if(act==='delnews'){S.news=S.news.filter(n=>String(n.id)!==id);keep()}
+  else if(act==='broadcast'){openSheet(`<h3>הודעה לכל הדיירים</h3><textarea class="input" id="bc" placeholder="למשל: ביום חמישי ייערך סיור דיירים באתר"></textarea><button class="btn gold block" style="margin-top:14px" id="bcSend">שליחה ל-${RES.length} דיירים</button>`,sh=>{$('#bcSend',sh).onclick=()=>{const t=$('#bc',sh).value.trim();if(!t){$('#bc',sh).focus();return}RES.forEach(x=>sendMsg(x.id,t));closeSheet();toast('ההודעה נשלחה לכל הדיירים')}})}
+}
+function applyScope(){const pl=S.scope==='pilot';$('#phone').dataset.scope=S.scope;$('#scopeBtn').textContent=pl?'החזון המלא':'תצוגת פיילוט';$('#moreLbl').textContent=pl?'בהמשך':'ספר הבית';if(pl&&(pane==='handover'||pane==='guide'))pane='progress'}
+function applyRole(){$('#phone').dataset.role=S.role;$('#roleBtn').textContent=S.role==='dev'?'חזרה לתצוגת הדייר':'תצוגת יזם';$('#main').scrollTop=0}
+
+/* ---------- sheets ---------- */
+function openSheet(html,after){
+  $('#sheet').innerHTML='<div class="grab"></div><button class="sheet-x" aria-label="סגירה" data-close="1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>'+html;
+  $('#sheetWrap').classList.add('on');
+  after&&after($('#sheet'));
+  const f=$('#sheet').querySelector('input:not([type=file]),textarea,button:not(.sheet-x)');f&&setTimeout(()=>f.focus(),50);
+}
+function closeSheet(){$('#sheetWrap').classList.remove('on')}
+$('#sheetWrap').addEventListener('click',e=>{if(e.target.id==='sheetWrap')closeSheet()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+
+function signaturePad(canvas){
+  const ctx=canvas.getContext('2d');let drawing=false,has=false;
+  const fit=()=>{const r=canvas.getBoundingClientRect();canvas.width=r.width*2;canvas.height=r.height*2;ctx.scale(2,2);ctx.lineWidth=2.4;ctx.lineCap='round';ctx.strokeStyle='#33322E'};
+  fit();
+  const pos=e=>{const r=canvas.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+  canvas.onpointerdown=e=>{drawing=true;canvas.setPointerCapture(e.pointerId);ctx.beginPath();ctx.moveTo(...pos(e))};
+  canvas.onpointermove=e=>{if(!drawing)return;ctx.lineTo(...pos(e));ctx.stroke();has=true;canvas.dispatchEvent(new Event('signed'))};
+  canvas.onpointerup=()=>drawing=false;
+  return{has:()=>has,clear:()=>{ctx.clearRect(0,0,canvas.width,canvas.height);has=false}};
+}
+function signSheet(title,body,onDone){
+  openSheet(`<h3>${title}</h3>${body}<label class="f">חתימה</label><canvas class="sign" id="sig"></canvas>
+    <div class="row" style="margin-top:12px;gap:8px"><button class="btn ghost" id="sigClear">ניקוי</button><button class="btn gold" style="flex:1" id="sigOk" disabled>אישור וחתימה</button></div>`,sh=>{
+    const pad=signaturePad($('#sig',sh));
+    $('#sig',sh).addEventListener('signed',()=>$('#sigOk',sh).disabled=false);
+    $('#sigClear',sh).onclick=()=>{pad.clear();$('#sigOk',sh).disabled=true};
+    $('#sigOk',sh).onclick=()=>{closeSheet();onDone()};
+  });
+}
+
+function reqSheet(kind){
+  const q=REQ[kind];let opt=q.opts?q.opts[0]:null;
+  openSheet(`<h3>${q.t}</h3><p class="mut">${q.sub}</p>
+    ${q.opts?`<label class="f">${q.optsLabel||'מתקן'}</label><div class="opt-row">${q.opts.map((o,i)=>`<button class="opt ${i?'':'on'}" data-o="${o}">${o}</button>`).join('')}</div>`:''}
+    ${q.f.map(f=>`<label class="f" for="rq-${f[2]}">${f[0]}</label><input class="input" id="rq-${f[2]}" type="${f[1]}">`).join('')}
+    <label class="f" for="rq-note">${q.f.length?'הערות':'מה תרצו שנסדר?'}</label><textarea class="input" id="rq-note" placeholder="${q.f.length?'לא חובה':'למשל: זר פרחים שיחכה בבית ביום שישי'}"></textarea>
+    <button class="btn gold block" style="margin-top:20px" id="rqSend">שליחה ל${HOST.name}</button>`,sh=>{
+    $$('[data-o]',sh).forEach(b=>b.onclick=()=>{opt=b.dataset.o;$$('[data-o]',sh).forEach(x=>x.classList.toggle('on',x===b))});
+    $('#rqSend',sh).onclick=()=>{
+      const v=id=>{const e=$('#rq-'+id,sh);return e?e.value.trim():''};
+      const first=q.f[0]&&$('#rq-'+q.f[0][2],sh);
+      if(first&&!first.value){first.focus();return}
+      if(!q.f.length&&!v('note')){$('#rq-note',sh).focus();return}
+      const d=v('date')?new Date(v('date')).toLocaleDateString(LOC,{day:'numeric',month:'long'}):'';
+      const detail=[v('name'),opt,d,v('time'),v('note')].filter(Boolean).join(' · ');
+      S.requests.unshift({kind,title:q.t,detail});save();closeSheet();renderService();toast(q.ok)};
+  });
+}
+const SHEETS={
+  gallery(){const list=GALLERY.filter(g=>galF==='all'||g[2]===galF);
+    openSheet(`<h3>הדמיות הפרויקט</h3><div class="opt-row" style="margin-bottom:14px"><button class="opt ${galF==='all'?'on':''}" data-gf="all">הכול</button>${GCAT.map(c=>`<button class="opt ${galF===c[0]?'on':''}" data-gf="${c[0]}">${c[1]}</button>`).join('')}</div><div class="gridg">${list.map(g=>galImg(g[0])).join('')}</div><p class="small mut" style="margin-top:14px;text-align:center">הדמיות להמחשה בלבד</p>`,sh=>{$$('[data-gf]',sh).forEach(b=>b.onclick=()=>{galF=b.dataset.gf;const y=sh.scrollTop;SHEETS.gallery()})})},
+  about(){openSheet(`<div class="latin">THE PROJECT</div><h3 style="margin-top:6px">פיתוח על הים</h3>
+    <div class="full">${galImg('aerial')}</div>
+    <p class="about-q" dir="ltr">In the heart of Herzliya Pituach, where the sea meets sophistication, a new level of luxury awaits.</p>
+    <p style="line-height:1.7">שביל גישה פרטי מוביל מהמתחם ישירות לחוף אכדיה, לטיילת המלונות ולמרינה של הרצליה. מסביב, אווירת חוף, מרכזי בילוי, קניות וקולינריה, ברים ובתי קפה.</p>
+    <label class="f">הבניינים</label>
+    <div class="bld"><figure>${galImg('tower_sunset')}<figcaption>TOWER</figcaption></figure><figure>${galImg('sea_welcome')}<figcaption>SEA HOUSE</figcaption></figure><figure>${galImg('tree_facade')}<figcaption>TREE HOUSE</figcaption></figure></div>
+    <label class="f">הלובי והבריכה</label>
+    <div class="strip" style="margin:0 -22px;padding:0 22px 4px">${['lobby_lounge','pool_in','lobby_desk','tree_lobby'].map(k=>`<figure style="flex-basis:74%">${galImg(k)}</figure>`).join('')}</div>
+    <button class="btn block" style="margin:16px 0 22px" data-open="gallery">לכל ההדמיות</button>
+    <div class="dark-card"><div class="latin">THE DEVELOPER</div><img src="${A.ofer}" alt="Ofer Investments"><p>עופר השקעות היא חברת נדל״ן פרטית בבעלות ליאורה עופר. החברה מחזיקה נכסים מניבים, בנייה למגורים והתחדשות עירונית, והיא בעלת השליטה במליסרון, חברת הקניונים הגדולה בישראל, שמנהלת 18 קניונים ומרכזים מסחריים תחת המותג ״קניוני עופר״.</p></div>
+    <div class="dark-card"><div class="latin">THE ARCHITECTS</div><p style="margin-top:14px;letter-spacing:4px;direction:ltr">YASHAR &nbsp;·&nbsp; OBERSON</p><p style="margin-top:12px">ישר אדריכלים, ממשרדי האדריכלות המובילים בישראל, נוסד ב-1956 בידי האדריכל יצחק ישר, ומובל כיום בידי בנו, האדריכל אבנר ישר.</p></div>
+    <p class="small mut" style="text-align:center">מתוך המצגת השיווקית של הפרויקט. הדמיות להמחשה בלבד.</p>`)},
+  a11y(){const a=S.a11y,sw=(k,l,d)=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${l}</b><div class="small mut">${d}</div></div><button class="switch ${a[k]?'on':''}" role="switch" aria-checked="${!!a[k]}" aria-label="${l}" data-ax="${k}"></button></div>`;
+    openSheet(`<h3>נגישות</h3>
+      <div class="card"><div class="row between"><b>גודל טקסט</b><div class="sizer"><button data-az="-1" aria-label="הקטנת טקסט">A−</button><span id="azVal">${100+a.z*10}%</span><button data-az="1" aria-label="הגדלת טקסט">A+</button></div></div></div>
+      <div class="card">${sw('contrast','ניגודיות גבוהה','טקסט כהה וקווים ברורים')}${sw('links','הדגשת קישורים','קו תחתון עבה ומסגרת מיקוד')}${sw('motion','עצירת אנימציות','בלי תנועה ומעברים')}${sw('gray','גווני אפור','תצוגה בלי צבע')}</div>
+      <div class="card"><div class="row between"><b>שפה</b><div class="opt-row"><button class="opt ${LANG==='he'?'on':''}" data-lang="he">עברית</button><button class="opt ${LANG==='en'?'on':''}" data-lang="en">English</button></div></div></div>
+      <button class="btn block" data-ax="reset">איפוס הגדרות הנגישות</button>
+      <p class="small mut" style="margin-top:14px;text-align:center">אלה התאמות נגישות בסיסיות. בדיקת נגישות מלאה לפי תקן ישראלי 5568 עוד לא בוצעה.</p>`,sh=>{
+      $$('[data-ax]',sh).forEach(b=>b.onclick=()=>{const k=b.dataset.ax;if(k==='reset')S.a11y={z:0};else S.a11y[k]=!S.a11y[k];save();applyAcc();SHEETS.a11y()});
+      $$('[data-az]',sh).forEach(b=>b.onclick=()=>{S.a11y.z=Math.max(-1,Math.min(4,(S.a11y.z||0)+ +b.dataset.az));save();applyAcc();$('#azVal',sh).textContent=(100+S.a11y.z*10)+'%'});
+    })},
+  notifs(){
+    S.readNotifs=NOTIFS().map(n=>n.id);save();$('#notifDot').style.display='none';
+    openSheet(`<h3>התראות</h3><div class="card">${NOTIFS().map(n=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${n.t}</b><div class="small mut">${n.d}</div></div>${n.kind==='critical'?'<span class="chip warn">חשוב</span>':n.kind==='marketing'?'<span class="chip gold">הטבה</span>':''}</div>`).join('')}</div><button class="btn ghost block" data-open="settings">הגדרות התראות</button>`);
+  },
+  settings(){
+    const P=[['critical','הודעות קריטיות','תשלומים, מסירה ובטיחות. תמיד פעיל',true],['payments','תזכורות תשלום','שבוע לפני כל מועד'],['construction','עדכוני בנייה','תמונות ואבני דרך'],['community','קהילת הבניין','הודעות ועד ושכנים'],['marketing','עדכונים כלליים','אירועים והודעות מהקבוצה']];
+    openSheet(`<h3>הגדרות</h3><b class="small mut">דמו: כניסה כדייר אחר</b><div style="margin:6px 0 22px">${RES.map(r=>`<button class="who ${r.id===S.rid?'on':''}" data-res="${r.id}"><span class="av">${r.name[0]}</span><span class="grow"><b>${r.name}</b><span class="lat small mut">${r.apt}</span></span><span class="small mut">${floorTxt(r)}</span></button>`).join('')}</div><b class="small mut">התראות</b><div class="card" style="margin-top:6px">${P.map(p=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${p[1]}</b><div class="small mut">${p[2]}</div></div><button class="switch ${S.prefs[p[0]]?'on':''} ${p[3]?'locked':''}" role="switch" aria-checked="${!!S.prefs[p[0]]}" aria-label="${p[1]}" data-pref="${p[0]}" ${p[3]?'disabled':''}></button></div>`).join('')}</div>
+    <b class="small mut">נגישות ושפה</b><div class="card" style="margin-top:6px">
+      <div class="list-item"><div class="grow"><b style="font-size:14.5px">שפה</b></div><div class="opt-row"><button class="opt ${LANG==='he'?'on':''}" data-lang="he">עברית</button><button class="opt ${LANG==='en'?'on':''}" data-lang="en">English</button></div></div>
+      <button class="rowlink" style="border:0;padding:14px 0 2px" data-open="a11y"><span class="grow"><b>תפריט הנגישות</b><span class="small mut">גודל טקסט, ניגודיות, אנימציות</span></span><span class="chev">${ICON.chev}</span></button></div>
+    <p class="small mut">הנתונים האישיים והפיננסיים מוצפנים ונשמרים לפי חוק הגנת הפרטיות.</p><div style="text-align:center;margin-top:18px"><img src="${A.ofer}" alt="Ofer Investments" style="width:84px;opacity:.8"></div>`,sh=>{
+      $$('[data-pref]',sh).forEach(b=>b.onclick=()=>{const k=b.dataset.pref;S.prefs[k]=!S.prefs[k];b.classList.toggle('on',S.prefs[k]);b.setAttribute('aria-checked',S.prefs[k]);save();renderAll()});
+    });
+  },
+  ticket(){
+    let cat='',urg='רגילה',img=null;
+    const cats=['אינסטלציה','חשמל','דלתות וחלונות','ריצוף וקירות','מיזוג','אחר'];
+    openSheet(`<h3>דיווח על ליקוי</h3>
+      <label class="f">מה צריך תיקון?</label><div class="opt-row" id="cats">${cats.map(c=>`<button class="opt" data-c="${c}">${c}</button>`).join('')}</div>
+      <label class="f" for="tdesc">תיאור קצר</label><textarea class="input" id="tdesc" placeholder="למשל: נזילה מתחת לכיור באמבטיה הראשית"></textarea>
+      <label class="f">דחיפות</label><div class="opt-row" id="urg">${['רגילה','גבוהה'].map(u=>`<button class="opt ${u===urg?'on':''}" data-u="${u}">${u}</button>`).join('')}</div>
+      <label class="f">תמונה (לא חובה)</label><label class="btn ghost block" style="cursor:pointer">${ICON.cam} צירוף תמונה<input type="file" accept="image/*" id="timg" hidden></label><img id="tprev" alt="" style="display:none;width:100%;border-radius:12px;margin-top:8px;max-height:160px;object-fit:cover">
+      <button class="btn gold block" style="margin-top:16px" id="tsend" disabled>שליחה</button>`,sh=>{
+      const chk=()=>$('#tsend',sh).disabled=!(cat&&$('#tdesc',sh).value.trim());
+      $$('[data-c]',sh).forEach(b=>b.onclick=()=>{cat=b.dataset.c;$$('[data-c]',sh).forEach(x=>x.classList.toggle('on',x===b));chk()});
+      $$('[data-u]',sh).forEach(b=>b.onclick=()=>{urg=b.dataset.u;$$('[data-u]',sh).forEach(x=>x.classList.toggle('on',x===b))});
+      $('#tdesc',sh).oninput=chk;
+      $('#timg',sh).onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),k=Math.min(1,640/im.width);c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);img=c.toDataURL('image/jpeg',.7);$('#tprev',sh).src=img;$('#tprev',sh).style.display='block'};im.src=r.result};r.readAsDataURL(f)};
+      $('#tsend',sh).onclick=()=>{const id='t'+(S.tickets.length+1)+Math.floor(Math.random()*90+10);S.tickets.unshift({id,cat,desc:$('#tdesc',sh).value.trim(),urgency:urg,step:0,date:new Date().toISOString(),rating:0,img});save();closeSheet();go('service');toast('הדיווח התקבל והועבר לקבלן. נעדכן אותך בכל שלב.')};
+    });
+  },
+  newChange(){
+    openSheet(`<h3>בקשת שינוי</h3><label class="f" for="chT">מה תרצו לשנות?</label><input class="input" id="chT" placeholder="למשל: הוספת נקודת חשמל בחדר השינה">
+      <label class="f" for="chD">פרטים</label><textarea class="input" id="chD" placeholder="מיקום, מידות, העדפות"></textarea>
+      <button class="btn gold block" style="margin-top:16px" id="chSend">שליחה לבדיקה</button>`,sh=>{
+      $('#chSend',sh).onclick=()=>{const t=$('#chT',sh).value.trim();if(!t){$('#chT',sh).focus();return}S.changes.unshift({id:'c'+Date.now(),title:t,price:0,status:'review',date:new Date().toISOString()});save();closeSheet();renderChanges();renderHome();toast('הבקשה נשלחה. הצעת מחיר תגיע לאפליקציה.')};
+    });
+  },
+  slots(){
+    openSheet(`<h3>בחירת מועד מסירה</h3><p class="small mut" style="margin-bottom:10px">הפגישה נמשכת כשעה וחצי, בדירה.</p>${SLOTS.map(s=>`<button class="opt ${S.appt===s?'on':''}" style="display:block;width:100%;text-align:right;margin-bottom:8px;border-radius:12px;padding:12px" data-slot="${s}">${s}</button>`).join('')}`,sh=>{
+      $$('[data-slot]',sh).forEach(b=>b.onclick=()=>{S.appt=b.dataset.slot;save();closeSheet();renderHandover();renderHome();toast('נקבע: '+S.appt+'. אישור נשלח גם במייל.')});
+    });
+  },
+  signProtocol(){
+    const issues=Object.entries(S.protocol).filter(([k,v])=>v==='issue').map(([k])=>k.split('|')[1]);
+    signSheet('חתימה על פרוטוקול המסירה',`<p class="small mut">${issues.length?'הליקויים הבאים יירשמו בפרוטוקול ויפתחו כקריאות שירות:':'כל הסעיפים סומנו תקינים.'}</p>${issues.length?`<ul style="margin:8px 18px 0;font-size:14.5px;line-height:1.7">${issues.map(i=>`<li>${i}</li>`).join('')}</ul>`:''}`,()=>{
+      S.protocolSigned=true;
+      issues.forEach((i,n)=>S.tickets.unshift({id:'m'+(n+1)+Math.floor(Math.random()*90+10),cat:'ליקוי מסירה',desc:i,urgency:'רגילה',step:0,date:new Date().toISOString(),rating:0}));
+      save();renderAll();toast('הפרוטוקול נחתם ונשמר במסמכים');
+    });
+  },
+  indexInfo(){
+    openSheet(`<h3>מה זה הצמדה למדד?</h3><p style="line-height:1.65;font-size:15px">בדירה מקבלן, חלק מהתשלומים צמודים למדד תשומות הבנייה. אם המדד עולה מאז החתימה, סכום התשלום עולה באותו שיעור.</p>
+      <div class="card" style="margin-top:12px"><div class="small mut">דוגמה</div><p style="font-size:14.5px;line-height:1.6;margin-top:4px">תשלום בסיס של ${nis(1930000)}, והמדד עלה מ-${BASE_INDEX} ל-${CUR_INDEX}: תוספת ההצמדה היא ${nis(1930000*(CUR_INDEX/BASE_INDEX-1))}.</p></div>
+      <button class="btn block" data-open="chat">שאלה ל${HOST.name}</button>`);
+  },
+  chat(){
+    openSheet(`<h3>הודעה ל${HOST.name}</h3><p class="small mut" style="margin:-8px 0 12px">${HOST.role}. מענה אנושי, בדרך כלל באותו יום עבודה.</p><div class="chat" id="chatBox"></div>
+      <form class="row" id="chatForm" style="gap:8px"><input class="input" id="chatIn" placeholder="כתבו הודעה" aria-label="הודעה"><button class="btn gold">שליחה</button></form>`,sh=>{
+      const box=$('#chatBox',sh);
+      const draw=()=>{box.innerHTML=S.thread.length?S.thread.map(m=>`<div class="msg ${m.me?'me':'bot'}">${esc(m.t)}</div>`).join(''):'<div class="empty">עוד אין הודעות. אפשר לשאול כל דבר על הדירה, התשלומים או הבנייה.</div>';box.scrollTop=box.scrollHeight};
+      draw();
+      $('#chatForm',sh).onsubmit=e=>{e.preventDefault();const v=$('#chatIn',sh).value.trim();if(!v)return;$('#chatIn',sh).value='';S.thread.push({me:true,t:v});save();draw();renderDev();toast('ההודעה נשלחה ל'+HOST.name)};
+    });
+  },
+};
+/* ---------- documents: contract, plan, downloads ---------- */
+let DL=null;try{window.claude&&window.claude.use&&window.claude.use('downloads').then(x=>{DL=x}).catch(()=>{})}catch(e){}
+const inArtifact=()=>{try{return window.top!==window.self}catch(e){return true}};
+async function saveFile(name,key){
+  let blob;try{blob=await (await fetch(A[key])).blob()}catch(e){toast('הקובץ לא זמין כרגע');return}
+  if(DL){try{const r=await DL.save({filename:name,data:blob});if(r&&r.status==='saved')toast('הקובץ נשמר: '+name)}catch(e){const c=e&&e.code;if(c==='declined')return;if(c==='rate_limited'){toast('רגע, יש כבר שמירה פתוחה');return}if(c==='host_unavailable'){toast('כדי לשמור את הקובץ, פתחו את האפליקציה בדפדפן או במחשב');return}toast('לא ניתן לשמור את הקובץ כאן')}return}
+  if(inArtifact()&&!(window.claude)){toast('ההורדה זמינה כשפותחים את האפליקציה בדפדפן');return}
+  const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);toast('הקובץ ירד: '+name);
+}
+function contractHTML(id){
+  const r=RES.find(x=>x.id===id), rows=payRows(id);
+  return `<h4>חוזה מכר דירה</h4><div class="stamp">דוגמה לצורכי הדגמה בלבד · אינו חוזה מחייב</div>
+  <p>שנערך ונחתם ביום 15 בפברואר 2026</p>
+  <p><b>בין:</b> [שם החברה המוכרת] ("החברה")<br><b>לבין:</b> ${r.name}${r.co?' ו'+r.co:''} [שם משפחה, ת״ז] ("הקונה")</p>
+  <h5>1. הדירה</h5><p>${r.apt}, ${floorTxt(r)}, בשטח ${r.sqm} מ״ר ו${r.out}, בבניין SEA HOUSE בפרויקט פיתוח על הים, הרצליה פיתוח, כמפורט בתוכנית ובמפרט המצורפים לחוזה זה.</p>
+  <h5>2. התמורה ולוח התשלומים</h5><p>התמורה הכוללת: ${nis(r.price)} כולל מע״מ, שתשולם לפי הלוח שלהלן.</p>
+  <table><tr><th>תשלום</th><th>מועד</th><th>שיעור</th><th>סכום</th></tr>${rows.map(x=>`<tr><td>${x.name}</td><td>${fmtDate(x.due)}</td><td>${x.pct}%</td><td>${nis(x.base)}</td></tr>`).join('')}</table>
+  <h5>3. הצמדה</h5><p>החלק הצמוד של כל תשלום יוצמד למדד תשומות הבנייה. מדד הבסיס: ${BASE_INDEX}.</p>
+  <h5>4. מסירה</h5><p>מועד המסירה המשוער: במהלך 2029, בכפוף לתנאי חוזה זה.</p>
+  <h5>5. בטוחות</h5><p>על כל תשלום תינתן ערבות לפי חוק המכר (דירות) (הבטחת השקעות של רוכשי דירות), התשל״ה–1975.</p>
+  <h5>6. בדק ואחריות</h5><p>תקופות הבדק והאחריות לפי חוק המכר (דירות), התשל״ג–1973.</p>
+  <div class="sig"><div>החברה<br>נחתם דיגיטלית</div><div>הקונה<br>נחתם דיגיטלית</div></div>`;
+}
+function openContract(){
+  const r=cur();
+  openSheet(`<h3>חוזה מכר חתום</h3><p class="small mut" style="margin:-8px 0 12px">${r.apt} · ${floorTxt(r)}</p><div class="doc">${contractHTML(r.id)}</div>
+    <div class="dlrow"><button class="btn gold" data-save="contract">הורדת החוזה (PDF)</button></div>
+    <p class="dlnote">מסמך לדוגמה. בגרסה המלאה יוצג כאן החוזה החתום עצמו.</p>`);
+}
+
+/* ---------- gallery ---------- */
+const GCAT=[['sea','הים והנוף'],['bld','הבניינים'],['common','לובי ובריכה'],['in','פנים הדירה']];
+const GALLERY=[
+  ['sea_welcome','הים, מהמרפסות של SEA HOUSE','sea'],['sea_sunset','שקיעה מול חוף אכדיה','sea'],['aerial','הרצליה פיתוח, מבט מהאוויר','sea'],['sail','הים','sea'],
+  ['tower','המגדל והבניינים','bld'],['tower_sunset','המגדל מול הים','bld'],['ph_day','קומות הפנטהאוז','bld'],['street','מבט מהרחוב','bld'],['garden','הגן והשבילים','bld'],['exterior','הבניינים והגן','bld'],['tree_welcome','TREE HOUSE','bld'],['tree_facade','המרפסות של TREE HOUSE','bld'],
+  ['lobby_desk','לובי הכניסה','common'],['lobby_lounge','פינת הישיבה בלובי','common'],['pool_in','הבריכה','common'],['tree_lobby','הלובי של TREE HOUSE','common'],['lobby','הגינה הפנימית','common'],
+  ['sofa','הים, מכל חדר','in'],['dining','פינת האוכל מול הים','in'],['walk','הסלון והמטבח','in'],['terrace','המרפסת, בשעת ערב','in'],['dusk','הסלון בשקיעה','in'],['stone','אי המטבח','in'],['kitchen','המטבח','in'],['shelf','פרטים במטבח','in'],['feet','אור של אחר הצהריים','in'],['pool','ליד הבריכה','in'],['throw','רגע בחוץ','in'],['green','פינת ישיבה בגינה','in'],['portrait','רגע של שקט','in']];
+let galF='all';
+let lbI=0;
+function lbShow(i){lbI=(i+GALLERY.length)%GALLERY.length;const g=GALLERY[lbI];const im=$('#lbImg');im.style.animation='none';im.offsetWidth;im.style.animation='';im.src=A[g[0]];im.alt=g[1];$('#lbCap').textContent=g[1];$('#lbCount').textContent=(lbI+1)+' / '+GALLERY.length}
+function lbOpen(key){const i=GALLERY.findIndex(g=>g[0]===key);lbShow(i<0?0:i);$('#lb').classList.add('on');$('#lbClose').focus()}
+function lbClose(){$('#lb').classList.remove('on')}
+$('#lbClose').onclick=lbClose;$('#lbPrev').onclick=()=>lbShow(lbI-1);$('#lbNext').onclick=()=>lbShow(lbI+1);
+{let x0=null;const el=$('#lb');el.addEventListener('pointerdown',e=>x0=e.clientX);el.addEventListener('pointerup',e=>{if(x0===null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>45)lbShow(lbI+(dx<0?1:-1))})}
+document.addEventListener('keydown',e=>{if(!$('#lb').classList.contains('on'))return;if(e.key==='Escape')lbClose();if(e.key==='ArrowRight')lbShow(lbI+1);if(e.key==='ArrowLeft')lbShow(lbI-1)});
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('img[data-g]')){e.preventDefault();lbOpen(e.target.dataset.g)}});
+const galImg=(k,cls='')=>`<img class="${cls}" data-g="${k}" src="${A[k]}" alt="${(GALLERY.find(g=>g[0]===k)||[0,'הדמיה'])[1]}" tabindex="0" role="button" loading="lazy">`;
+
+/* ---------- toast ---------- */
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2600)}
+
+/* ---------- navigation ---------- */
+function defaultPane(){return{build:'progress',handover:'handover',after:'guide'}[S.stage]}
+let pane=defaultPane();
+function setPane(p){if(S.scope==='pilot'&&(p==='handover'||p==='guide'))p='progress';pane=p;$$('#aptSeg button').forEach(b=>b.classList.toggle('on',b.dataset.pane===p));$$('.pane').forEach(x=>x.classList.toggle('on',x.id==='p-'+p))}
+function go(tab,p){
+  S.tab=tab;save();
+  const hl=tab==='docs'?'apt':tab;$$('nav.tabs button').forEach(b=>{b.classList.toggle('on',b.dataset.tab===hl);b.setAttribute('aria-current',b.dataset.tab===tab?'page':'false')});
+  $$('.screen').forEach(s=>s.classList.toggle('on',s.id==='s-'+tab));
+  if(tab==='apt')setPane(p||pane);
+  $('#main').scrollTop=0;
+}
+function setStage(st){
+  S.stage=st;save();
+  $$('[data-stage]').forEach(b=>{b.classList.toggle('on',b.dataset.stage===st);b.setAttribute('aria-selected',b.dataset.stage===st)});
+  pane=defaultPane();renderAll();go(S.tab==='apt'?'apt':S.tab);
+}
+function applyAcc(){const a=S.a11y||(S.a11y={z:0}),r=document.documentElement;r.style.setProperty('--z',1+(a.z||0)*.1);r.dataset.contrast=a.contrast?'high':'';r.dataset.gray=a.gray?'1':'';r.dataset.links=a.links?'1':'';r.dataset.motion=a.motion?'1':''}
+function renderAll(){syncProj();renderDev();renderHome();renderApt();renderMoney();renderDocs();renderService();renderMore();setPane(pane);
+  $('#notifDot').style.display=NOTIFS().some(n=>!S.readNotifs.includes(n.id))?'':'none'}
+
+/* ---------- global clicks ---------- */
+document.addEventListener('click',e=>{
+  if(e.target.closest('[data-close]')){closeSheet();return}
+  const lg=e.target.closest('[data-lang]');if(lg){if(lg.dataset.lang!==LANG){S.lang=lg.dataset.lang;save();try{sessionStorage.setItem('nosplash','1')}catch(e){}location.reload()}return}
+  const g=e.target.closest('[data-g]');if(g){lbOpen(g.dataset.g);return}
+  const dv=e.target.closest('[data-dv]');if(dv){devAct(dv.dataset.dv);return}
+  const sc=e.target.closest('button[data-scope],#scopeBtn');if(sc){S.scope=sc.dataset.scope||(S.scope==='pilot'?'full':'pilot');if(S.scope==='pilot')S.stage='build';save();closeSheet();applyScope();setStage(S.stage);go('home');toast(S.scope==='pilot'?'תצוגת הפיילוט: שלב הבנייה בלבד':'החזון המלא: כל שלושת השלבים');return}
+  const dt=e.target.closest('[data-dvtab]');if(dt){if(!DTABS[S.devRole].includes(dt.dataset.dvtab)){toast('לתפקיד הזה אין הרשאה למסך הזה');return}S.devTab=dt.dataset.dvtab;save();renderDev();$('#main').scrollTop=0;return}
+  const ao=e.target.closest('[data-allok]');if(ao){PROTOCOL[ao.dataset.allok].forEach(it=>{const k=ao.dataset.allok+'|'+it;if(!S.protocol[k])S.protocol[k]='ok'});save();const y=$('#main').scrollTop;renderHandover();$('#main').scrollTop=y;return}
+  const sv=e.target.closest('[data-save]');if(sv){const r=cur(),k=sv.dataset.save,slug=r.apt.toLowerCase().replace(/^the /,'').replace(/\s+/g,'-');
+    if(k==='contract')saveFile('contract-'+slug+'-sample.pdf','contract_'+r.id);
+    if(k==='planpdf')saveFile('plan-'+slug+'.pdf','plandoc_'+r.plan);
+    if(k==='planimg')saveFile('plan-'+slug+'.jpg',r.plan);return}
+  const t=e.target.closest('[data-res],[data-quote],[data-okreq],[data-req],[data-parcel],[data-tab],[data-stage],[data-pane],[data-goto],[data-open],[data-toast],[data-pay],[data-sign],[data-proto],[data-advance],[data-rate],[data-doc],[data-coupon]');
+  if(!t)return;
+  const d=t.dataset;
+  if(d.res){switchRes(d.res);if(S.scope==='pilot')S.stage='build';closeSheet();const tab=S.tab;setStage(S.stage);go(S.role==='dev'?tab:'home');if(S.role!=='dev')toast('מחוברים כ'+cur().name+' · '+cur().apt);else $('#main').scrollTop=0}
+  else if(d.quote){const c=S.changes.find(x=>x.id===d.quote);
+    openSheet(`<h3>הצעת מחיר</h3><p class="mut">${esc(c.title)}</p><label class="f" for="qPrice">מחיר כולל מע״מ, בשקלים</label><input class="input" id="qPrice" type="number" inputmode="numeric" min="0" placeholder="2500"><button class="btn gold block" style="margin-top:20px" id="qSend">שליחה לדייר</button>`,sh=>{$('#qSend',sh).onclick=()=>{const v=+$('#qPrice',sh).value;if(!(v>0)){$('#qPrice',sh).focus();return}c.price=v;c.status='quote';save();closeSheet();renderAll();toast('ההצעה נשלחה לאישור בחתימה דיגיטלית.')}})}
+  else if(d.okreq){S.requests[+d.okreq].done=true;save();renderAll();toast('הבקשה אושרה, והעדכון נשלח.')}
+  else if(d.req)reqSheet(d.req);
+  else if(d.parcel){S.parcel=false;save();renderAll();toast('תודה. החבילה סומנה כנאספה.')}
+  else if(d.tab)go(d.tab);
+  else if(d.stage)setStage(d.stage);
+  else if(d.pane)setPane(d.pane);
+  else if(d.goto){closeSheet();const[a,b]=d.goto.split(':');go(a,b)}
+  else if(d.open){SHEETS[d.open]&&SHEETS[d.open]()}
+  else if(d.toast)toast(d.toast);
+  else if(d.pay){const r=payRows().find(x=>x.id===d.pay);
+    openSheet(`<h3>תשלום</h3><div class="card"><b>${r.name}</b><div class="row between" style="margin-top:8px"><span class="mut small">קרן</span><span>${nis(r.base)}</span></div><div class="row between"><span class="mut small">הצמדה</span><span>${nis(r.link)}</span></div><hr style="border:0;border-top:1px solid var(--line);margin:8px 0"><div class="row between"><b>סה״כ</b><b>${nis(r.total)}</b></div></div>
+      <p class="small mut" style="margin-bottom:12px">זהו דמו: לא מתבצע חיוב אמיתי ולא נאספים פרטי תשלום.</p><button class="btn gold block" id="payOk">אישור תשלום (דמו)</button>`,sh=>{$('#payOk',sh).onclick=()=>{S.paid[r.id]=true;save();closeSheet();renderAll();toast('התשלום התקבל. הקבלה תופיע במסמכים.')}})}
+  else if(d.sign){const c=S.changes.find(x=>x.id===d.sign);
+    signSheet('אישור הצעת מחיר',`<div class="card"><b>${esc(c.title)}</b><div class="row between" style="margin-top:6px"><span class="mut small">מחיר כולל מע״מ</span><b>${nis(c.price)}</b></div><p class="small mut" style="margin-top:6px">הסכום יתווסף לתשלום הבא.</p></div>`,()=>{c.status='approved';save();renderChanges();renderHome();toast('השינוי אושר ונחתם')})}
+  else if(d.proto){S.protocol[d.proto]=S.protocol[d.proto]===d.v?undefined:d.v;save();const y=$('#main').scrollTop;renderHandover();$('#main').scrollTop=y}
+  else if(d.advance){const k=S.tickets.find(x=>x.id===d.advance);k.step=Math.min(3,k.step+1);save();renderAll();toast('סטטוס: '+STEPS[k.step])}
+  else if(d.rate){const k=S.tickets.find(x=>x.id===d.rate);k.rating=+d.n;save();renderService()}
+  else if(d.doc==='תוכנית הדירה'){closeSheet();go('apt','plan')}
+  else if(d.doc==='חוזה מכר חתום')openContract();
+  else if(d.doc)openSheet(`<h3>${esc(d.doc)}</h3><div class="card" style="aspect-ratio:3/4;display:flex;flex-direction:column;gap:10px;padding:22px">${[90,70,85,60,95,40,80,75,50].map(w=>`<div style="height:9px;width:${w}%;background:var(--sand2);border-radius:9px"></div>`).join('')}<div style="flex:1"></div><p class="small mut" style="text-align:center">תצוגה מקדימה לדוגמה</p></div><button class="btn block" data-toast="בגרסה המלאה: הורדת PDF">הורדה</button>`);
+  else if(d.coupon){const b=BENEFITS[+d.coupon];openSheet(`<h3>${b.t}</h3><div class="card" style="text-align:center"><svg width="180" height="70" viewBox="0 0 180 70" aria-label="ברקוד לדוגמה">${[...Array(40)].map((_,i)=>`<rect x="${i*4.5}" y="0" width="${(i*7)%3+1}" height="70" fill="#33322E"/>`).join('')}</svg><div class="big" style="font-size:22px;margin-top:8px;letter-spacing:3px">DEMO-${4200+ +d.coupon}</div><p class="small mut" style="margin-top:6px">${b.p}</p></div>`)}
+});
+$('#roleBtn').onclick=()=>{S.role=S.role==='dev'?'res':'dev';save();renderAll();applyRole()};
+$('#resetBtn').onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()};
+
+/* ---------- boot ---------- */
+$$('[data-a]').forEach(i=>i.src=A[i.dataset.a]);
+let noSplash=false;try{noSplash=sessionStorage.getItem('nosplash')==='1';sessionStorage.removeItem('nosplash')}catch(e){}
+if(noSplash)$('#splash').style.display='none';
+setTimeout(()=>$('#splash').classList.add('off'),2100);$('#splash').onclick=()=>$('#splash').classList.add('off');
+applyAcc();
+if(S.scope==='pilot')S.stage='build';applyScope();
+setStage(S.stage);applyRole();
+go(S.tab||'home');
+</script>
+</body>
+</html>
