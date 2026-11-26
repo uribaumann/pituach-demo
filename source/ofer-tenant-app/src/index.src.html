@@ -848,9 +848,9 @@ function renderHome(){
     ${personCard()}
     <div class="quick">${quick.map(q=>`<button ${q[0]}><span class="ci">${ICON[q[1]]}</span>${q[2]}</button>`).join('')}</div>
     <button class="homecard" data-goto="apt:plan"><img src="${A[r.plan]}" alt=""><span class="grow" style="flex:1"><span class="kicker">הדירה שלי</span><span class="lat">${r.apt}</span><span class="small mut">${floorTxt(r)} · ${r.sqm} מ״ר</span></span><span class="chev" style="color:#9aa0ab">${ICON.chev}</span></button>
-    ${st==='build'?`<h3 class="sub">מהאתר</h3><button class="full" data-goto="apt:progress" style="display:block;width:100%"><img src="${A.site}" alt="${PHOTOS[0].cap}"></button><p class="cap">${PHOTOS[0].cap} · ${PHOTOS[0].date}</p>`:''}
     <h3 class="sub">הודעות</h3>
-    <div class="card">${NOTIFS().slice(0,2).map(n=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${n.t}</b><div class="small mut">${n.d}</div></div>${n.kind==='critical'?'<span class="chip warn">חשוב</span>':n.kind==='personal'?'<span class="chip">אישי</span>':''}</div>`).join('')}</div>
+    <div class="card">${NOTIFS().slice(0,2).map(n=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${n.t}</b><div class="small mut">${n.d}</div></div>${n.kind==='critical'?'':n.kind==='personal'?'<span class="chip">אישי</span>':''}</div>`).join('')}</div>
+    ${st==='build'?`<h3 class="sub">מהאתר</h3><button class="full" data-goto="apt:progress" style="display:block;width:100%"><img src="${A.site}" alt="${PHOTOS[0].cap}"></button><p class="cap">${PHOTOS[0].cap} · ${PHOTOS[0].date}</p>`:''}
     <div class="rows">${rowlink("open:about","pin","על הפרויקט","המיקום, הבניינים וההדמיות")}</div>`;
 }
 
@@ -1199,7 +1199,7 @@ const SHEETS={
     })},
   notifs(){
     S.readNotifs=NOTIFS().map(n=>n.id);save();$('#notifDot').style.display='none';
-    openSheet(`<h3>התראות</h3><div class="card">${NOTIFS().map(n=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${n.t}</b><div class="small mut">${n.d}</div></div>${n.kind==='critical'?'<span class="chip warn">חשוב</span>':n.kind==='marketing'?'<span class="chip gold">הטבה</span>':''}</div>`).join('')}</div><button class="btn ghost block" data-open="settings">הגדרות התראות</button>`);
+    openSheet(`<h3>התראות</h3><div class="card">${NOTIFS().map(n=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${n.t}</b><div class="small mut">${n.d}</div></div>${n.kind==='critical'?'':n.kind==='marketing'?'<span class="chip gold">הטבה</span>':''}</div>`).join('')}</div><button class="btn ghost block" data-open="settings">הגדרות התראות</button>`);
   },
   settings(){
     const P=[['critical','הודעות קריטיות','תשלומים, מסירה ובטיחות. תמיד פעיל',true],['payments','תזכורות תשלום','שבוע לפני כל מועד'],['construction','עדכוני בנייה','תמונות ואבני דרך'],];
