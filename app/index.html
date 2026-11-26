@@ -36,6 +36,9 @@ svg{stroke-width:1.35}
 .top-row{display:flex;align-items:center;justify-content:space-between;gap:10px;direction:ltr;height:44px}
 .marks{display:flex;align-items:center;gap:10px;direction:ltr}
 .marks .wm{height:25px}.marks .bd{height:19px}
+.tr-end{display:flex;align-items:center;gap:4px}
+.langbtn{min-width:38px;height:30px;padding:0 9px;border-radius:15px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:12px;font-weight:500;letter-spacing:.6px}
+.langbtn:hover{border-color:var(--gold-d)}
 .icon-btn{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;position:relative;color:var(--ink)}
 .icon-btn:hover{background:#2e2d2a0a}
 .icon-btn .dot{position:absolute;top:8px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--gold-d);border:1.5px solid var(--sand)}
@@ -575,7 +578,8 @@ table.tbl{width:100%;border-collapse:collapse;background:var(--paper);border-rad
       <div class="top-row">
         <button class="icon-btn" aria-label="הגדרות" data-open="settings"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
         <div class="marks"><img class="bd" data-a="bird" alt=""><img class="wm" data-a="wordmark" alt="Pituach by the Sea"></div>
-        <button class="icon-btn" aria-label="התראות" data-open="notifs"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot" id="notifDot"></span></button>
+        <div class="tr-end"><button class="langbtn" id="langBtn" data-lang="en" aria-label="Switch to English" lang="en">EN</button>
+        <button class="icon-btn" aria-label="התראות" data-open="notifs"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot" id="notifDot"></span></button></div>
       </div>
       <div class="demo-strip"><span class="lbl">DEMO</span><button class="role" id="roleBtn"></button><button class="scope" id="scopeBtn"></button>
         <div class="stage-switch" role="tablist" aria-label="שלב הדייר בדמו">
@@ -1631,9 +1635,9 @@ function tr(t){if(!HEB.test(t))return t;let c=trc.get(t);if(c!==undefined)return
   if(EX[k]!==undefined)out=t.replace(k,EX[k]);else if(FR[k]!==undefined)out=t.replace(k,FR[k]);else{out=t;for(const h of ENK){if(out.includes(h)){out=out.split(h).join(FR[h]);if(!HEB.test(out))break}}if(HEB.test(out)){if(window.__miss)window.__miss.add(k);out=t}}
   trc.set(t,out);return out}
 function trNode(n){if(n.nodeType===3){const v=n.nodeValue;if(HEB.test(v)){const o=tr(v);if(o!==v)n.nodeValue=o}}
-  else if(n.nodeType===1&&n.nodeName!=='SCRIPT'&&n.nodeName!=='STYLE'){for(const a of ['placeholder','aria-label','alt','title','data-toast']){const v=n.getAttribute(a);if(v&&HEB.test(v))n.setAttribute(a,tr(v))}for(const c of n.childNodes)trNode(c)}}
+  else if(n.nodeType===1&&n.nodeName!=='SCRIPT'&&n.nodeName!=='STYLE'){for(const a of ['placeholder','aria-label','alt','title','data-toast']){const v=n.getAttribute(a);if(v&&HEB.test(v)){const o=tr(v);if(o!==v)n.setAttribute(a,o)}}for(const c of n.childNodes)trNode(c)}}
 if(LANG==='en'){document.title='Pituach by the Sea · Residents App';trNode(document.body);
-  new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')trNode(m.target);else if(m.type==='attributes'){const v=m.target.getAttribute(m.attributeName);if(v&&HEB.test(v))m.target.setAttribute(m.attributeName,tr(v))}else m.addedNodes.forEach(trNode)}}).observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['alt','placeholder','aria-label','data-toast']})}
+  new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')trNode(m.target);else if(m.type==='attributes'){const v=m.target.getAttribute(m.attributeName);if(v&&HEB.test(v)){const o=tr(v);if(o!==v)m.target.setAttribute(m.attributeName,o)}}else m.addedNodes.forEach(trNode)}}).observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['alt','placeholder','aria-label','data-toast']})}
 
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 
@@ -2503,6 +2507,7 @@ $$('[data-a]').forEach(i=>i.src=A[i.dataset.a]);
 let noSplash=false;try{noSplash=sessionStorage.getItem('nosplash')==='1';sessionStorage.removeItem('nosplash')}catch(e){}
 if(noSplash)$('#splash').style.display='none';
 setTimeout(()=>$('#splash').classList.add('off'),2000);applyDemo();$('#splash').onclick=()=>$('#splash').classList.add('off');
+{const lb=$('#langBtn');if(LANG==='en'){lb.dataset.lang='he';lb.textContent='עב';lb.setAttribute('aria-label','מעבר לעברית');lb.setAttribute('lang','he')}}
 applyAcc();
 if(S.scope==='pilot')S.stage='build';applyScope();
 setStage(S.stage);applyRole();
