@@ -365,6 +365,8 @@ function seed(){
    {id:'q1',res:'maya',kind:'visit',detail:'סיור מלווה בשלב החפירה',when:'2026-12-15',time:'',status:'new',date:'2026-11-20'},
    {id:'q2',res:'noa',kind:'supplier',opt:'מטבחים',detail:'פגישה באולם התצוגה של ספק המטבחים',when:'2027-01-14',time:'10:30',status:'new',date:'2026-11-24'},
    {id:'q3',res:'daniel',kind:'design',detail:'מה גובה התקרה בסלון, והאם אפשר להנמיך לתאורה שקועה?',when:'',time:'',status:'new',date:'2026-11-22'},
+   {id:'q5',res:'tamar',kind:'special',opt:'תשלומים',detail:'אפשר לפרוס את תשלום סיום החפירה לשני תשלומים?',when:'',time:'',status:'new',date:'2026-11-23'},
+   {id:'q6',res:'yonatan',kind:'special',opt:'החוזה והמסמכים',detail:'מתי תירשם הערת האזהרה לטובתנו, ואיפה אפשר לראות אותה?',when:'',time:'',status:'new',date:'2026-11-21'},
    {id:'q4',res:'yonatan',kind:'supplier',opt:'כלים סניטריים',detail:'בחירת כלים סניטריים לחדר הרחצה הראשי',when:'2026-12-03',time:'16:00',status:'sched',date:'2026-11-12'}],
   changes:[
    {id:'c1',res:'noa',title:'הזזת נקודת חשמל בסלון',price:1450,status:'approved',date:'2026-06-02'},
@@ -540,10 +542,10 @@ const PERMS={
  res_pm:{t:'ניהול פרויקט',r:['overview','residents','docs','requests','changes','suppliers','construction','messages'],d:'דיירים, בקשות, ספקים ושלבי הבנייה'},
  eng_vp:{t:'סמנכ״ל הנדסה',r:['overview','requests','construction','changes','defects','docs'],d:'שלבי בנייה, שינויי דיירים וליקויים, ואישור אבני הדרך'},
  eng:{t:'הנדסה',r:['overview','requests','changes','docs','construction','defects'],d:'שינויי דיירים, הצעות מחיר, תוכניות וצילומים מהאתר'},
- fin_vp:{t:'סמנכ״ל כספים',r:['overview','payments','reminders','residents','docs'],d:'תשלומים, מדד ותזכורות, לצפייה ולאישור'},
- fin:{t:'כספים',r:['overview','payments','reminders','residents','docs'],d:'תשלומים, מדד, קבלות ותזכורות'},
- fin_ops:{t:'הנהלת חשבונות',r:['overview','payments','payments','reminders'],d:'תשלומים ותזכורות. כל תזכורת לדייר יוצאת רק באישורה'},
- legal:{t:'משפטית',r:['overview','docs','construction','broadcast','activity'],d:'חוזים ומסמכים, ונוסחי עדכונים והודעות'},
+ fin_vp:{t:'סמנכ״ל כספים',r:['overview','requests','payments','reminders','residents','docs'],d:'תשלומים, מדד ותזכורות, לצפייה ולאישור'},
+ fin:{t:'כספים',r:['overview','requests','payments','reminders','residents','docs'],d:'תשלומים, מדד, קבלות ותזכורות'},
+ fin_ops:{t:'הנהלת חשבונות',r:['overview','payments','requests','reminders'],d:'תשלומים ותזכורות. כל תזכורת לדייר יוצאת רק באישורה'},
+ legal:{t:'משפטית',r:['overview','requests','docs','construction','broadcast','activity'],d:'חוזים ומסמכים, ונוסחי עדכונים והודעות'},
  legal_ext:{t:'משפטית · חיצוני',r:['docs'],d:'חוזים וערבויות בלבד'},
  mkt_ext:{t:'שיווק · חיצוני',r:['residents'],d:'צירוף רוכש חדש ביום החתימה'},
  ceo:{t:'הנהלה',r:['overview','residents','payments','construction','activity'],d:'תמונת מצב לצפייה'}};
@@ -560,7 +562,7 @@ const daysSince=d=>Math.floor((new Date(today())-new Date(d))/864e5);
 function invState(r){const v=r.invite||{st:'none'};if(v.st==='joined'){const n=daysSince(v.seen||v.joined);return n>30?{c:'warn',t:`לא נכנס ${n} ימים`,k:'idle'}:{c:'ok',t:'הצטרף',k:'joined'}}
  return v.st==='invited'?{c:'plain',t:'הוזמן, עוד לא הצטרף',k:'invited'}:{c:'bad',t:'לא הוזמן',k:'none'}}
 const KEY='pituach-admin-v1';
-let ST=LS.get(KEY);if(!ST||ST.v!==1)ST=seed();ST.reminders=ST.reminders||[];ST.remLead=ST.remLead||14;ST.phase2=!!ST.phase2;if(ST.host.role==='מנהל קשרי הדיירים שלך')ST.host.role='אחראי קשרי דיירים';ST.residents.forEach(r=>{if(!r.invite)r.invite=structuredClone(INV0[r.id]||{st:'none'})});
+let ST=LS.get(KEY);if(!ST||ST.v!==1)ST=seed();ST.reminders=ST.reminders||[];ST.remLead=ST.remLead||14;ST.phase2=!!ST.phase2;[{id:'q5',res:'tamar',kind:'special',opt:'תשלומים',detail:'אפשר לפרוס את תשלום סיום החפירה לשני תשלומים?',when:'',time:'',status:'new',date:'2026-11-23'},{id:'q6',res:'yonatan',kind:'special',opt:'החוזה והמסמכים',detail:'מתי תירשם הערת האזהרה לטובתנו, ואיפה אפשר לראות אותה?',when:'',time:'',status:'new',date:'2026-11-21'}].forEach(q=>{if(!ST.requests.some(x=>x.id===q.id))ST.requests.push(q)});if(ST.host.role==='מנהל קשרי הדיירים שלך')ST.host.role='אחראי קשרי דיירים';ST.residents.forEach(r=>{if(!r.invite)r.invite=structuredClone(INV0[r.id]||{st:'none'})});
 const save=()=>LS.set(KEY,ST);
 function log(t){ST.log.unshift({at:new Date().toISOString(),who:CUR().name,t});ST.log=ST.log.slice(0,300);save()}
 const resOf=id=>ST.residents.find(r=>r.id===id);
@@ -568,9 +570,17 @@ const rname=id=>id?(resOf(id)||{name:'דייר שהוסר'}).name:'כל הפרו
 const floorTxt=r=>+r.floor?'קומה '+r.floor:'קומת הגן';
 function payRows(r){return ST.schedule.map(p=>{const base=r.price*p.pct/100,link=base*(ST.index.cur/ST.index.base-1);return{...p,base,link,total:base+link,paid:!!(p.fixed||r.paid[p.id])}})}
 const nextPay=r=>payRows(r).find(p=>!p.paid);
-const openReq=()=>ST.requests.filter(q=>q.status==='new');
-const openChg=()=>ST.changes.filter(c=>c.status==='review');
-const openTk=()=>ST.tickets.filter(t=>t.step<3);
+/* who handles what: every inquiry belongs to one department, and each person sees their department's inquiries */
+const DEPTS={res:'מגורים',eng:'הנדסה',fin:'כספים',legal:'משפטית'};
+const TOPIC={'הדירה והמפרט':'eng','תשלומים':'fin','החוזה והמסמכים':'legal','אחר':'res'};
+const deptOfReq=q=>q.dept||(q.kind==='design'?'eng':q.kind==='special'?(TOPIC[q.opt]||'res'):'res');
+const myDepts=()=>({res_pm:['res'],eng_vp:['eng'],eng:['eng'],fin_vp:['fin'],fin:['fin'],fin_ops:['fin'],legal:['legal']}[CUR().perm]||Object.keys(DEPTS));
+const seesAll=()=>myDepts().length>1;
+const sees=d=>myDepts().includes(d)&&(!ui.rd||ui.rd==='all'||ui.rd===d||!seesAll());
+const visReq=()=>ST.requests.filter(q=>myDepts().includes(deptOfReq(q)));
+const openReq=()=>visReq().filter(q=>q.status==='new');
+const openChg=()=>myDepts().includes('eng')?ST.changes.filter(c=>c.status==='review'):[];
+const openTk=()=>myDepts().includes('eng')?ST.tickets.filter(t=>t.step<3):[];
 const unreadN=()=>Object.values(ST.unread).reduce((a,b)=>a+b,0);
 const pendUpd=()=>ST.updates.filter(u=>u.status==='vp');
 const pendRem=()=>ST.reminders.filter(x=>x.status==='pending');
@@ -856,20 +866,24 @@ VIEWS.payments=()=>{const t=ui.ptab||'pay',n=pendRem().length;
 VIEWS.reminders=()=>{ui.ptab='rem';return VIEWS.payments()};
 /* ---- requests ---- */
 function reqTable(list,inRes){return list.length?`<div class="tbl-wrap"><table><thead><tr><th scope="col">סוג</th>${inRes?'':'<th scope="col">דייר</th>'}<th scope="col">פרטים</th><th scope="col">מועד מבוקש</th><th scope="col">התקבלה</th><th scope="col">סטטוס</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
- ${list.map(q=>`<tr><td class="t">${REQK[q.kind]||q.kind}${q.opt?`<div class="small mut">${esc(q.opt)}</div>`:''}</td>${inRes?'':`<td>${resLink(q.res)}</td>`}<td style="max-width:320px">${esc(q.detail)}${q.reply?`<div class="small mut">תשובה: ${esc(q.reply)}</div>`:''}</td><td class="num">${q.when?fmtD(q.when):'—'}${q.time?` · ${esc(q.time)}`:''}</td><td class="num">${fmtD(q.date)}</td><td>${chip(...RSTAT[q.status])}</td>
- <td class="act">${q.status==='new'?`<button class="btn sm pri" data-act="reqOk" data-q="${q.id}">${q.kind==='design'||q.kind==='special'?'מענה':'אישור ותיאום'}</button> <button class="btn sm" data-act="reqNo" data-q="${q.id}">דחייה</button>`:q.status==='sched'?`<button class="btn sm" data-act="reqDone" data-q="${q.id}">${I('check')}התקיימה</button>`:''}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">אין בקשות.</div>'}
-VIEWS.requests=()=>{const f=ui.rk||'all',fs=ui.rs||'open';
+ ${list.map(q=>`<tr><td class="t">${REQK[q.kind]||q.kind}${q.opt?`<div class="small mut">${esc(q.opt)}</div>`:''}<div style="margin-top:4px">${chip(DEPTS[deptOfReq(q)],'info')}</div></td>${inRes?'':`<td>${resLink(q.res)}</td>`}<td style="max-width:320px">${esc(q.detail)}${q.reply?`<div class="small mut">תשובה: ${esc(q.reply)}</div>`:''}</td><td class="num">${q.when?fmtD(q.when):'—'}${q.time?` · ${esc(q.time)}`:''}</td><td class="num">${fmtD(q.date)}</td><td>${chip(...RSTAT[q.status])}</td>
+ <td class="act">${q.status==='new'?`<button class="btn sm pri" data-act="reqOk" data-q="${q.id}">${q.kind==='design'||q.kind==='special'?'מענה':'אישור ותיאום'}</button> <button class="btn sm" data-act="reqNo" data-q="${q.id}">דחייה</button>${seesAll()?` <button class="btn sm ghost" data-act="reqMove" data-q="${q.id}">העברה למחלקה</button>`:''}`:q.status==='sched'?`<button class="btn sm" data-act="reqDone" data-q="${q.id}">${I('check')}התקיימה</button>`:''}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">אין בקשות.</div>'}
+VIEWS.requests=()=>{if((ui.rk==='chg'||ui.rk==='tk')&&!(myDepts().includes('eng')&&sees('eng')))ui.rk='all';const f=ui.rk||'all',fs=ui.rs||'open';
  if(f==='chg'||f==='tk')return inboxHead(f)+`<section class="panel">${f==='chg'?chgTable([...ST.changes].sort((a,b)=>b.date.localeCompare(a.date))):tkTable([...ST.tickets].sort((a,b)=>a.step-b.step||b.date.localeCompare(a.date)))}</section>`;
- const list=ST.requests.filter(q=>(f==='all'||q.kind===f)&&(fs==='all'||(fs==='open'?['new','sched'].includes(q.status):q.status===fs))).sort((a,b)=>(a.status==='new'?0:1)-(b.status==='new'?0:1)||b.date.localeCompare(a.date));
+ const list=ST.requests.filter(q=>sees(deptOfReq(q))&&(f==='all'||q.kind===f)&&(fs==='all'||(fs==='open'?['new','sched'].includes(q.status):q.status===fs))).sort((a,b)=>(a.status==='new'?0:1)-(b.status==='new'?0:1)||b.date.localeCompare(a.date));
  return inboxHead(f)+
  `<section class="panel"><div class="ph2"><span class="mut small">${f==='all'?'בקשות ופגישות':esc(REQK[f])}</span>
   <div class="seg" role="group" aria-label="סטטוס">${[['open','פתוחות'],['done','טופלו'],['no','נדחו'],['all','הכול']].map(([k,t])=>`<button aria-pressed="${fs===k}" data-rs="${k}">${t}</button>`).join('')}</div></div>${reqTable(list)}</section>`};
 
-function inboxHead(f){const kinds=['all',...Object.keys(REQK).filter(k=>ST.requests.some(q=>q.kind===k)),'chg',...(ST.phase2||ST.tickets.some(t=>t.step<3)?['tk']:[])];
- const lab=k=>k==='all'?'בקשות ופגישות':k==='chg'?'שינויי דיירים':k==='tk'?'ליקויים':REQK[k];
- const cnt=k=>k==='chg'?openChg().length:k==='tk'?openTk().length:k==='all'?openReq().length:ST.requests.filter(q=>q.kind===k&&q.status==='new').length;
+function inboxHead(f){const eng=myDepts().includes('eng')&&sees('eng');const vis=visReq().filter(q=>sees(deptOfReq(q)));
+ const kinds=['all',...Object.keys(REQK).filter(k=>vis.some(q=>q.kind===k)),...(eng?['chg']:[]),...(eng&&(ST.phase2||ST.tickets.some(t=>t.step<3))?['tk']:[])];
+ const lab=k=>k==='all'?'כל הפניות':k==='chg'?'שינויי דיירים':k==='tk'?'ליקויים':REQK[k];
+ const cnt=k=>k==='chg'?openChg().length:k==='tk'?openTk().length:k==='all'?vis.filter(q=>q.status==='new').length:vis.filter(q=>q.kind===k&&q.status==='new').length;
+ const dn=d=>(d==='all'?visReq():visReq().filter(q=>deptOfReq(q)===d)).filter(q=>q.status==='new').length+(d==='all'||d==='eng'?openChg().length+openTk().length:0);
+ const md=myDepts(),sub=seesAll()?'כל פנייה מגיעה למחלקה שמטפלת בה. אפשר לסנן לפי מחלקה, ולהעביר פנייה למחלקה אחרת.':`הפניות של ${md.map(d=>DEPTS[d]).join(', ')}: רק מה שבאחריות המחלקה שלך.`;
  const act=f==='chg'?'':f==='tk'?`<button class="btn" data-act="addTk">${I('plus')}פתיחת ליקוי</button>`:`<button class="btn" data-act="addReq">${I('plus')}בקשה ידנית</button>`;
- return pageHead('INBOX','פניות דיירים','כל מה שהדיירים מבקשים באפליקציה, במקום אחד: בקשות ופגישות, שינויי דיירים וליקויים. מטפלים, והדייר מקבל עדכון.',act)+
+ return pageHead('INBOX',seesAll()?'פניות דיירים':'פניות · '+md.map(d=>DEPTS[d]).join(', '),sub,act)+
+ (seesAll()?`<div class="seg" role="group" aria-label="מחלקה" style="align-self:flex-start">${['all',...Object.keys(DEPTS)].map(d=>{const n=dn(d);return `<button aria-pressed="${(ui.rd||'all')===d}" data-rd="${d}">${d==='all'?'כל המחלקות':DEPTS[d]}${n?` · ${n}`:''}</button>`}).join('')}</div>`:'')+
  `<div class="seg" role="group" aria-label="סוג פנייה" style="align-self:flex-start">${kinds.map(k=>{const n=cnt(k);return `<button aria-pressed="${f===k}" data-rk="${k}">${lab(k)}${n?` · ${n}`:''}</button>`}).join('')}</div>`}
 /* ---- changes ---- */
 function chgTable(list,inRes){return list.length?`<div class="tbl-wrap"><table><thead><tr><th scope="col">שינוי</th>${inRes?'':'<th scope="col">דייר</th>'}<th scope="col">תאריך</th><th scope="col">מחיר</th><th scope="col">סטטוס</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
@@ -948,7 +962,7 @@ VIEWS.config=()=>pageHead('SETTINGS','הגדרות והרשאות','מי נכנ�
  <section class="panel" aria-labelledby="h-users"><div class="ph2"><h2 id="h-users">משתמשים והרשאות</h2>${chip('פעיל כרגע: מנהל המערכת בלבד','info')}</div>
  <p class="mut small" style="margin:-4px 0 14px">כל משתמש רואה רק את המסכים של התפקיד שלו. אפשר לראות איך המערכת תיראה אצל כל אחד עם "צפייה בתור".</p>
  ${[...new Set(PEOPLE.map(p=>p.dept))].map(d=>`<h3 style="margin:18px 0 6px">${esc(d)}</h3><div class="tbl-wrap"><table><thead><tr><th scope="col">שם</th><th scope="col">תפקיד</th><th scope="col">הרשאה</th><th scope="col">מה רואה</th><th scope="col">מצב</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
- ${PEOPLE.filter(p=>p.dept===d).map(p=>`<tr><td><div class="row" style="flex-wrap:nowrap"><span class="av">${esc(p.name[0])}</span><b style="font-weight:500">${esc(p.name)}</b></div></td><td>${esc(p.title)}</td><td>${chip(PERMS[p.perm].t,p.perm==='admin'?'info':'plain')}</td><td class="small" style="max-width:300px">${esc(PERMS[p.perm].d)}${p.id===REM_APPROVER?'<div><b>מאשרת כל תזכורת תשלום לפני שהיא יוצאת</b></div>':''}${p.id==='resvp'?'<div><b>מאשרת עדכונים שמזכירים מועד</b></div>':''}</td>
+ ${PEOPLE.filter(p=>p.dept===d).map(p=>`<tr><td><div class="row" style="flex-wrap:nowrap"><span class="av">${esc(p.name[0])}</span><b style="font-weight:500">${esc(p.name)}</b></div></td><td>${esc(p.title)}</td><td>${chip(PERMS[p.perm].t,p.perm==='admin'?'info':'plain')}</td><td class="small" style="max-width:300px">${esc(PERMS[p.perm].d)}${p.id===REM_APPROVER?'<div><b>מאשרת כל תזכורת תשלום לפני שהיא יוצאת</b></div>':''}${({res_pm:'פניות: פגישות עם ספקים, ביקורים ובקשות כלליות',eng_vp:'פניות: שאלות על המפרט, שינויי דיירים וליקויים',eng:'פניות: שאלות על המפרט, שינויי דיירים וליקויים',fin_vp:'פניות: שאלות על תשלומים',fin:'פניות: שאלות על תשלומים',fin_ops:'פניות: שאלות על תשלומים',legal:'פניות: שאלות על החוזה והמסמכים'})[p.perm]?`<div class="mut">${({res_pm:'פניות: פגישות עם ספקים, ביקורים ובקשות כלליות',eng_vp:'פניות: שאלות על המפרט, שינויי דיירים וליקויים',eng:'פניות: שאלות על המפרט, שינויי דיירים וליקויים',fin_vp:'פניות: שאלות על תשלומים',fin:'פניות: שאלות על תשלומים',fin_ops:'פניות: שאלות על תשלומים',legal:'פניות: שאלות על החוזה והמסמכים'})[p.perm]}</div>`:''}${p.id==='resvp'?'<div><b>מאשרת עדכונים שמזכירים מועד</b></div>':''}</td>
   <td>${p.id==='uri'?chip('פעיל','ok'):chip(p.ext?'חיצוני · ייפתח בהמשך':'ייפתח בשלב הבא','plain')}</td><td class="act">${p.id==='uri'?'':`<button class="btn sm" data-act="asUser" data-u="${p.id}">${I('eye')}צפייה בתור</button>`}</td></tr>`).join('')}</tbody></table></div>`).join('')}
  <p class="small mut" style="margin-top:12px">פתיחת משתמשים נוספים תופעל אחרי אישור ההנהלה. עד אז רק מנהל המערכת נכנס, וצפייה בתור היא להדגמה בלבד.</p></section>
  <section class="panel" aria-labelledby="h-rem"><div class="ph2"><h2 id="h-rem">תזכורות תשלום</h2></div><div class="grid2">
@@ -1001,6 +1015,7 @@ const ACT={
   ST.reminders.push({id:uid('rm'),res:r.id,pay:p.id,status:'pending',created:today(),by:CUR().name,text:'',sendOn:today()});log(`בקשת תזכורת תשלום: ${p.name} · ${r.name} · נשלחה לאישור ${P(REM_APPROVER).name}`);save();toast(`נשלח ל${P(REM_APPROVER).name} לאישור. היא תקבל התראה`);render()},
  goRem:()=>{closeDlg();ui.ptab='rem';go('payments')},
  exp:b=>EXP[b.dataset.x](),
+ reqMove:b=>{const q=ST.requests.find(x=>x.id===b.dataset.q);formDlg('העברה למחלקה',`<div class="notice"><b>${esc(rname(q.res))}</b> · ${esc(q.detail)}</div>${fld('mv-d','המחלקה שתטפל',deptOfReq(q),'select',{options:Object.entries(DEPTS)})}`,'העברה',()=>{q.dept=$('#mv-d').value;log(`פנייה הועברה ל${DEPTS[q.dept]} · ${rname(q.res)}`);toast('הפנייה הועברה ל'+DEPTS[q.dept])})},
  reinvite:b=>{const r=resOf(b.dataset.res);r.invite=r.invite||{};if(r.invite.st!=='joined')r.invite.st='invited';r.invite.at=today();log(`הזמנה לאפליקציה נשלחה${b.textContent.includes('שוב')?' שוב':''} · ${r.name}`);save();toast(`ההזמנה נשלחה ל${r.name}${r.email?' · '+r.email:''}`);render()},
  asBack:()=>switchAs('uri'),
  asUser:b=>switchAs(b.dataset.u),
@@ -1020,7 +1035,7 @@ const ACT={
    log(`${ans?'מענה':'תיאום'} · ${REQK[q.kind]} · ${r?.name}`);toast(ans?'המענה נשלח לדייר':'אושר. הדייר קיבל הודעה עם המועד')})},
  reqNo:b=>{const q=ST.requests.find(x=>x.id===b.dataset.q),r=resOf(q.res);formDlg('דחיית הבקשה',fld('n-msg','הסבר לדייר','','textarea',{req:1,hint:'הדייר יראה את ההסבר באפליקציה'}),'דחייה ושליחה',()=>{q.status='no';q.reply=$('#n-msg').value.trim();(ST.threads[q.res]||(ST.threads[q.res]=[])).push({me:true,t:q.reply,at:new Date().toISOString()});log('דחיית בקשה · '+REQK[q.kind]+' · '+r?.name);toast('הבקשה נדחתה והדייר עודכן')})},
  reqDone:b=>{const q=ST.requests.find(x=>x.id===b.dataset.q);q.status='done';log('סימון כטופל · '+REQK[q.kind]+' · '+rname(q.res));save();toast('סומן שהפגישה התקיימה');render()},
- addReq:()=>formDlg('בקשה ידנית',`<div class="grid2">${fld('a-res','דייר','','select',{options:ST.residents.map(r=>[r.id,r.name])})}${fld('a-kind','סוג','supplier','select',{options:Object.entries(REQK)})}${fld('a-opt','ספק (לפגישה עם ספק)','','select',{options:[['','—'],...ST.suppliers.map(s=>[s.cat,s.cat])]})}${fld('a-when','מועד מבוקש','','date')}${fld('a-det','פרטים','','textarea',{req:1,span:1})}</div>`,'הוספה',()=>{
+ addReq:()=>formDlg('בקשה ידנית',`<div class="grid2">${fld('a-res','דייר','','select',{options:ST.residents.map(r=>[r.id,r.name])})}${fld('a-kind','סוג','supplier','select',{options:Object.entries(REQK)})}${fld('a-opt','ספק או נושא','','select',{options:[['','—'],...ST.suppliers.map(s=>[s.cat,'ספק: '+s.cat]),...Object.keys(TOPIC).map(t=>[t,'נושא: '+t])]})}${fld('a-when','מועד מבוקש','','date')}${fld('a-det','פרטים','','textarea',{req:1,span:1})}</div>`,'הוספה',()=>{
   ST.requests.push({id:uid('q'),res:$('#a-res').value,kind:$('#a-kind').value,opt:$('#a-opt').value,detail:$('#a-det').value.trim(),when:$('#a-when').value,time:'',status:'new',date:today()});log('הוספת בקשה ידנית · '+rname($('#a-res').value));toast('הבקשה נוספה')}),
  quote:b=>{const c=ST.changes.find(x=>x.id===b.dataset.c);formDlg('שליחת הצעת מחיר',`<div class="notice"><b>${esc(rname(c.res))}</b> · ${esc(c.title)}</div><div class="grid2">${fld('qp','מחיר (₪, כולל מע״מ)',c.price||'','number',{req:1,attrs:'min="0"'})}${fld('qd','תוקף ההצעה','','date')}</div>${fld('qn','הערות ההנדסה','','textarea')}<div class="field"><span class="lbl">קובץ ההצעה (לא חובה)</span><div class="row"><button type="button" class="btn sm" id="qf">${I('upload')}צירוף קובץ</button><span class="small mut" id="qfn">לא צורף</span></div></div>`,'שליחה לדייר לאישור',async()=>{
   c.price=+$('#qp').value;c.status='quote';if(qFile){const id=uid('d');await FS.put(id,qFile);ST.docs.push({id,res:c.res,cat:'שינויי דיירים',title:'הצעת מחיר · '+c.title,file:qFile.name,type:typeOf(qFile.name),size:qFile.size,src:'u:'+id,date:today(),visible:true})}qFile=null;log(`הצעת מחיר נשלחה: ${c.title} · ${nis(c.price)} · ${rname(c.res)}`);toast('ההצעה נשלחה. הדייר יאשר בחתימה דיגיטלית')});
@@ -1066,6 +1081,7 @@ document.addEventListener('click',e=>{
  const rt=e.target.closest('[data-rtab]');if(rt){ui.rtab=rt.dataset.rtab;render();$(`[data-rtab="${ui.rtab}"]`).focus();return}
  const rk=e.target.closest('[data-rk]');if(rk){ui.rk=rk.dataset.rk;render();$(`[data-rk="${ui.rk}"]`).focus();return}
  const rs=e.target.closest('[data-rs]');if(rs){ui.rs=rs.dataset.rs;render();$(`[data-rs="${ui.rs}"]`).focus();return}
+ const rdb=e.target.closest('[data-rd]');if(rdb){ui.rd=rdb.dataset.rd;render();$(`[data-rd="${ui.rd}"]`).focus();return}
  const pt=e.target.closest('[data-ptab]');if(pt){ui.ptab=pt.dataset.ptab;render();$(`[data-ptab="${ui.ptab}"]`).focus();return}
  const rt2=e.target.closest('[data-remt]');if(rt2){ui.remt=rt2.dataset.remt;render();$(`[data-remt="${ui.remt}"]`).focus();return}
  const gc=e.target.closest('[data-gcat]');if(gc){ui.gcat=gc.dataset.gcat;render();$(`[data-gcat="${ui.gcat}"]`).focus();return}
