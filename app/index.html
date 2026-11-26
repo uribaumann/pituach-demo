@@ -2187,17 +2187,10 @@ const LEGAL={
   <h4>מה עוד לא נבדק</h4><p>בדיקת נגישות מלאה בידי מורשה נגישות עוד לא בוצעה. היא תבוצע לפני העלייה לאוויר.</p>
   <h4>רכז הנגישות</h4><p>אם נתקלת בבעיה, אפשר לפנות אלינו דרך ״הודעה״ באפליקציה, ונטפל בתוך 14 ימים. פרטי רכז הנגישות יתווספו לפני העלייה לאוויר.</p>
   <p class="small mut">עודכן לאחרונה: נובמבר 2026</p>`]};
-const legalSheet=k=>openSheet(`<h3>${LEGAL[k][0]}</h3>${DRAFT}<div class="legal">${LEGAL[k][1]}</div><button class="btn block" id="legalBack" style="margin-top:18px">${S.consent?'סגירה':'חזרה'}</button>`,sh=>{$('#legalBack',sh).onclick=()=>{closeSheet();if(!S.consent)setTimeout(firstRun,300)}});
+const legalSheet=k=>openSheet(`<h3>${LEGAL[k][0]}</h3>${DRAFT}<div class="legal">${LEGAL[k][1]}</div><button class="btn block" id="legalBack" style="margin-top:18px">סגירה</button>`,sh=>{$('#legalBack',sh).onclick=()=>{closeSheet()}});
 /* demo bar only when asked for (claude.ai preview, ?demo, or the switch in settings) */
 const demoOn=()=>S.demo===true||/[?&]demo/.test(location.search)||(()=>{try{return window.top!==window.self}catch(e){return true}})();
 function applyDemo(){const on=demoOn();$('#phone').classList.toggle('demo',on);if(!on&&S.role==='dev'){S.role='res';save();applyRole();renderAll()}}
-function firstRun(){if(S.consent||S.role!=='res')return;
-  openSheet(`<div class="latin">WELCOME</div><h3 style="margin-top:6px">ברוכים הבאים לאפליקציית הדיירים</h3>
-   <p class="mut" style="margin:-6px 0 14px">כאן תמצאו את שלבי הבנייה, התשלומים, המסמכים והבקשות שלכם. לפני שמתחילים:</p>
-   <div class="card"><div class="list-item"><div class="grow small">חוזה המכר הוא המסמך הקובע. המידע כאן נועד לעדכן ולשרת.</div></div><div class="list-item"><div class="grow small">המידע שלכם משמש רק לניהול הקשר איתכם כרוכשים.</div></div></div>
-   <div class="row" style="gap:14px;margin:6px 0 14px;flex-wrap:wrap"><button class="link" data-open="privacy">מדיניות פרטיות</button><button class="link" data-open="terms">תנאי שימוש</button><button class="link" data-open="access">הצהרת נגישות</button></div>
-   <label class="row" style="gap:10px;align-items:flex-start;margin-bottom:16px"><input type="checkbox" id="mkOpt" style="width:20px;height:20px;margin-top:2px"><span class="small">אשמח לקבל גם עדכונים שיווקיים על אירועים ופרויקטים של החברה. לא חובה, ואפשר לבטל בכל רגע.</span></label>
-   <button class="btn gold block" id="consentOk">הבנתי, אפשר להתחיל</button>`,sh=>{$('#consentOk',sh).onclick=()=>{S.consent=new Date().toISOString();S.prefs.marketing=$('#mkOpt',sh).checked;save();closeSheet();setTimeout(()=>PWA.banner(),900)}})}
 
 /* ---------- install as an app (PWA) ---------- */
 const PWA=(()=>{const framed=(()=>{try{return window.top!==window.self}catch(e){return true}})();
@@ -2218,7 +2211,7 @@ const PWA=(()=>{const framed=(()=>{try{return window.top!==window.self}catch(e){
       <ol class="ios-steps"><li><span>לוחצים על כפתור השיתוף ${share} בסרגל של Safari</span></li><li><span>גוללים ובוחרים <b>"הוסף למסך הבית"</b> ${plus}</span></li><li><span>לוחצים <b>"הוסף"</b> למעלה</span></li></ol>
       <p class="small mut">ההתקנה עובדת מ-Safari. אם פתחתם את הקישור מוואטסאפ או מאפליקציה אחרת, פתחו אותו קודם ב-Safari.</p>
       <button class="btn block" data-close="1" style="margin-top:16px">הבנתי</button>`)}
-  function banner(){if(!can()||dismissed()||$('#install')||S.role!=='res'||!S.consent)return;const ph=$('.phone');if(!ph)return;
+  function banner(){if(!can()||dismissed()||$('#install')||S.role!=='res')return;const ph=$('.phone');if(!ph)return;
     ph.insertAdjacentHTML('beforeend',`<div class="install" id="install" role="region" aria-label="התקנת האפליקציה"><img src="apple-touch-icon.png" alt=""><div class="t"><b>להוסיף את Pituach למסך הבית</b><span class="mut">גישה בלחיצה אחת, במסך מלא</span></div><button class="go" id="installGo">התקנה</button><button class="x" id="installX" aria-label="לא עכשיו"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>`);
     $('#installGo').onclick=install;$('#installX').onclick=()=>{try{localStorage.setItem('pwa-dismiss',Date.now()+3*864e5)}catch(e){}$('#install').remove()}}
   return{can,install,banner,standalone}})();
@@ -2228,7 +2221,7 @@ setTimeout(()=>PWA.banner(),3200);
 $$('[data-a]').forEach(i=>i.src=A[i.dataset.a]);
 let noSplash=false;try{noSplash=sessionStorage.getItem('nosplash')==='1';sessionStorage.removeItem('nosplash')}catch(e){}
 if(noSplash)$('#splash').style.display='none';
-setTimeout(()=>$('#splash').classList.add('off'),1400);applyDemo();setTimeout(firstRun,1700);$('#splash').onclick=()=>$('#splash').classList.add('off');
+setTimeout(()=>$('#splash').classList.add('off'),1400);applyDemo();$('#splash').onclick=()=>$('#splash').classList.add('off');
 applyAcc();
 if(S.scope==='pilot')S.stage='build';applyScope();
 setStage(S.stage);applyRole();
