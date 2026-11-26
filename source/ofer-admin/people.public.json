@@ -4,70 +4,89 @@
 "name": "אורי",
 "title": "אחראי קשרי לקוחות · אחראי האפליקציה",
 "dept": "מגורים ושיווק",
-"perm": "admin"
+"perm": "admin",
+"email": ""
 },
 {
 "id": "resvp",
 "name": "סמנכ״לית מגורים",
 "title": "סמנכ״לית מגורים",
 "dept": "מגורים ושיווק",
-"perm": "res_vp"
+"perm": "res_vp",
+"email": ""
 },
 {
 "id": "pm",
 "name": "מנהלת פרויקטים",
 "title": "מנהלת פרויקטים",
 "dept": "מגורים ושיווק",
-"perm": "res_pm"
+"perm": "res_pm",
+"email": ""
 },
 {
 "id": "engvp",
 "name": "סמנכ״ל הנדסה",
 "title": "סמנכ״ל הנדסה",
 "dept": "הנדסה",
-"perm": "eng_vp"
+"perm": "eng_vp",
+"email": ""
 },
 {
 "id": "arch",
 "name": "אדריכלית",
 "title": "אדריכלית",
 "dept": "הנדסה",
-"perm": "eng"
+"perm": "eng",
+"email": ""
 },
 {
 "id": "planco",
 "name": "מתאמת תכנון",
 "title": "מתאמת תכנון",
 "dept": "הנדסה",
-"perm": "eng"
+"perm": "eng",
+"email": ""
+},
+{
+"id": "insp",
+"name": "מפקח הדיירים",
+"title": "מפקח מטעם הדיירים · טרם מונה",
+"dept": "הנדסה",
+"perm": "inspector",
+"vacant": true,
+"email": ""
 },
 {
 "id": "cfo",
 "name": "סמנכ״ל כספים",
 "title": "סמנכ״ל כספים",
 "dept": "כספים",
-"perm": "fin_vp"
+"perm": "fin_vp",
+"email": ""
 },
 {
 "id": "ctrl",
 "name": "חשבת",
 "title": "חשבת",
 "dept": "כספים",
-"perm": "fin"
+"perm": "fin",
+"email": ""
 },
 {
 "id": "books",
 "name": "מנהלת חשבונות",
 "title": "מנהלת חשבונות",
 "dept": "כספים",
-"perm": "fin_ops"
+"perm": "fin_ops",
+"email": ""
 },
 {
 "id": "legal",
 "name": "סמנכ״לית משפטית",
 "title": "סמנכ״לית משפטית",
 "dept": "משפטית",
-"perm": "legal"
+"perm": "legal",
+"email": ""
 },
 {
 "id": "lx1",
@@ -75,7 +94,8 @@
 "title": "משרד עורכי דין חיצוני",
 "dept": "משפטית · חיצוני",
 "perm": "legal_ext",
-"ext": true
+"ext": true,
+"email": ""
 },
 {
 "id": "lx2",
@@ -83,7 +103,8 @@
 "title": "משרד עורכי דין חיצוני",
 "dept": "משפטית · חיצוני",
 "perm": "legal_ext",
-"ext": true
+"ext": true,
+"email": ""
 },
 {
 "id": "lx3",
@@ -91,7 +112,8 @@
 "title": "משרד עורכי דין חיצוני",
 "dept": "משפטית · חיצוני",
 "perm": "legal_ext",
-"ext": true
+"ext": true,
+"email": ""
 },
 {
 "id": "mk1",
@@ -99,7 +121,8 @@
 "title": "משווק הפרויקט",
 "dept": "שיווק · חיצוני",
 "perm": "mkt_ext",
-"ext": true
+"ext": true,
+"email": ""
 },
 {
 "id": "mk2",
@@ -107,7 +130,8 @@
 "title": "משווקת",
 "dept": "שיווק · חיצוני",
 "perm": "mkt_ext",
-"ext": true
+"ext": true,
+"email": ""
 },
 {
 "id": "mk3",
@@ -115,7 +139,8 @@
 "title": "משווקת",
 "dept": "שיווק · חיצוני",
 "perm": "mkt_ext",
-"ext": true
+"ext": true,
+"email": ""
 },
 {
 "id": "mk4",
@@ -123,13 +148,15 @@
 "title": "משווק",
 "dept": "שיווק · חיצוני",
 "perm": "mkt_ext",
-"ext": true
+"ext": true,
+"email": ""
 },
 {
 "id": "ceo",
 "name": "מנכ״לית",
 "title": "מנכ״לית",
 "dept": "הנהלה",
-"perm": "ceo"
+"perm": "ceo",
+"email": ""
 }
 ]

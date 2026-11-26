@@ -432,6 +432,7 @@ const PERMS={
  fin:{t:'כספים',r:['overview','requests','payments','reminders','residents','docs'],d:'תשלומים, מדד, קבלות ותזכורות'},
  fin_ops:{t:'הנהלת חשבונות',r:['overview','payments','requests','reminders'],d:'תשלומים ותזכורות. כל תזכורת לדייר יוצאת רק באישורה'},
  legal:{t:'משפטית',r:['overview','requests','docs','construction','broadcast','activity'],d:'חוזים ומסמכים, ונוסחי עדכונים והודעות'},
+ inspector:{t:'פיקוח דיירים',r:['overview','requests','changes','docs','construction'],d:'עונה לדיירים על שאלות טכניות: מפרט, תוכניות ושינויים'},
  legal_ext:{t:'משפטית · חיצוני',r:['docs'],d:'חוזים וערבויות בלבד'},
  mkt_ext:{t:'שיווק · חיצוני',r:['residents'],d:'צירוף רוכש חדש ביום החתימה'},
  ceo:{t:'הנהלה',r:['overview','residents','payments','construction','activity'],d:'תמונת מצב לצפייה'}};
@@ -461,7 +462,7 @@ const nextPay=r=>payRows(r).find(p=>!p.paid);
 const DEPTS={res:'מגורים',eng:'הנדסה',fin:'כספים',legal:'משפטית'};
 const TOPIC={'הדירה והמפרט':'eng','תשלומים':'fin','החוזה והמסמכים':'legal','אחר':'res'};
 const deptOfReq=q=>q.dept||(q.kind==='design'?'eng':q.kind==='special'?(TOPIC[q.opt]||'res'):'res');
-const myDepts=()=>({res_pm:['res'],eng_vp:['eng'],eng:['eng'],fin_vp:['fin'],fin:['fin'],fin_ops:['fin'],legal:['legal']}[CUR().perm]||Object.keys(DEPTS));
+const myDepts=()=>({res_pm:['res'],eng_vp:['eng'],eng:['eng'],inspector:['eng'],fin_vp:['fin'],fin:['fin'],fin_ops:['fin'],legal:['legal']}[CUR().perm]||Object.keys(DEPTS));
 const seesAll=()=>myDepts().length>1;
 const sees=d=>myDepts().includes(d)&&(!ui.rd||ui.rd==='all'||ui.rd===d||!seesAll());
 const visReq=()=>ST.requests.filter(q=>myDepts().includes(deptOfReq(q)));
@@ -850,8 +851,8 @@ VIEWS.config=()=>pageHead('SETTINGS','הגדרות והרשאות','מי נכנ�
  <section class="panel" aria-labelledby="h-users"><div class="ph2"><h2 id="h-users">משתמשים והרשאות</h2>${chip('פעיל כרגע: מנהל המערכת בלבד','info')}</div>
  <p class="mut small" style="margin:-4px 0 14px">כל משתמש רואה רק את המסכים של התפקיד שלו. אפשר לראות איך המערכת תיראה אצל כל אחד עם "צפייה בתור".</p>
  ${[...new Set(PEOPLE.map(p=>p.dept))].map(d=>`<h3 style="margin:18px 0 6px">${esc(d)}</h3><div class="tbl-wrap"><table><thead><tr><th scope="col">שם</th><th scope="col">תפקיד</th><th scope="col">הרשאה</th><th scope="col">מה רואה</th><th scope="col">מצב</th><th scope="col"><span class="sr">פעולות</span></th></tr></thead><tbody>
- ${PEOPLE.filter(p=>p.dept===d).map(p=>`<tr><td><div class="row" style="flex-wrap:nowrap"><span class="av">${esc(p.name[0])}</span><b style="font-weight:500">${esc(p.name)}</b></div></td><td>${esc(p.title)}</td><td>${chip(PERMS[p.perm].t,p.perm==='admin'?'info':'plain')}</td><td class="small" style="max-width:300px">${esc(PERMS[p.perm].d)}${p.id===REM_APPROVER?'<div><b>מאשרת כל תזכורת תשלום לפני שהיא יוצאת</b></div>':''}${({res_pm:'פניות: פגישות עם ספקים, ביקורים ובקשות כלליות',eng_vp:'פניות: שאלות על המפרט, שינויי דיירים וליקויים',eng:'פניות: שאלות על המפרט, שינויי דיירים וליקויים',fin_vp:'פניות: שאלות על תשלומים',fin:'פניות: שאלות על תשלומים',fin_ops:'פניות: שאלות על תשלומים',legal:'פניות: שאלות על החוזה והמסמכים'})[p.perm]?`<div class="mut">${({res_pm:'פניות: פגישות עם ספקים, ביקורים ובקשות כלליות',eng_vp:'פניות: שאלות על המפרט, שינויי דיירים וליקויים',eng:'פניות: שאלות על המפרט, שינויי דיירים וליקויים',fin_vp:'פניות: שאלות על תשלומים',fin:'פניות: שאלות על תשלומים',fin_ops:'פניות: שאלות על תשלומים',legal:'פניות: שאלות על החוזה והמסמכים'})[p.perm]}</div>`:''}${p.id==='resvp'?'<div><b>מאשרת עדכונים שמזכירים מועד</b></div>':''}</td>
-  <td>${p.id==='uri'?chip('פעיל','ok'):chip(p.ext?'חיצוני · ייפתח בהמשך':'ייפתח בשלב הבא','plain')}</td><td class="act">${p.id==='uri'?'':`<button class="btn sm" data-act="asUser" data-u="${p.id}">${I('eye')}צפייה בתור</button>`}</td></tr>`).join('')}</tbody></table></div>`).join('')}
+ ${PEOPLE.filter(p=>p.dept===d).map(p=>`<tr><td><div class="row" style="flex-wrap:nowrap"><span class="av">${esc(p.name[0])}</span><div><b style="font-weight:500">${esc(p.name)}</b>${p.email?`<div class="small mut" dir="ltr" style="text-align:right">${esc(p.email)}</div>`:''}</div></div></td><td>${esc(p.title)}</td><td>${chip(PERMS[p.perm].t,p.perm==='admin'?'info':'plain')}</td><td class="small" style="max-width:300px">${esc(PERMS[p.perm].d)}${p.id===REM_APPROVER?'<div><b>מאשרת כל תזכורת תשלום לפני שהיא יוצאת</b></div>':''}${({inspector:'פניות: שאלות טכניות של הדיירים על המפרט והתוכניות',res_pm:'פניות: פגישות עם ספקים, ביקורים ובקשות כלליות',eng_vp:'פניות: שאלות על המפרט, שינויי דיירים וליקויים',eng:'פניות: שאלות על המפרט, שינויי דיירים וליקויים',fin_vp:'פניות: שאלות על תשלומים',fin:'פניות: שאלות על תשלומים',fin_ops:'פניות: שאלות על תשלומים',legal:'פניות: שאלות על החוזה והמסמכים'})[p.perm]?`<div class="mut">${({inspector:'פניות: שאלות טכניות של הדיירים על המפרט והתוכניות',res_pm:'פניות: פגישות עם ספקים, ביקורים ובקשות כלליות',eng_vp:'פניות: שאלות על המפרט, שינויי דיירים וליקויים',eng:'פניות: שאלות על המפרט, שינויי דיירים וליקויים',fin_vp:'פניות: שאלות על תשלומים',fin:'פניות: שאלות על תשלומים',fin_ops:'פניות: שאלות על תשלומים',legal:'פניות: שאלות על החוזה והמסמכים'})[p.perm]}</div>`:''}${p.id==='resvp'?'<div><b>מאשרת עדכונים שמזכירים מועד</b></div>':''}</td>
+  <td>${p.id==='uri'?chip('פעיל','ok'):p.vacant?chip('טרם מונה','warn'):chip(p.ext?'חיצוני · ייפתח בהמשך':'ייפתח בשלב הבא','plain')}</td><td class="act">${p.id==='uri'?'':`<button class="btn sm" data-act="asUser" data-u="${p.id}">${I('eye')}צפייה בתור</button>`}</td></tr>`).join('')}</tbody></table></div>`).join('')}
  <p class="small mut" style="margin-top:12px">פתיחת משתמשים נוספים תופעל אחרי אישור ההנהלה. עד אז רק מנהל המערכת נכנס, וצפייה בתור היא להדגמה בלבד.</p></section>
  <section class="panel" aria-labelledby="h-rem"><div class="ph2"><h2 id="h-rem">תזכורות תשלום</h2></div><div class="grid2">
   <div class="field"><span class="lbl">מאשרת לפני שליחה</span><div class="row"><span class="av">${esc(P(REM_APPROVER).name[0])}</span><span><b style="font-weight:500">${esc(P(REM_APPROVER).name)}</b><div class="small mut">${esc(P(REM_APPROVER).title)}</div></span></div></div>
@@ -898,6 +899,8 @@ function mailDlg(m){m={to:'',cc:'',bcc:'',subject:'',body:'',...m};
  $('#ml-owa').onclick=()=>{log('נפתח מייל ב-Outlook: '+cur().subject)};$('#ml-app').onclick=()=>{log('נפתח מייל ב-Outlook: '+cur().subject)};
  $('#ml-copy').onclick=()=>{const x=cur();const t=`אל: ${x.to}\nנושא: ${x.subject}\n\n${x.body}`;navigator.clipboard?.writeText(t).then(()=>toast('הנוסח הועתק. מדביקים ב-Outlook'),()=>{$('#ml-body').select();toast('מסמנים ומעתיקים עם Ctrl+C')})}}
 const resMail=id=>(resOf(id)||{}).email||'';
+const DEPT_PEOPLE={res:['pm','resvp'],eng:['engvp','arch','planco','insp'],fin:['cfo','ctrl','books'],legal:['legal','lx1']};
+const deptMails=d=>(DEPT_PEOPLE[d]||[]).map(id=>P(id).email).filter(Boolean).join('; ');
 const hi=id=>{const r=resOf(id);return r?`שלום ${first(r.name)},\n\n`:''};
 /* ================= dialogs ================= */
 let lastFocus=null;
@@ -939,7 +942,7 @@ const ACT={
    <div class="list"><button class="li" style="border:0;background:none;text-align:right;width:100%" id="mq-res"><span class="ic">${I('users')}</span><span class="grow"><b style="font-weight:500">תשובה לדייר</b><div class="small mut">וואטסאפ או שיתוף מהטלפון · <span dir="ltr">${esc(r?.phone||'')}</span></div></span>${I('chev')}</button>
    <button class="li" style="border:0;background:none;text-align:right;width:100%" id="mq-fwd"><span class="ic">${I('inbox')}</span><span class="grow"><b style="font-weight:500">העברה ל${esc(d)}</b><div class="small mut">עם פרטי הפנייה, לטיפול</div></span>${I('chev')}</button></div></div></div>`);
   $('#mq-res').onclick=()=>shareDlg({res:q.res,title:t,text:hiTxt(q.res)+(q.reply||'קיבלנו את פנייתך ונחזור אליך בהקדם.')+signTxt()});
-  $('#mq-fwd').onclick=()=>mailDlg({to:'',cc:ST.mail.box,subject:`פנייה לטיפול ${d} · ${r?.name||''} · ${t}`,body:`שלום,\n\nהתקבלה פנייה מ${r?.name||''}, ${r?.apt||''} (דירה ${r?.unit||''}):\n"${q.detail}"\n\nהתקבלה ב-${fmtD(q.date)}. אשמח לטיפולכם ולעדכון.`})},
+  $('#mq-fwd').onclick=()=>mailDlg({to:deptMails(deptOfReq(q)),cc:ST.mail.box,subject:`פנייה לטיפול ${d} · ${r?.name||''} · ${t}`,body:`שלום,\n\nהתקבלה פנייה מ${r?.name||''}, ${r?.apt||''} (דירה ${r?.unit||''}):\n"${q.detail}"\n\nהתקבלה ב-${fmtD(q.date)}. אשמח לטיפולכם ולעדכון.`})},
  mailRes:b=>{const r=resOf(b.dataset.res);const t=$('#mt-'+r.id)?.value.trim();shareDlg({res:r.id,text:hiTxt(r.id)+(t||'')+signTxt()})},
  mailDoc:b=>{const d=ST.docs.find(x=>x.id===b.dataset.doc);if(d.res){shareDlg({res:d.res,title:d.title,text:hiTxt(d.res)+`המסמך "${d.title}" זמין עכשיו בתיק הדירה באפליקציה, בלשונית המסמכים:\n${APP_URL}`+signTxt()});return}mailDlg({to:d.res?resMail(d.res):'',subject:`פיתוח על הים · ${d.title}`,body:(d.res?hi(d.res):'שלום,\n\n')+`המסמך "${d.title}" זמין עכשיו בתיק הדירה באפליקציה, בלשונית המסמכים.`+(d.res?'':'\n(לצרף את הקובץ ב-Outlook)')})},
  mailRem:b=>{const x=ST.reminders.find(y=>y.id===b.dataset.r),r=resOf(x.res),p=r&&payRows(r).find(y=>y.id===x.pay);if(!p)return;shareDlg({res:r.id,title:'תזכורת תשלום',text:x.text||remText(r,p)})},
