@@ -25,7 +25,7 @@ b{font-weight:500}
 svg{stroke-width:1.35}
 .serif{font-family:var(--serif)}
 .stage{min-height:100%;display:flex;align-items:center;justify-content:center;gap:56px;padding:24px}
-.aside-info{max-width:300px}
+.aside-info{display:none!important}
 .aside-info h1{font-family:var(--serif);font-weight:300;font-size:36px;line-height:1.15;margin-bottom:14px}
 .aside-info p{color:var(--mut);margin-bottom:12px}
 .aside-info .of{width:112px;margin-bottom:26px;display:block}
@@ -825,7 +825,8 @@ const EN={
 "הבנתי": "Got it",
 "האפליקציה הותקנה במסך הבית": "The app was added to your Home Screen",
 "לפתוח את האפליקציה כמו כל אפליקציה בטלפון": "Open it like any other app on your phone",
-"ההתקנה עובדת מ-Safari. אם פתחתם את הקישור מוואטסאפ או מאפליקציה אחרת, פתחו אותו קודם ב-Safari.": "Installing works from Safari. If you opened the link from WhatsApp or another app, open it in Safari first."
+"ההתקנה עובדת מ-Safari. אם פתחתם את הקישור מוואטסאפ או מאפליקציה אחרת, פתחו אותו קודם ב-Safari.": "Installing works from Safari. If you opened the link from WhatsApp or another app, open it in Safari first.",
+"חזרה לנתוני ההתחלה": "Back to the starting data"
 },
 "f": {
 "בוקר טוב, ": "Good morning, ",
@@ -1968,6 +1969,7 @@ const SHEETS={
       <div class="list-item"><div class="grow"><b style="font-size:14.5px">שפה</b></div><div class="opt-row"><button class="opt ${LANG==='he'?'on':''}" data-lang="he">עברית</button><button class="opt ${LANG==='en'?'on':''}" data-lang="en">English</button></div></div>
       ${PWA.can()?`<button class="rowlink" style="border:0;border-bottom:1px solid var(--line);padding:14px 0" id="installRow"><span class="grow"><b>התקנה במסך הבית</b><span class="small mut">לפתוח את האפליקציה כמו כל אפליקציה בטלפון</span></span><span class="chev">${ICON.chev}</span></button>`:''}
       <button class="rowlink" style="border:0;padding:14px 0 2px" data-open="a11y"><span class="grow"><b>תפריט הנגישות</b><span class="small mut">גודל טקסט, ניגודיות, אנימציות</span></span><span class="chev">${ICON.chev}</span></button></div>
+    <button class="rowlink" style="border:0;padding:4px 0 14px" onclick="document.getElementById('resetBtn').click()"><span class="grow"><b>איפוס נתוני הדמו</b><span class="small mut">חזרה לנתוני ההתחלה</span></span><span class="chev">${ICON.chev}</span></button>
     <p class="small mut">הנתונים האישיים והפיננסיים מוצפנים ונשמרים לפי חוק הגנת הפרטיות.</p><div style="text-align:center;margin-top:18px"><img src="${A.ofer}" alt="Ofer Investments" style="width:84px;opacity:.8"></div>`,sh=>{
       const ir=$('#installRow',sh);if(ir)ir.onclick=()=>PWA.install();
       $$('[data-pref]',sh).forEach(b=>b.onclick=()=>{const k=b.dataset.pref;S.prefs[k]=!S.prefs[k];b.classList.toggle('on',S.prefs[k]);b.setAttribute('aria-checked',S.prefs[k]);save();renderAll()});
