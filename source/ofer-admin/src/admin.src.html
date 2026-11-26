@@ -428,7 +428,7 @@ const daysSince=d=>Math.floor((new Date(today())-new Date(d))/864e5);
 function invState(r){const v=r.invite||{st:'none'};if(v.st==='joined'){const n=daysSince(v.seen||v.joined);return n>30?{c:'warn',t:`לא נכנס ${n} ימים`,k:'idle'}:{c:'ok',t:'הצטרף',k:'joined'}}
  return v.st==='invited'?{c:'plain',t:'הוזמן, עוד לא הצטרף',k:'invited'}:{c:'bad',t:'לא הוזמן',k:'none'}}
 const KEY='pituach-admin-v1';
-let ST=LS.get(KEY);if(!ST||ST.v!==1)ST=seed();ST.reminders=ST.reminders||[];ST.remLead=ST.remLead||14;ST.phase2=!!ST.phase2;[{id:'q5',res:'tamar',kind:'special',opt:'תשלומים',detail:'אפשר לפרוס את תשלום סיום החפירה לשני תשלומים?',when:'',time:'',status:'new',date:'2026-11-23'},{id:'q6',res:'yonatan',kind:'special',opt:'החוזה והמסמכים',detail:'מתי תירשם הערת האזהרה לטובתנו, ואיפה אפשר לראות אותה?',when:'',time:'',status:'new',date:'2026-11-21'}].forEach(q=>{if(!ST.requests.some(x=>x.id===q.id))ST.requests.push(q)});if(ST.host.role==='מנהל קשרי הדיירים שלך')ST.host.role='אחראי קשרי דיירים';ST.residents.forEach(r=>{if(!r.invite)r.invite=structuredClone(INV0[r.id]||{st:'none'})});
+let ST=LS.get(KEY);if(!ST||ST.v!==1)ST=seed();ST.reminders=ST.reminders||[];ST.remLead=ST.remLead||14;ST.phase2=!!ST.phase2;if(ST.skipLogin===undefined)ST.skipLogin=true;[{id:'q5',res:'tamar',kind:'special',opt:'תשלומים',detail:'אפשר לפרוס את תשלום סיום החפירה לשני תשלומים?',when:'',time:'',status:'new',date:'2026-11-23'},{id:'q6',res:'yonatan',kind:'special',opt:'החוזה והמסמכים',detail:'מתי תירשם הערת האזהרה לטובתנו, ואיפה אפשר לראות אותה?',when:'',time:'',status:'new',date:'2026-11-21'}].forEach(q=>{if(!ST.requests.some(x=>x.id===q.id))ST.requests.push(q)});if(ST.host.role==='מנהל קשרי הדיירים שלך')ST.host.role='אחראי קשרי דיירים';ST.residents.forEach(r=>{if(!r.invite)r.invite=structuredClone(INV0[r.id]||{st:'none'})});
 const save=()=>LS.set(KEY,ST);
 function log(t){ST.log.unshift({at:new Date().toISOString(),who:CUR().name,t});ST.log=ST.log.slice(0,300);save()}
 const resOf=id=>ST.residents.find(r=>r.id===id);
@@ -835,7 +835,8 @@ VIEWS.config=()=>pageHead('SETTINGS','הגדרות והרשאות','מי נכנ�
   <div class="field"><span class="lbl">מאשרת לפני שליחה</span><div class="row"><span class="av">${esc(P(REM_APPROVER).name[0])}</span><span><b style="font-weight:500">${esc(P(REM_APPROVER).name)}</b><div class="small mut">${esc(P(REM_APPROVER).title)}</div></span></div></div>
   ${fld('remLead','כמה ימים לפני המועד לשלוח',ST.remLead,'select',{options:[[7,'7 ימים'],[14,'14 ימים'],[21,'21 ימים'],[30,'30 ימים']]})}</div></section>
  <div class="cols even"><section class="panel" aria-labelledby="h-pw"><div class="ph2"><h2 id="h-pw">החלפת סיסמה</h2></div><form id="pwForm" novalidate><div class="grid2">${fld('pw-old','סיסמה נוכחית','','password',{req:1,span:1,attrs:'autocomplete="current-password" dir="ltr"'})}${fld('pw-new','סיסמה חדשה','','password',{req:1,attrs:'autocomplete="new-password" dir="ltr" minlength="10"',hint:'לפחות 10 תווים, עם אות גדולה, ספרה ותו מיוחד'})}${fld('pw-new2','אימות הסיסמה החדשה','','password',{req:1,attrs:'autocomplete="new-password" dir="ltr"'})}</div><div id="pwMsg" role="alert" style="margin-top:12px" hidden></div><button class="btn pri" style="margin-top:14px" type="submit">${I('key')}עדכון סיסמה</button></form></section>
- <section class="panel" aria-labelledby="h-sec"><div class="ph2"><h2 id="h-sec">אבטחה</h2></div><div class="list">
+ <section class="panel" aria-labelledby="h-sec"><div class="ph2"><h2 id="h-sec">אבטחה</h2></div>
+  <label class="check" style="align-items:flex-start;margin-bottom:14px"><span class="switch"><input type="checkbox" id="needLogin" ${ST.skipLogin?'':'checked'}><i></i></span><span><b style="font-weight:500">כניסה עם דוא״ל וסיסמה</b><div class="small mut">${ST.skipLogin?'כבויה זמנית בזמן הדמו: מרכז הניהול נפתח ישירות. להדלקה לפני שמציגים או משתפים.':'פעילה: מי שנכנס צריך דוא״ל וסיסמה.'}</div></span></label><div class="list">
   <div class="li"><span class="ic">${I('lock')}</span><div class="grow">ניתוק אוטומטי אחרי ${IDLE_MIN} דקות ללא פעילות</div>${chip('פעיל','ok')}</div>
   <div class="li"><span class="ic">${I('shield')}</span><div class="grow">נעילה ל-5 דקות אחרי 5 ניסיונות כניסה כושלים</div>${chip('פעיל','ok')}</div>
   <div class="li"><span class="ic">${I('key')}</span><div class="grow">אימות דו־שלבי בקוד לנייד<div class="small mut">יופעל בגרסת הייצור, יחד עם השרת</div></div>${chip('בשלב הפיתוח','plain')}</div></div>
@@ -968,6 +969,7 @@ document.addEventListener('change',e=>{const t=e.target;
  if(t.name==='stage'){ST.stage=+t.value;log('עדכון שלב הבנייה: '+ST.milestones[ST.stage].t);save();toast('השלב עודכן אצל כל הדיירים: '+ST.milestones[ST.stage].t);render();$(`input[name=stage][value="${ST.stage}"]`).focus()}
  if(t.id==='vpRule'){ST.vpRule=t.checked;log('כלל אישור עדכונים: '+(t.checked?'פעיל':'כבוי'));save();toast(t.checked?'הכלל פעיל':'הכלל כובה')}
  if(t.id==='phase2'){ST.phase2=t.checked;log('מודולי שלב המסירה: '+(t.checked?'פעילים':'כבויים'));save();render();toast(t.checked?'ליקויים ומדריך הדירה נוספו לתפריט':'הוסרו מהתפריט')}
+ if(t.id==='needLogin'){ST.skipLogin=!t.checked;log(t.checked?'הופעלה כניסה עם סיסמה':'הכניסה עם סיסמה כובתה זמנית');save();toast(t.checked?'מעכשיו נדרשת כניסה עם דוא״ל וסיסמה':'מרכז הניהול ייפתח בלי מסך כניסה');render()}
  if(t.id==='remLead'){ST.remLead=+t.value;ST.reminders.filter(x=>['pending','sched'].includes(x.status)).forEach(x=>{const r=resOf(x.res),p=r&&payRows(r).find(y=>y.id===x.pay);if(p&&x.by==='מערכת')x.sendOn=addDays(p.due,-ST.remLead)});log('תזכורות יישלחו '+ST.remLead+' ימים לפני המועד');save();toast('נשמר')}
  if(t.id==='deliv'){ST.delivery=t.value.trim();log('שנת מסירה משוערת: '+ST.delivery);save();toast('נשמר')}
 });
@@ -1012,7 +1014,7 @@ document.head.insertAdjacentHTML('beforeend','<style>body.links a{text-decoratio
 /* ================= boot ================= */
 async function boot(){await FS.ready;await warmImages();ensureReminders();shell();render(true);setTimeout(popAlerts,600)}
 addEventListener('hashchange',()=>{if(session())render(true)});
-(function init(){const th=LS.get('pa-theme');if(th)document.documentElement.dataset.theme=th;applyA11y();if(session())boot();else renderLogin()})();
+(function init(){const th=LS.get('pa-theme');if(th)document.documentElement.dataset.theme=th;applyA11y();if(ST.skipLogin&&!session())startSession(false);if(session())boot();else renderLogin()})();
 </script>
 </body>
 </html>
