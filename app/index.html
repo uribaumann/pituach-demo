@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="he" dir="rtl">
-<head><meta name="robots" content="noindex,nofollow">
+<head><meta name="robots" content="noindex,nofollow"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Pituach">
 <meta charset="utf-8">
 <meta name="theme-color" content="#FAF9F6">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -148,6 +148,15 @@ textarea.input{min-height:92px;resize:vertical}
 canvas.sign{width:100%;height:150px;background:var(--paper);border:1px dashed #2e2d2a55;border-radius:var(--r);touch-action:none}
 .toast{position:absolute;top:14px;left:16px;right:16px;background:var(--navy);color:#fff;padding:14px 18px;border-radius:var(--r);font-size:13.5px;z-index:40;box-shadow:0 14px 40px #0003;transform:translateY(calc(-100% - 60px));transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .toast.on{transform:none}
+.install{position:absolute;left:12px;right:12px;bottom:calc(78px + env(safe-area-inset-bottom));z-index:35;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 40px #2e2d2a26;padding:12px 14px;display:flex;align-items:center;gap:12px;animation:up .35s cubic-bezier(.2,.8,.2,1)}
+.install img{width:44px;height:44px;border-radius:11px;flex:none}
+.install .t{flex:1;min-width:0;font-size:13.5px;line-height:1.35}.install .t b{display:block;font-size:14.5px}
+.install .go{background:var(--gold-d);color:#fff;border-radius:20px;padding:8px 14px;font-size:13.5px;font-weight:500;white-space:nowrap}
+.install .x{width:30px;height:30px;display:grid;place-items:center;color:var(--mut);flex:none}
+.ios-steps{counter-reset:s;display:flex;flex-direction:column;gap:14px;margin:6px 0 18px;padding:0;list-style:none}
+.ios-steps li{display:flex;gap:12px;align-items:center;font-size:15px}
+.ios-steps li::before{counter-increment:s;content:counter(s);width:28px;height:28px;border-radius:50%;background:var(--sand2);color:var(--gold-d);display:grid;place-items:center;font-weight:500;flex:none}
+.ios-steps svg{vertical-align:-4px;color:var(--gold-d)}
 .chat{display:flex;flex-direction:column;gap:10px;min-height:240px;max-height:44vh;overflow-y:auto;padding:4px 0 12px}
 .msg{max-width:84%;padding:11px 15px;border-radius:14px;font-size:14.5px}
 .msg.bot{background:var(--paper);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:3px}
@@ -806,7 +815,17 @@ const EN={
 "ורוני": "and Roni",
 "הטבה": "Benefit",
 "אורי": "Uri",
-"תמונות הפרויקט, החליקו לתמונה הבאה": "Project images, swipe for the next one"
+"תמונות הפרויקט, החליקו לתמונה הבאה": "Project images, swipe for the next one",
+"התקנה במסך הבית": "Add to Home Screen",
+"כך האפליקציה נפתחת במסך מלא, כמו כל אפליקציה בטלפון.": "The app then opens full screen, like any app on your phone.",
+"להוסיף את Pituach למסך הבית": "Add Pituach to your Home Screen",
+"גישה בלחיצה אחת, במסך מלא": "One tap away, full screen",
+"התקנה": "Install",
+"לא עכשיו": "Not now",
+"הבנתי": "Got it",
+"האפליקציה הותקנה במסך הבית": "The app was added to your Home Screen",
+"לפתוח את האפליקציה כמו כל אפליקציה בטלפון": "Open it like any other app on your phone",
+"ההתקנה עובדת מ-Safari. אם פתחתם את הקישור מוואטסאפ או מאפליקציה אחרת, פתחו אותו קודם ב-Safari.": "Installing works from Safari. If you opened the link from WhatsApp or another app, open it in Safari first."
 },
 "f": {
 "בוקר טוב, ": "Good morning, ",
@@ -1434,7 +1453,13 @@ const EN={
 "תפקיד: מגורים": "Role: Residential",
 "תפקיד: כספים": "Role: Finance",
 "תפקיד: הנדסה": "Role: Engineering",
-"תמונה ": "Image "
+"תמונה ": "Image ",
+"לוחצים על כפתור השיתוף": "Tap the Share button",
+"בסרגל של Safari": "in the Safari toolbar",
+"גוללים ובוחרים": "Scroll and choose",
+"\"הוסף למסך הבית\"": "\"Add to Home Screen\"",
+"\"הוסף\"": "\"Add\"",
+"למעלה": "at the top"
 }
 };
 const EX=EN.x||{}, FR=Object.assign({},...Object.entries(EX).filter(e=>e[0].length>=8).map(e=>({[e[0]]:e[1]})),EN.f||{});
@@ -1941,8 +1966,10 @@ const SHEETS={
     openSheet(`<h3>הגדרות</h3><b class="small mut">דמו: כניסה כדייר אחר</b><div style="margin:6px 0 22px">${RES.map(r=>`<button class="who ${r.id===S.rid?'on':''}" data-res="${r.id}"><span class="av">${r.name[0]}</span><span class="grow"><b>${r.name}</b><span class="lat small mut">${r.apt}</span></span><span class="small mut">${floorTxt(r)}</span></button>`).join('')}</div><b class="small mut">התראות</b><div class="card" style="margin-top:6px">${P.map(p=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${p[1]}</b><div class="small mut">${p[2]}</div></div><button class="switch ${S.prefs[p[0]]?'on':''} ${p[3]?'locked':''}" role="switch" aria-checked="${!!S.prefs[p[0]]}" aria-label="${p[1]}" data-pref="${p[0]}" ${p[3]?'disabled':''}></button></div>`).join('')}</div>
     <b class="small mut">נגישות ושפה</b><div class="card" style="margin-top:6px">
       <div class="list-item"><div class="grow"><b style="font-size:14.5px">שפה</b></div><div class="opt-row"><button class="opt ${LANG==='he'?'on':''}" data-lang="he">עברית</button><button class="opt ${LANG==='en'?'on':''}" data-lang="en">English</button></div></div>
+      ${PWA.can()?`<button class="rowlink" style="border:0;border-bottom:1px solid var(--line);padding:14px 0" id="installRow"><span class="grow"><b>התקנה במסך הבית</b><span class="small mut">לפתוח את האפליקציה כמו כל אפליקציה בטלפון</span></span><span class="chev">${ICON.chev}</span></button>`:''}
       <button class="rowlink" style="border:0;padding:14px 0 2px" data-open="a11y"><span class="grow"><b>תפריט הנגישות</b><span class="small mut">גודל טקסט, ניגודיות, אנימציות</span></span><span class="chev">${ICON.chev}</span></button></div>
     <p class="small mut">הנתונים האישיים והפיננסיים מוצפנים ונשמרים לפי חוק הגנת הפרטיות.</p><div style="text-align:center;margin-top:18px"><img src="${A.ofer}" alt="Ofer Investments" style="width:84px;opacity:.8"></div>`,sh=>{
+      const ir=$('#installRow',sh);if(ir)ir.onclick=()=>PWA.install();
       $$('[data-pref]',sh).forEach(b=>b.onclick=()=>{const k=b.dataset.pref;S.prefs[k]=!S.prefs[k];b.classList.toggle('on',S.prefs[k]);b.setAttribute('aria-checked',S.prefs[k]);save();renderAll()});
     });
   },
@@ -2112,6 +2139,31 @@ document.addEventListener('click',e=>{
 });
 $('#roleBtn').onclick=()=>{S.role=S.role==='dev'?'res':'dev';save();renderAll();applyRole()};
 $('#resetBtn').onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()};
+
+/* ---------- install as an app (PWA) ---------- */
+const PWA=(()=>{const framed=(()=>{try{return window.top!==window.self}catch(e){return true}})();
+  const ok=!framed&&'serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost');
+  const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  let deferred=null;
+  if(ok){navigator.serviceWorker.register('sw.js').catch(()=>{});
+    addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;banner()});
+    addEventListener('appinstalled',()=>{deferred=null;$('#install')?.remove();toast('האפליקציה הותקנה במסך הבית')})}
+  const dismissed=()=>{try{return +localStorage.getItem('pwa-dismiss')>Date.now()}catch(e){return false}};
+  const can=()=>ok&&!standalone()&&!!(deferred||ios);
+  async function install(){if(deferred){deferred.prompt();const r=await deferred.userChoice.catch(()=>null);deferred=null;$('#install')?.remove();if(r&&r.outcome==='accepted')toast('האפליקציה הותקנה במסך הבית');return}
+    $('#install')?.remove();
+    const share='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M8 7l4-4 4 4M5 11v8a2 2 0 002 2h10a2 2 0 002-2v-8"/></svg>';
+    const plus='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg>';
+    openSheet(`<h3>התקנה במסך הבית</h3><p class="mut" style="margin:-6px 0 16px">כך האפליקציה נפתחת במסך מלא, כמו כל אפליקציה בטלפון.</p>
+      <ol class="ios-steps"><li><span>לוחצים על כפתור השיתוף ${share} בסרגל של Safari</span></li><li><span>גוללים ובוחרים <b>"הוסף למסך הבית"</b> ${plus}</span></li><li><span>לוחצים <b>"הוסף"</b> למעלה</span></li></ol>
+      <p class="small mut">ההתקנה עובדת מ-Safari. אם פתחתם את הקישור מוואטסאפ או מאפליקציה אחרת, פתחו אותו קודם ב-Safari.</p>
+      <button class="btn block" data-close="1" style="margin-top:16px">הבנתי</button>`)}
+  function banner(){if(!can()||dismissed()||$('#install')||S.role!=='res')return;const ph=$('.phone');if(!ph)return;
+    ph.insertAdjacentHTML('beforeend',`<div class="install" id="install" role="region" aria-label="התקנת האפליקציה"><img src="apple-touch-icon.png" alt=""><div class="t"><b>להוסיף את Pituach למסך הבית</b><span class="mut">גישה בלחיצה אחת, במסך מלא</span></div><button class="go" id="installGo">התקנה</button><button class="x" id="installX" aria-label="לא עכשיו"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>`);
+    $('#installGo').onclick=install;$('#installX').onclick=()=>{try{localStorage.setItem('pwa-dismiss',Date.now()+3*864e5)}catch(e){}$('#install').remove()}}
+  return{can,install,banner,standalone}})();
+setTimeout(()=>PWA.banner(),3200);
 
 /* ---------- boot ---------- */
 $$('[data-a]').forEach(i=>i.src=A[i.dataset.a]);

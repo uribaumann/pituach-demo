@@ -6,7 +6,9 @@ cd "$(dirname "$0")"
 python3 source/ofer-tenant-app/build.py >/dev/null
 python3 source/ofer-admin/build.py >/dev/null
 noindex='<meta name="robots" content="noindex,nofollow">'
-sed "s#<head>#<head>$noindex#" source/ofer-tenant-app/index.html > app/index.html
+pwa='<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Pituach">'
+sed "s#<head>#<head>$noindex$pwa#" source/ofer-tenant-app/index.html > app/index.html
+cp source/ofer-tenant-app/pwa/* app/
 sed "s#<head>#<head>$noindex#" source/ofer-admin/admin.html > admin/index.html
 git add -A
 git diff --cached --quiet && { echo "nothing changed"; exit 0; }

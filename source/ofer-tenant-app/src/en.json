@@ -171,7 +171,17 @@
 "ורוני": "and Roni",
 "הטבה": "Benefit",
 "אורי": "Uri",
-"תמונות הפרויקט, החליקו לתמונה הבאה": "Project images, swipe for the next one"
+"תמונות הפרויקט, החליקו לתמונה הבאה": "Project images, swipe for the next one",
+"התקנה במסך הבית": "Add to Home Screen",
+"כך האפליקציה נפתחת במסך מלא, כמו כל אפליקציה בטלפון.": "The app then opens full screen, like any app on your phone.",
+"להוסיף את Pituach למסך הבית": "Add Pituach to your Home Screen",
+"גישה בלחיצה אחת, במסך מלא": "One tap away, full screen",
+"התקנה": "Install",
+"לא עכשיו": "Not now",
+"הבנתי": "Got it",
+"האפליקציה הותקנה במסך הבית": "The app was added to your Home Screen",
+"לפתוח את האפליקציה כמו כל אפליקציה בטלפון": "Open it like any other app on your phone",
+"ההתקנה עובדת מ-Safari. אם פתחתם את הקישור מוואטסאפ או מאפליקציה אחרת, פתחו אותו קודם ב-Safari.": "Installing works from Safari. If you opened the link from WhatsApp or another app, open it in Safari first."
 },
 "f": {
 "בוקר טוב, ": "Good morning, ",
@@ -799,6 +809,12 @@
 "תפקיד: מגורים": "Role: Residential",
 "תפקיד: כספים": "Role: Finance",
 "תפקיד: הנדסה": "Role: Engineering",
-"תמונה ": "Image "
+"תמונה ": "Image ",
+"לוחצים על כפתור השיתוף": "Tap the Share button",
+"בסרגל של Safari": "in the Safari toolbar",
+"גוללים ובוחרים": "Scroll and choose",
+"\"הוסף למסך הבית\"": "\"Add to Home Screen\"",
+"\"הוסף\"": "\"Add\"",
+"למעלה": "at the top"
 }
 }
