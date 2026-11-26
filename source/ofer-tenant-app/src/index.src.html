@@ -148,6 +148,10 @@ textarea.input{min-height:92px;resize:vertical}
 canvas.sign{width:100%;height:150px;background:var(--paper);border:1px dashed #2e2d2a55;border-radius:var(--r);touch-action:none}
 .toast{position:absolute;top:14px;left:16px;right:16px;background:var(--navy);color:#fff;padding:14px 18px;border-radius:var(--r);font-size:13.5px;z-index:40;box-shadow:0 14px 40px #0003;transform:translateY(calc(-100% - 60px));transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .toast.on{transform:none}
+.phone:not(.demo) .demo-strip{display:none!important}
+.phone:not(.demo)[data-scope=pilot] nav.tabs [data-tab=more]{display:none}
+.legal h4{font-size:15px;font-weight:500;margin:16px 0 4px}.legal p{font-size:14.5px;line-height:1.65;color:var(--ink)}
+button.link{color:var(--gold-d);text-decoration:underline;font-size:14px}
 .install{position:absolute;left:12px;right:12px;bottom:calc(78px + env(safe-area-inset-bottom));z-index:35;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 40px #2e2d2a26;padding:12px 14px;display:flex;align-items:center;gap:12px;animation:up .35s cubic-bezier(.2,.8,.2,1)}
 .install img{width:44px;height:44px;border-radius:11px;flex:none}
 .install .t{flex:1;min-width:0;font-size:13.5px;line-height:1.35}.install .t b{display:block;font-size:14.5px}
@@ -671,11 +675,11 @@ const msBar=()=>`<div class="ms">${MILESTONES.map((m,i)=>`<i class="${i<S.proj.s
 const stageOf=()=>`שלב ${S.proj.stage+1} מתוך ${MILESTONES.length}`;
 const MILESTONES=[
   {t:'חפירה ודיפון',d:'בביצוע'},
-  {t:'יסודות ומרתפים',d:'צפוי · 2027'},
-  {t:'שלד הבניין',d:'צפוי · 2027'},
-  {t:'מעטפת וחזיתות',d:'צפוי · 2028'},
-  {t:'גמרים, מטבחים ומערכות',d:'צפוי · 2028'},
-  {t:'פיתוח, לובי ומסירה',d:'צפוי · 2029'},
+  {t:'יסודות ומרתפים',d:'בהמשך'},
+  {t:'שלד הבניין',d:'בהמשך'},
+  {t:'מעטפת וחזיתות',d:'בהמשך'},
+  {t:'גמרים, מטבחים ומערכות',d:'בהמשך'},
+  {t:'פיתוח, לובי ומסירה',d:'בהמשך'},
 ];
 const PHOTOS=[
   {cap:'עבודות החפירה והדיפון, מבט מלמעלה',date:'אוגוסט 2026',img:'site'},
@@ -728,12 +732,7 @@ const WARRANTY=[
   {t:'אינסטלציה וחיפויים',end:'2031-06-01'},
   {t:'רטיבות ואיטום',end:'2036-06-01'},
 ];
-const BENEFITS=[
-  {t:'10% בחנויות הבית והעיצוב',p:'בקניוני עופר · עד סוף השנה',tag:'למעבר דירה'},
-  {t:'חניה חינם בקניון השכונתי',p:'שעתיים בכל ביקור, לדיירי הפרויקט',tag:'קבוע'},
-  {t:'ערב פתיחה לדיירים',p:'אירוע היכרות בלובי הקניון · דצמבר',tag:'אירוע'},
-  {t:'חבר מביא חבר',p:'מכירים מישהו שמחפש דירה? הטבה לשניכם בפרויקט הבא',tag:'הפניה'},
-];
+const BENEFITS=[];
 const STEPS=['התקבל','הועבר לקבלן','בטיפול','טופל'];
 const NOTIFS=()=>{
   const n=[...S.msgs.map(x=>({id:'m'+x.id,kind:'personal',t:esc(x.t),d:'הודעה אישית מ'+HOST.name})),...S.news.map(x=>({id:'u'+x.id,kind:x.kind,t:esc(x.t),d:'עכשיו'})),
@@ -806,6 +805,7 @@ function renderProgress(){
     <div class="hscroll">${[...S.news.filter(x=>x.kind==='construction').map(x=>({cap:x.t,date:'עכשיו',src:x.img,nophoto:!x.img})),...PHOTOS].map(p=>`<div>${p.src||p.img?`<div class="upd ph"><img src="${p.src||A[p.img]}" alt="${esc(p.cap)}"></div>`:`<div class="upd"><img src="${A.bird}" alt=""></div>`}<b style="font-size:14.5px">${esc(p.cap)}</b><div class="small mut">${p.date}${p.src||p.img?' · צילום מהאתר':p.nophoto?'':' · כאן יופיעו תמונות ווידאו מהאתר'}</div></div>`).join('')}</div>
     <h3 class="sub">אבני דרך</h3>
     <div class="tl">${MILESTONES.map((m,i)=>`<div class="tl-item ${i===S.proj.stage?'now':i<S.proj.stage?'done':''}"><b>${m.t}</b><div class="small mut">${i===S.proj.stage?'בביצוע':i<S.proj.stage?'הושלם':m.d}</div></div>`).join('')}</div>
+    <p class="small mut" style="margin-top:10px">שלבי הבנייה מוצגים לצורך מעקב בלבד. מועד המסירה המחייב הוא המועד שבחוזה.</p>
     <p class="small mut" style="margin-top:22px">מועדים עתידיים הם הערכה בלבד. מועד המסירה המחייב הוא זה שבחוזה.</p>`;
 }
 function renderChanges(){
@@ -874,7 +874,7 @@ function renderMoney(){
       <div class="grid2" style="margin-top:10px"><div><div class="small mut">מדד בסיס</div><b>${BASE_INDEX}</b></div><div><div class="small mut">מדד אחרון</div><b>${CUR_INDEX} <span class="chip warn">+${((CUR_INDEX/BASE_INDEX-1)*100).toFixed(1)}%</span></b></div></div></div>
     <h3 class="sub">לוח תשלומים</h3>
     <div class="card">${rows.map(r=>`<div class="list-item"><span class="ic-round" style="${r.paid?'background:#DCEFE4;color:var(--ok)':''}">${r.paid?ICON.check:ICON.card}</span><div class="grow"><b style="font-size:14.5px">${r.name}</b><div class="small mut">${fmtDate(r.due)} · ${r.pct}%</div></div><div style="text-align:left"><b>${nis(r.total)}</b><div>${r.paid?'<span class="chip ok">שולם</span>':np&&r.id===np.id?`<button class="btn gold" style="padding:5px 10px;font-size:12.5px;margin-top:3px" data-pay="${r.id}">לתשלום</button>`:'<span class="chip">עתידי</span>'}</div></div></div>`).join('')}</div>
-    <p class="small mut">הסכומים לדוגמה. סכום ההצמדה הסופי מחושב לפי המדד הידוע ביום התשלום.</p>`;
+    <p class="small mut">הסכומים מחושבים לפי המדד האחרון הידוע, ולמידע בלבד. הסכום לתשלום הוא לפי דרישת התשלום שתישלח אליך, והחוזה הוא המסמך הקובע.</p>`;
 }
 
 /* ---------- render: docs ---------- */
@@ -890,10 +890,10 @@ function renderDocs(){
 const REQ={
   guest:{t:'אורח מגיע',i:'key',sub:'דרך חברת הניהול, הלובי יקבל את פניו',f:[['שם האורח','text','name'],['תאריך','date','date'],['שעה משוערת','time','time']],ok:'הלובי עודכן. האורח יתקבל בשמו.'},
   amenity:{t:'הזמנת מתקן',i:'wave',sub:'דרך חברת הניהול: בריכה, סאונה או חדר כושר',opts:['בריכה','סאונה','חדר כושר'],f:[['תאריך','date','date'],['שעה','time','time']],ok:'ההזמנה התקבלה. אישור יגיע בהתראה.'},
-  visit:{t:'ביקור באתר',i:'pin',sub:'סיור מלווה, בתיאום מראש',f:[['תאריך מועדף','date','date']],ok:'הבקשה התקבלה. נחזור אליך לתיאום הסיור.'},
+  visit:{t:'ביקור באתר',i:'pin',sub:'סיור מלווה, בתיאום מראש ולפי הוראות הבטיחות',f:[['תאריך מועדף','date','date']],ok:'הבקשה התקבלה. נחזור אליך לתיאום הסיור.'},
   design:{t:'שאלה על המפרט',i:'swatch',sub:'חומרים, גמרים ותוכנית הדירה',f:[],ok:'השאלה התקבלה. נחזור אליך עם תשובה מהצוות.'},
   move:{t:'תיאום מעבר',i:'box',sub:'מעלית שירות, חניה למובילים',f:[['תאריך המעבר','date','date']],ok:'תיאום המעבר התקבל. נשריין מעלית שירות.'},
-  supplier:{t:'פגישה עם ספק',i:'cal',sub:'מטבחים, כלים סניטריים, ריצוף ואלומיניום',optsLabel:'הספק',opts:['מטבחים','כלים סניטריים','ריצוף וחיפויים','אלומיניום ודלתות'],f:[['תאריך מועדף','date','date'],['שעה','time','time']],ok:'הבקשה נשלחה. נתאם מול הספק ונאשר לך את המועד.'},
+  supplier:{t:'פגישה עם ספק',i:'cal',sub:'מטבחים, כלים סניטריים, ריצוף ואלומיניום',optsLabel:'הספק',opts:['מטבחים','כלים סניטריים','ריצוף וחיפויים','אלומיניום ודלתות'],f:[['תאריך מועדף','date','date'],['שעה','time','time']],ok:'הבקשה נשלחה. נתאם מול הספק ונאשר לך את המועד. שדרוגים מעבר למפרט נסגרים ישירות מול הספק.'},
   special:{t:'בקשה אישית',i:'star',sub:'כל דבר אחר, נטפל בזה',f:[],ok:'הבקשה התקבלה. '+'נחזור אליך בהקדם.'},
 };
 function renderService(){
@@ -916,7 +916,7 @@ function renderService(){
     ${st==='build'?'':`<h3 class="sub">ליקויים ובדק</h3>
     <p class="small mut" style="margin-bottom:10px">מדווחים כאן, הקבלן מטפל, ואנחנו עוקבים עד שהליקוי נסגר.</p>
     <button class="btn block" data-open="ticket" style="margin-bottom:10px">דיווח על ליקוי</button>
-    <p class="small mut" style="margin-bottom:16px">דחוף? הצפה, חשמל או דלת שלא נפתחת: <button style="color:var(--gold-d);font-weight:500;text-decoration:underline" data-toast="בגרסה המלאה: חיוג למוקד החירום, 24/7">מוקד חירום 24/7</button></p>
+    <p class="small mut" style="margin-bottom:16px">דחוף? הצפה, חשמל או דלת שלא נפתחת: <button style="color:var(--gold-d);font-weight:500;text-decoration:underline" data-toast="בגרסה המלאה: חיוג למוקד החירום של חברת הניהול">מוקד החירום של חברת הניהול</button></p>
     ${open.length?open.map(tk).join(''):'<div class="empty">אין קריאות פתוחות</div>'}
     ${closed.length?`<h3 class="sub">טופלו</h3>${closed.map(tk).join('')}`:''}`}`;
 }
@@ -931,11 +931,7 @@ function renderMore(){
     <div class="card">${[['שינויים שאושרו',ch.length?ch.map(c=>esc(c.title)).join(' · '):'אין עדיין'],['חומרים וגמרים','ריצוף, חיפויים, מטבח וכלים סניטריים, לפי המפרט'],['מערכות ואחריות','מיזוג, מים חמים, אלומיניום וממ״ד, עם תעודות האחריות'],['פרוטוקול המסירה',S.protocolSigned?'נחתם ונשמר':'יתווסף במסירה']].map(x=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${x[0]}</b><div class="small mut">${x[1]}</div></div></div>`).join('')}</div>
     <button class="btn block" data-toast="בגרסה המלאה: שיתוף התיק עם קונה, בהרשאה שלך">העברת התיק לבעלים הבאים</button>
     <h3 class="sub">שנה ראשונה מלווה</h3>
-    <div class="card">${WARRANTY.map(w=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${w.t}</b><div class="small mut">בתוקף עד ${fmtDate(w.end)} · נזכיר לך חודש לפני</div></div></div>`).join('')}</div>
-    <h3 class="sub">לוח הבניין</h3>
-    <div class="card"><textarea class="input" id="postText" placeholder="כתבו הודעה לשכנים" aria-label="הודעה לשכנים" style="min-height:64px"></textarea><button class="btn block" style="margin-top:8px" id="postBtn">פרסום</button></div>
-    ${S.posts.map(p=>`<div class="card"><div class="row between"><b>${esc(p.who)}</b><span class="small mut">${esc(p.time)}</span></div><p style="margin-top:6px;font-size:14.5px;line-height:1.5">${esc(p.text)}</p></div>`).join('')}`;
-  $('#postBtn').onclick=()=>{const t=$('#postText').value.trim();if(!t)return;S.posts.unshift({who:cur().name+', דירה '+cur().unit,text:t,time:'עכשיו'});save();renderMore();toast('ההודעה פורסמה בלוח הבניין')};
+    <div class="card">${WARRANTY.map(w=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${w.t}</b><div class="small mut">בתוקף עד ${fmtDate(w.end)} · נזכיר לך חודש לפני</div></div></div>`).join('')}</div>`;
 }
 
 /* ---------- developer view ---------- */
@@ -1114,6 +1110,7 @@ function reqSheet(kind){
   });
 }
 const SHEETS={
+  privacy(){legalSheet('privacy')},terms(){legalSheet('terms')},access(){legalSheet('access')},
   gallery(){const list=GALLERY.filter(g=>galF==='all'||g[2]===galF);
     openSheet(`<h3>הדמיות הפרויקט</h3><div class="opt-row" style="margin-bottom:14px"><button class="opt ${galF==='all'?'on':''}" data-gf="all">הכול</button>${GCAT.map(c=>`<button class="opt ${galF===c[0]?'on':''}" data-gf="${c[0]}">${c[1]}</button>`).join('')}</div><div class="gridg">${list.map(g=>galImg(g[0])).join('')}</div><p class="small mut" style="margin-top:14px;text-align:center">הדמיות להמחשה בלבד</p>`,sh=>{$$('[data-gf]',sh).forEach(b=>b.onclick=()=>{galF=b.dataset.gf;const y=sh.scrollTop;SHEETS.gallery()})})},
   about(){openSheet(`<div class="latin">THE PROJECT</div><h3 style="margin-top:6px">פיתוח על הים</h3>
@@ -1125,7 +1122,7 @@ const SHEETS={
     <label class="f">הלובי והבריכה</label>
     <div class="strip" style="margin:0 -22px;padding:0 22px 4px">${['lobby_lounge','pool_in','lobby_desk','tree_lobby'].map(k=>`<figure style="flex-basis:74%">${galImg(k)}</figure>`).join('')}</div>
     <button class="btn block" style="margin:16px 0 22px" data-open="gallery">לכל ההדמיות</button>
-    <div class="dark-card"><div class="latin">THE DEVELOPER</div><img src="${A.ofer}" alt="Ofer Investments"><p>עופר השקעות היא חברת נדל״ן פרטית בבעלות ליאורה עופר. החברה מחזיקה נכסים מניבים, בנייה למגורים והתחדשות עירונית, והיא בעלת השליטה במליסרון, חברת הקניונים הגדולה בישראל, שמנהלת 18 קניונים ומרכזים מסחריים תחת המותג ״קניוני עופר״.</p></div>
+    <div class="dark-card"><div class="latin">THE DEVELOPER</div><img src="${A.ofer}" alt="Ofer Investments"><p>עופר השקעות היא היזמית של פיתוח על הים.</p></div>
     <div class="dark-card"><div class="latin">THE ARCHITECTS</div><p style="margin-top:14px;letter-spacing:4px;direction:ltr">YASHAR &nbsp;·&nbsp; OBERSON</p><p style="margin-top:12px">ישר אדריכלים, ממשרדי האדריכלות המובילים בישראל, נוסד ב-1956 בידי האדריכל יצחק ישר, ומובל כיום בידי בנו, האדריכל אבנר ישר.</p></div>
     <p class="small mut" style="text-align:center">מתוך המצגת השיווקית של הפרויקט. הדמיות להמחשה בלבד.</p>`)},
   a11y(){const a=S.a11y,sw=(k,l,d)=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${l}</b><div class="small mut">${d}</div></div><button class="switch ${a[k]?'on':''}" role="switch" aria-checked="${!!a[k]}" aria-label="${l}" data-ax="${k}"></button></div>`;
@@ -1143,15 +1140,18 @@ const SHEETS={
     openSheet(`<h3>התראות</h3><div class="card">${NOTIFS().map(n=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${n.t}</b><div class="small mut">${n.d}</div></div>${n.kind==='critical'?'<span class="chip warn">חשוב</span>':n.kind==='marketing'?'<span class="chip gold">הטבה</span>':''}</div>`).join('')}</div><button class="btn ghost block" data-open="settings">הגדרות התראות</button>`);
   },
   settings(){
-    const P=[['critical','הודעות קריטיות','תשלומים, מסירה ובטיחות. תמיד פעיל',true],['payments','תזכורות תשלום','שבוע לפני כל מועד'],['construction','עדכוני בנייה','תמונות ואבני דרך'],['community','קהילת הבניין','הודעות ועד ושכנים'],['marketing','עדכונים כלליים','אירועים והודעות מהקבוצה']];
+    const P=[['critical','הודעות קריטיות','תשלומים, מסירה ובטיחות. תמיד פעיל',true],['payments','תזכורות תשלום','שבוע לפני כל מועד'],['construction','עדכוני בנייה','תמונות ואבני דרך'],];
     openSheet(`<h3>הגדרות</h3><b class="small mut">דמו: כניסה כדייר אחר</b><div style="margin:6px 0 22px">${RES.map(r=>`<button class="who ${r.id===S.rid?'on':''}" data-res="${r.id}"><span class="av">${r.name[0]}</span><span class="grow"><b>${r.name}</b><span class="lat small mut">${r.apt}</span></span><span class="small mut">${floorTxt(r)}</span></button>`).join('')}</div><b class="small mut">התראות</b><div class="card" style="margin-top:6px">${P.map(p=>`<div class="list-item"><div class="grow"><b style="font-size:14.5px">${p[1]}</b><div class="small mut">${p[2]}</div></div><button class="switch ${S.prefs[p[0]]?'on':''} ${p[3]?'locked':''}" role="switch" aria-checked="${!!S.prefs[p[0]]}" aria-label="${p[1]}" data-pref="${p[0]}" ${p[3]?'disabled':''}></button></div>`).join('')}</div>
     <b class="small mut">נגישות ושפה</b><div class="card" style="margin-top:6px">
       <div class="list-item"><div class="grow"><b style="font-size:14.5px">שפה</b></div><div class="opt-row"><button class="opt ${LANG==='he'?'on':''}" data-lang="he">עברית</button><button class="opt ${LANG==='en'?'on':''}" data-lang="en">English</button></div></div>
       ${PWA.can()?`<button class="rowlink" style="border:0;border-bottom:1px solid var(--line);padding:14px 0" id="installRow"><span class="grow"><b>התקנה במסך הבית</b><span class="small mut">לפתוח את האפליקציה כמו כל אפליקציה בטלפון</span></span><span class="chev">${ICON.chev}</span></button>`:''}
       <button class="rowlink" style="border:0;padding:14px 0 2px" data-open="a11y"><span class="grow"><b>תפריט הנגישות</b><span class="small mut">גודל טקסט, ניגודיות, אנימציות</span></span><span class="chev">${ICON.chev}</span></button></div>
     <button class="rowlink" style="border:0;padding:4px 0 14px" onclick="document.getElementById('resetBtn').click()"><span class="grow"><b>איפוס נתוני הדמו</b><span class="small mut">חזרה לנתוני ההתחלה</span></span><span class="chev">${ICON.chev}</span></button>
-    <p class="small mut">הנתונים האישיים והפיננסיים מוצפנים ונשמרים לפי חוק הגנת הפרטיות.</p><div style="text-align:center;margin-top:18px"><img src="${A.ofer}" alt="Ofer Investments" style="width:84px;opacity:.8"></div>`,sh=>{
+    <b class="small mut">מידע משפטי</b><div class="card" style="margin-top:6px">${[['privacy','מדיניות פרטיות'],['terms','תנאי שימוש'],['access','הצהרת נגישות']].map(x=>`<button class="rowlink" style="border:0;border-bottom:1px solid var(--line);padding:12px 0" data-open="${x[0]}"><span class="grow"><b>${x[1]}</b></span><span class="chev">${ICON.chev}</span></button>`).join('')}
+      <div class="list-item" style="border:0"><div class="grow"><b style="font-size:14.5px">עדכונים שיווקיים</b><div class="small mut">אירועים והצעות. רק אם אישרת, ואפשר לבטל בכל רגע</div></div><button class="switch ${S.prefs.marketing?'on':''}" role="switch" aria-checked="${!!S.prefs.marketing}" aria-label="עדכונים שיווקיים" data-pref="marketing"></button></div></div>
+    <div class="list-item" style="border:0;padding:4px 0 14px"><div class="grow"><b style="font-size:14.5px">מצב הדגמה</b><div class="small mut">מציג את סרגל ההדגמה: תצוגת יזם והחזון המלא</div></div><button class="switch ${demoOn()?'on':''}" role="switch" aria-checked="${demoOn()}" aria-label="מצב הדגמה" id="demoSw"></button></div><div style="text-align:center;margin-top:18px"><img src="${A.ofer}" alt="Ofer Investments" style="width:84px;opacity:.8"></div>`,sh=>{
       const ir=$('#installRow',sh);if(ir)ir.onclick=()=>PWA.install();
+      $('#demoSw',sh).onclick=e=>{S.demo=!demoOn();save();applyDemo();e.currentTarget.classList.toggle('on',S.demo);e.currentTarget.setAttribute('aria-checked',S.demo)};
       $$('[data-pref]',sh).forEach(b=>b.onclick=()=>{const k=b.dataset.pref;S.prefs[k]=!S.prefs[k];b.classList.toggle('on',S.prefs[k]);b.setAttribute('aria-checked',S.prefs[k]);save();renderAll()});
     });
   },
@@ -1322,6 +1322,40 @@ document.addEventListener('click',e=>{
 $('#roleBtn').onclick=()=>{S.role=S.role==='dev'?'res':'dev';save();renderAll();applyRole()};
 $('#resetBtn').onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()};
 
+
+/* ---------- legal pages (drafts for the legal department) ---------- */
+const DRAFT='<div class="chip warn" style="margin-bottom:14px">טיוטה לבדיקת המחלקה המשפטית</div>';
+const LEGAL={
+ privacy:['מדיניות פרטיות',`<p>האפליקציה מופעלת בידי עופר השקעות (״החברה״) עבור רוכשי הדירות בפרויקט פיתוח על הים.</p>
+  <h4>איזה מידע נשמר</h4><p>פרטי הזיהוי והקשר שלך, פרטי הדירה והחוזה, לוח התשלומים והתשלומים שבוצעו, בקשות ופניות ששלחת, ומסמכים שהועלו לתיק הדירה.</p>
+  <h4>למה</h4><p>כדי לנהל את הקשר איתך כרוכש: עדכונים על הפרויקט, תשלומים, מסמכים, בקשות שינוי, מסירה ובדק. לא נשתמש במידע לשיווק בלי הסכמה נפרדת, שאפשר לבטל בכל רגע.</p>
+  <h4>מי רואה את המידע</h4><p>עובדי החברה לפי תפקיד בלבד: קשרי דיירים, כספים, הנדסה, משפטית והנהלה. משרד עורכי הדין של הפרויקט, משווקי הפרויקט וספקי שירות מקבלים רק את מה שנדרש לתפקידם, לפי הסכם עיבוד מידע.</p>
+  <h4>אבטחה ושמירה</h4><p>המידע נשמר באמצעי אבטחה לפי תקנות הגנת הפרטיות (אבטחת מידע). הוא נשמר כל עוד יש לך קשר חוזי עם החברה, ולאחר מכן לפי חובות שמירת המסמכים בדין.</p>
+  <h4>הזכויות שלך</h4><p>אפשר לעיין במידע שלך ולבקש לתקן אותו, לפי חוק הגנת הפרטיות. פונים לקשרי הדיירים דרך האפליקציה.</p>`],
+ terms:['תנאי שימוש',`<p>האפליקציה נועדה לתת לך מידע ושירות. היא לא משנה את חוזה המכר ולא באה במקומו.</p>
+  <h4>מה מחייב</h4><p>חוזה המכר, המפרט ותוכניות המכר שצורפו לו הם המסמכים הקובעים. אם יש סתירה בין האפליקציה לבינם, המסמכים גוברים.</p>
+  <h4>שלבים ומועדים</h4><p>שלבי הבנייה מוצגים למעקב בלבד. מועד המסירה המחייב הוא המועד שבחוזה.</p>
+  <h4>תשלומים</h4><p>הסכומים באפליקציה מחושבים לפי המדד האחרון הידוע, ולמידע בלבד. הסכום לתשלום הוא לפי דרישת התשלום הרשמית.</p>
+  <h4>הדמיות</h4><p>ההדמיות והתמונות הן להמחשה בלבד, ואינן חלק מהמפרט.</p>
+  <h4>ספקים וביקורים</h4><p>פגישה עם ספק היא לבחירת חומרים במסגרת המפרט. שדרוגים מעבר למפרט נסגרים ישירות מול הספק. ביקור באתר נעשה בליווי נציג ובכפוף להוראות הבטיחות.</p>
+  <h4>שינויי דיירים</h4><p>שינוי מחייב רק אחרי הצעת מחיר בכתב ואישורך בחתימה.</p>`],
+ access:['הצהרת נגישות',`<p>אנחנו פועלים כדי שהאפליקציה תהיה נגישה לכל אחד, לפי תקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות) ותקן ישראלי 5568, ברמה AA.</p>
+  <h4>מה כבר נעשה</h4><p>תמיכה בקורא מסך ובניווט מקלדת, הגדלת טקסט, ניגודיות גבוהה, עצירת אנימציות, טקסט חלופי לתמונות, ושפה עברית ואנגלית.</p>
+  <h4>מה עוד לא נבדק</h4><p>בדיקת נגישות מלאה בידי מורשה נגישות עוד לא בוצעה. היא תבוצע לפני העלייה לאוויר.</p>
+  <h4>רכז הנגישות</h4><p>אם נתקלת בבעיה, אפשר לפנות אלינו דרך ״הודעה״ באפליקציה, ונטפל בתוך 14 ימים. פרטי רכז הנגישות יתווספו לפני העלייה לאוויר.</p>
+  <p class="small mut">עודכן לאחרונה: נובמבר 2026</p>`]};
+const legalSheet=k=>openSheet(`<h3>${LEGAL[k][0]}</h3>${DRAFT}<div class="legal">${LEGAL[k][1]}</div><button class="btn block" id="legalBack" style="margin-top:18px">${S.consent?'סגירה':'חזרה'}</button>`,sh=>{$('#legalBack',sh).onclick=()=>{closeSheet();if(!S.consent)setTimeout(firstRun,300)}});
+/* demo bar only when asked for (claude.ai preview, ?demo, or the switch in settings) */
+const demoOn=()=>S.demo===true||/[?&]demo/.test(location.search)||(()=>{try{return window.top!==window.self}catch(e){return true}})();
+function applyDemo(){const on=demoOn();$('#phone').classList.toggle('demo',on);if(!on&&S.role==='dev'){S.role='res';save();applyRole();renderAll()}}
+function firstRun(){if(S.consent||S.role!=='res')return;
+  openSheet(`<div class="latin">WELCOME</div><h3 style="margin-top:6px">ברוכים הבאים לאפליקציית הדיירים</h3>
+   <p class="mut" style="margin:-6px 0 14px">כאן תמצאו את שלבי הבנייה, התשלומים, המסמכים והבקשות שלכם. לפני שמתחילים:</p>
+   <div class="card"><div class="list-item"><div class="grow small">חוזה המכר הוא המסמך הקובע. המידע כאן נועד לעדכן ולשרת.</div></div><div class="list-item"><div class="grow small">המידע שלכם משמש רק לניהול הקשר איתכם כרוכשים.</div></div></div>
+   <div class="row" style="gap:14px;margin:6px 0 14px;flex-wrap:wrap"><button class="link" data-open="privacy">מדיניות פרטיות</button><button class="link" data-open="terms">תנאי שימוש</button><button class="link" data-open="access">הצהרת נגישות</button></div>
+   <label class="row" style="gap:10px;align-items:flex-start;margin-bottom:16px"><input type="checkbox" id="mkOpt" style="width:20px;height:20px;margin-top:2px"><span class="small">אשמח לקבל גם עדכונים שיווקיים על אירועים ופרויקטים של החברה. לא חובה, ואפשר לבטל בכל רגע.</span></label>
+   <button class="btn gold block" id="consentOk">הבנתי, אפשר להתחיל</button>`,sh=>{$('#consentOk',sh).onclick=()=>{S.consent=new Date().toISOString();S.prefs.marketing=$('#mkOpt',sh).checked;save();closeSheet();setTimeout(()=>PWA.banner(),900)}})}
+
 /* ---------- install as an app (PWA) ---------- */
 const PWA=(()=>{const framed=(()=>{try{return window.top!==window.self}catch(e){return true}})();
   const ok=!framed&&'serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost');
@@ -1341,7 +1375,7 @@ const PWA=(()=>{const framed=(()=>{try{return window.top!==window.self}catch(e){
       <ol class="ios-steps"><li><span>לוחצים על כפתור השיתוף ${share} בסרגל של Safari</span></li><li><span>גוללים ובוחרים <b>"הוסף למסך הבית"</b> ${plus}</span></li><li><span>לוחצים <b>"הוסף"</b> למעלה</span></li></ol>
       <p class="small mut">ההתקנה עובדת מ-Safari. אם פתחתם את הקישור מוואטסאפ או מאפליקציה אחרת, פתחו אותו קודם ב-Safari.</p>
       <button class="btn block" data-close="1" style="margin-top:16px">הבנתי</button>`)}
-  function banner(){if(!can()||dismissed()||$('#install')||S.role!=='res')return;const ph=$('.phone');if(!ph)return;
+  function banner(){if(!can()||dismissed()||$('#install')||S.role!=='res'||!S.consent)return;const ph=$('.phone');if(!ph)return;
     ph.insertAdjacentHTML('beforeend',`<div class="install" id="install" role="region" aria-label="התקנת האפליקציה"><img src="apple-touch-icon.png" alt=""><div class="t"><b>להוסיף את Pituach למסך הבית</b><span class="mut">גישה בלחיצה אחת, במסך מלא</span></div><button class="go" id="installGo">התקנה</button><button class="x" id="installX" aria-label="לא עכשיו"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>`);
     $('#installGo').onclick=install;$('#installX').onclick=()=>{try{localStorage.setItem('pwa-dismiss',Date.now()+3*864e5)}catch(e){}$('#install').remove()}}
   return{can,install,banner,standalone}})();
@@ -1351,7 +1385,7 @@ setTimeout(()=>PWA.banner(),3200);
 $$('[data-a]').forEach(i=>i.src=A[i.dataset.a]);
 let noSplash=false;try{noSplash=sessionStorage.getItem('nosplash')==='1';sessionStorage.removeItem('nosplash')}catch(e){}
 if(noSplash)$('#splash').style.display='none';
-setTimeout(()=>$('#splash').classList.add('off'),2100);$('#splash').onclick=()=>$('#splash').classList.add('off');
+setTimeout(()=>$('#splash').classList.add('off'),1400);applyDemo();setTimeout(firstRun,1700);$('#splash').onclick=()=>$('#splash').classList.add('off');
 applyAcc();
 if(S.scope==='pilot')S.stage='build';applyScope();
 setStage(S.stage);applyRole();

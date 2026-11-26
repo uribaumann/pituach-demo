@@ -554,7 +554,7 @@ const canApproveRem=()=>AS===REM_APPROVER;
 const isVP=()=>CUR().perm==='res_vp';
 const first=s=>s.split(' ')[0];
 const KEY='pituach-admin-v1';
-let ST=LS.get(KEY);if(!ST||ST.v!==1)ST=seed();ST.reminders=ST.reminders||[];ST.remLead=ST.remLead||14;
+let ST=LS.get(KEY);if(!ST||ST.v!==1)ST=seed();ST.reminders=ST.reminders||[];ST.remLead=ST.remLead||14;ST.phase2=!!ST.phase2;
 const save=()=>LS.set(KEY,ST);
 function log(t){ST.log.unshift({at:new Date().toISOString(),who:CUR().name,t});ST.log=ST.log.slice(0,300);save()}
 const resOf=id=>ST.residents.find(r=>r.id===id);
@@ -658,7 +658,7 @@ function shell(){
 }
 function toggleSide(open){const s=$('#side'),o=open??!s.classList.contains('open');s.classList.toggle('open',o);$('#menuBtn').setAttribute('aria-expanded',o);
  let sc=$('.scrim');if(o&&!sc){sc=document.createElement('div');sc.className='scrim';sc.onclick=()=>toggleSide(false);document.body.append(sc)}if(!o&&sc)sc.remove()}
-function navHTML(){return NAV.map(g=>{const items=g[2].filter(n=>canSee(n[0]));if(!items.length)return '';return `${g[1]!=='סקירה'?`<div class="grp">${g[1]}</div>`:''}${items.map(([id,ic,t])=>{const b=BADGE[id]?BADGE[id]():0;
+function navHTML(){return NAV.map(g=>{const hide=[...(ST.phase2?[]:['defects','homebook']),'broadcast','activity'];const items=g[2].filter(n=>canSee(n[0])&&!hide.includes(n[0]));if(!items.length)return '';return `${g[1]!=='סקירה'?`<div class="grp">${g[1]}</div>`:''}${items.map(([id,ic,t])=>{const b=BADGE[id]?BADGE[id]():0;
  return `<a href="#${id}" ${route===id||(route==='resident'&&id==='residents')?'aria-current="page"':''}>${I(ic)}<span>${t}</span>${b?`<span class="badge" aria-label="${b} ממתינים">${b}</span>`:''}</a>`}).join('')}`}).join('')}
 function searchRun(v){const box=$('#sres'),q=v.trim().toLowerCase();if(!q){box.hidden=true;$('#q').setAttribute('aria-expanded','false');return}
  const hits=[...ST.residents.filter(r=>(r.name+r.co+r.apt+r.phone+r.email+' '+r.unit).toLowerCase().includes(q)).map(r=>[`#res-${r.id}`,'users',r.name,r.apt+' · דירה '+r.unit]),
@@ -786,6 +786,7 @@ function openUpload(files,res){pending=[...files].filter(f=>{if(f.size>20*104857
   <div class="grid2">${fld('u-res','שיוך',res||'','select',{options:[['','כל הפרויקט'],...ST.residents.map(r=>[r.id,r.name+' · דירה '+r.unit])]})}${fld('u-cat','קטגוריה',cat,'select',{options:DOC_CATS})}${fld('u-date','תאריך המסמך',today(),'date')}
   <div class="field"><span class="lbl">באפליקציה</span><label class="check" style="min-height:44px"><span class="switch"><input type="checkbox" id="u-vis" checked><i></i></span>להציג לדייר מיד</label></div></div>
   <label class="check"><input type="checkbox" id="u-notify" checked>לשלוח לדייר התראה שנוסף מסמך</label>
+  <div class="notice"><b>דמו:</b> לא להעלות מסמכים אמיתיים של דיירים. הקבצים נשמרים רק בדפדפן הזה.</div>
  </div><div class="df"><button class="btn pri" type="submit">${I('upload')}העלאה</button><button class="btn" type="button" data-close>ביטול</button></div></form>`);
  $('#upForm').onsubmit=async e=>{e.preventDefault();if(!validate($('#upForm')))return;const res=$('#u-res').value||null,cat=$('#u-cat').value,date=$('#u-date').value||today(),vis=$('#u-vis').checked;
   for(const [i,f] of pending.entries()){const id=uid('d');await FS.put(id,f);ST.docs.push({id,res,cat,title:$('#ut'+i).value.trim(),file:f.name,type:typeOf(f.name),size:f.size,src:'u:'+id,date,visible:vis});if(typeOf(f.name)==='img')await urlOf('u:'+id)}
@@ -864,7 +865,7 @@ VIEWS.defects=()=>pageHead('DEFECTS','ליקויים ובדק','פעיל באפ�
 function threadHTML(id){const th=ST.threads[id]||[];return `<div class="thread" id="thr" aria-live="polite">${th.length?th.map(m=>`<div class="bub ${m.me?'me':''}"><div>${esc(m.t)}</div><div class="tm">${m.me?'אורי':esc(rname(id))} · ${fmtDT(m.at)}</div></div>`).join(''):'<div class="empty">עוד אין הודעות. ההודעה הראשונה שתשלח תופיע אצל הדייר באפליקציה.</div>'}</div>
  <form class="row" data-thread="${id}" style="margin-top:14px;flex-wrap:nowrap"><label class="sr" for="mt-${id}">הודעה ל${esc(rname(id))}</label><input type="text" id="mt-${id}" placeholder="כתיבת הודעה ל${esc(rname(id))}" autocomplete="off" class="grow"><button class="btn pri" type="submit">שליחה</button></form>`}
 VIEWS.messages=()=>{const cur=ui.mres||Object.keys(ST.unread).find(k=>ST.unread[k])||ST.residents[0]?.id;ui.mres=cur;if(ST.unread[cur]){ST.unread[cur]=0;save()}
- return pageHead('MESSAGES','הודעות','שיחה אישית עם כל דייר. מה שכותבים כאן מגיע אליו באפליקציה, מ'+esc(ST.host.name)+'.')+
+ return pageHead('MESSAGES','הודעות','שיחה אישית עם כל דייר. מה שכותבים כאן מגיע אליו באפליקציה, מ'+esc(ST.host.name)+'.',canSee('broadcast')?`<a class="btn pri" href="#broadcast">${I('mega')}הודעה לכל הדיירים</a>`:'')+
  `<div class="cols" style="grid-template-columns:minmax(0,300px) minmax(0,1fr)"><section class="panel" style="padding:10px"><div class="list" role="tablist" aria-label="דיירים">${ST.residents.map(r=>{const th=ST.threads[r.id]||[],last=th[th.length-1];
   return `<button role="tab" aria-selected="${cur===r.id}" class="li" data-mres="${r.id}" style="border-inline:0;border-top:0;background:${cur===r.id?'var(--soft)':'none'};text-align:right;width:100%;padding:10px;border-radius:8px"><span class="av">${esc(r.name[0])}</span><span class="grow"><b style="font-weight:500">${esc(r.name)}</b><div class="small mut" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${last?esc(last.t):'אין הודעות'}</div></span>${ST.unread[r.id]?`<span class="badge">${ST.unread[r.id]}</span>`:''}</button>`}).join('')}</div></section>
  <section class="panel" role="tabpanel"><div class="ph2"><h2>${esc(rname(cur))}</h2><a class="btn ghost sm" href="#res-${cur}">לכרטיס הדייר</a></div>${threadHTML(cur)}</section></div>`};
@@ -916,9 +917,10 @@ VIEWS.homebook=()=>pageHead('HOME BOOK','מדריך הדירה ואחריות','
  <section class="panel"><div class="ph2"><h2>חברת הניהול</h2></div><form id="mForm" novalidate><div class="grid2">${fld('m-name','שם החברה',ST.mgmt.name,'text',{span:1})}${fld('m-phone','טלפון',ST.mgmt.phone,'tel',{ltr:1})}${fld('m-email','דוא״ל',ST.mgmt.email,'email',{ltr:1})}${fld('m-hours','שעות פעילות',ST.mgmt.hours,'text',{span:1})}</div><button class="btn pri" type="submit" style="margin-top:14px">שמירה</button></form></section></div>`;
 
 /* ---- config ---- */
-VIEWS.config=()=>pageHead('SETTINGS','הגדרות והרשאות','מי נכנס למרכז הניהול, איך הדיירים פוגשים אותך באפליקציה, וכללי האישור.')+
+VIEWS.config=()=>pageHead('SETTINGS','הגדרות והרשאות','מי נכנס למרכז הניהול, איך הדיירים פוגשים אותך באפליקציה, וכללי האישור.',`<a class="btn" href="#activity">${I('list')}יומן פעולות</a>`)+
  `<div class="cols even"><section class="panel" aria-labelledby="h-host"><div class="ph2"><h2 id="h-host">איש הקשר באפליקציה</h2></div><form id="hostForm" novalidate><div class="grid2">${fld('h-name','שם',ST.host.name,'text',{req:1})}${fld('h-role','תפקיד כפי שהדייר רואה',ST.host.role,'text',{req:1})}${fld('h-hours','שעות מענה',ST.host.hours)}${fld('h-reply','זמן מענה שמוצג לדייר',ST.host.reply)}</div><button class="btn pri" style="margin-top:14px" type="submit">שמירה</button></form></section>
  <section class="panel" aria-labelledby="h-rule"><div class="ph2"><h2 id="h-rule">כללי אישור</h2></div><label class="check" style="align-items:flex-start"><span class="switch"><input type="checkbox" id="vpRule" ${ST.vpRule?'checked':''}><i></i></span><span>עדכון או הודעה שמזכירים מועד, מסירה או אכלוס ממתינים לאישור ${esc(P('resvp').name)}, ${esc(P('resvp').title)}<div class="small mut">מומלץ להשאיר פעיל. מונע התחייבות למועדים בלי אישור.</div></span></label>
+  <label class="check" style="align-items:flex-start;margin-top:18px"><span class="switch"><input type="checkbox" id="phase2" ${ST.phase2?'checked':''}><i></i></span><span>מודולים של שלב המסירה: ליקויים ובדק, מדריך הדירה ואחריות<div class="small mut">כבויים בפיילוט, כדי שהתפריט יישאר קצר</div></span></label>
   <div class="field" style="margin-top:18px"><label for="deliv">שנת מסירה משוערת שמוצגת לדיירים</label><input type="text" id="deliv" value="${esc(ST.delivery)}" style="max-width:160px"></div></section></div>
  <section class="panel" aria-labelledby="h-users"><div class="ph2"><h2 id="h-users">משתמשים והרשאות</h2>${chip('פעיל כרגע: מנהל המערכת בלבד','info')}</div>
  <p class="mut small" style="margin:-4px 0 14px">כל משתמש רואה רק את המסכים של התפקיד שלו. אפשר לראות איך המערכת תיראה אצל כל אחד עם "צפייה בתור".</p>
@@ -1056,6 +1058,7 @@ document.addEventListener('change',e=>{const t=e.target;
  if(t.id==='dcat'){ui.dcat=t.value;render()}if(t.id==='dres'){ui.dres=t.value;render()}
  if(t.name==='stage'){ST.stage=+t.value;log('עדכון שלב הבנייה: '+ST.milestones[ST.stage].t);save();toast('השלב עודכן אצל כל הדיירים: '+ST.milestones[ST.stage].t);render();$(`input[name=stage][value="${ST.stage}"]`).focus()}
  if(t.id==='vpRule'){ST.vpRule=t.checked;log('כלל אישור עדכונים: '+(t.checked?'פעיל':'כבוי'));save();toast(t.checked?'הכלל פעיל':'הכלל כובה')}
+ if(t.id==='phase2'){ST.phase2=t.checked;log('מודולי שלב המסירה: '+(t.checked?'פעילים':'כבויים'));save();render();toast(t.checked?'ליקויים ומדריך הדירה נוספו לתפריט':'הוסרו מהתפריט')}
  if(t.id==='remLead'){ST.remLead=+t.value;ST.reminders.filter(x=>['pending','sched'].includes(x.status)).forEach(x=>{const r=resOf(x.res),p=r&&payRows(r).find(y=>y.id===x.pay);if(p&&x.by==='מערכת')x.sendOn=addDays(p.due,-ST.remLead)});log('תזכורות יישלחו '+ST.remLead+' ימים לפני המועד');save();toast('נשמר')}
  if(t.id==='deliv'){ST.delivery=t.value.trim();log('שנת מסירה משוערת: '+ST.delivery);save();toast('נשמר')}
 });
