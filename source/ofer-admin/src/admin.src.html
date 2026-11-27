@@ -122,7 +122,7 @@ input[aria-invalid=true]{border-color:var(--bad)}
 .side .foot{margin-top:auto;padding:16px 10px 0;display:flex;flex-direction:column;gap:8px}
 .side .foot img{height:26px;align-self:flex-end}
 .main{min-width:0;display:flex;flex-direction:column}
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);display:flex;align-items:center;gap:14px;padding-block:12px;padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:28px;border-bottom:1px solid var(--line)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;align-items:center;gap:14px;padding-block:12px;padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:28px;border-bottom:1px solid var(--line)}
 .top .search{flex:1;max-width:440px;position:relative}
 .top .search svg{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--mut)}
 .top .search input{padding-right:40px;background:var(--panel)}
@@ -280,6 +280,7 @@ dialog form,dialog .dlg{display:flex;flex-direction:column;max-height:calc(100dv
  .tbl-wrap td.act{text-align:right;white-space:normal;padding-top:10px;margin-top:4px;border-top:1px solid var(--line)!important}
  .tbl-wrap td.act:empty{display:none}
 }
+dialog,.bellpop,.side{overscroll-behavior:contain}
 .bellpop .li{padding:10px 4px}.bellpop .li:hover{background:var(--hover);border-radius:8px}
 .confirm-bar{display:flex;gap:8px;align-items:center;background:var(--bad-bg);color:var(--bad);border-radius:8px;padding:6px 10px;font-size:.88em;flex-wrap:wrap}
 .log td{font-size:.92em}

@@ -48,7 +48,7 @@ svg{stroke-width:1.35}
 .stage-switch button{padding:9px 2px;font-size:12.5px;color:var(--mut);border-bottom:1.5px solid transparent;margin-bottom:-1px}
 .stage-switch button.on{color:var(--ink);font-weight:500;border-color:var(--ink)}
 /* content */
-main{flex:1;overflow-y:auto;padding:0 20px 104px;scroll-behavior:smooth}
+main{flex:1;overflow-y:auto;padding:0 20px 104px;scroll-behavior:smooth;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
 .screen{display:none;animation:fade .35s ease}
 .screen.on{display:block}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -129,15 +129,15 @@ h3.sub:after{content:"";flex:1;height:1px;background:var(--line)}
 .back{display:inline-flex;align-items:center;gap:4px;color:var(--mut);font-size:13px;margin-top:20px}
 .back svg{transform:scaleX(-1)}
 /* tabbar */
-nav.tabs{position:absolute;bottom:0;left:0;right:0;background:#fffffff2;backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;padding:8px 10px max(12px,env(safe-area-inset-bottom))}
+nav.tabs{position:absolute;bottom:0;left:0;right:0;background:#fffffffa;border-top:1px solid var(--line);display:flex;padding:8px 10px max(12px,env(safe-area-inset-bottom))}
 nav.tabs button{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:6px 0 2px;font-size:10.5px;letter-spacing:.3px;color:#8a8f99;position:relative}
 nav.tabs button.on{color:var(--ink);font-weight:500}
 nav.tabs button.on:before{content:"";position:absolute;top:-9px;width:22px;height:1.5px;background:var(--ink)}
 .fab{display:none}
 /* sheet */
-.sheet-wrap{position:absolute;inset:0;background:#1f1e1b66;display:none;z-index:20;align-items:flex-end;backdrop-filter:blur(3px)}
+.sheet-wrap{position:absolute;inset:0;background:#1f1e1b66;display:none;z-index:20;align-items:flex-end}
 .sheet-wrap.on{display:flex}
-.sheet{background:var(--sand);width:100%;max-height:90%;border-radius:18px 18px 0 0;padding:12px 24px 30px;overflow-y:auto;animation:up .3s cubic-bezier(.2,.8,.2,1)}
+.sheet{background:var(--sand);width:100%;max-height:90%;border-radius:18px 18px 0 0;padding:12px 24px 30px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;animation:up .3s cubic-bezier(.2,.8,.2,1)}
 @keyframes up{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
 .grab{width:36px;height:3px;border-radius:9px;background:#2e2d2a33;margin:0 auto 18px}
 .sheet h3{font-family:var(--serif);font-weight:300;font-size:28px;line-height:1.15;margin-bottom:16px}
@@ -201,7 +201,7 @@ button.link{color:var(--gold-d);text-decoration:underline;font-size:14px}
 .splash .bd{width:112px;display:block;transform-origin:50% 60%;animation:flap .42s ease-in-out 4}
 @keyframes fly{0%{transform:translate(18px,120px) rotate(8deg) scale(.8);opacity:0}12%{opacity:1}100%{transform:none;opacity:1}}
 @keyframes flap{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.45) translateY(4px)}}.splash .wm{width:200px;animation:rise 1.2s .25s ease both}.splash .em{width:140px;opacity:.7;animation:rise 1.2s .5s ease both}.splash .of{width:84px;position:absolute;bottom:46px;opacity:.9}
-.splash img{filter:brightness(0) invert(1)}
+.splash .of{filter:brightness(0) invert(1)}.splash .bd,.splash .bdw{will-change:transform}
 .splash .wm{animation-delay:.9s!important}.splash .em{animation-delay:1.15s!important}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}}
 details summary::-webkit-details-marker{display:none}
@@ -340,7 +340,7 @@ button:active{transform:scale(.97)}
 .svc button svg{display:block;color:var(--gold-d)}.svc button b{font-family:'Heebo',sans-serif;font-weight:500;font-size:15px}
 .person .av{background:var(--sand2);border:0}
 .upd,.upd.ph img{border-radius:16px}
-nav.tabs{background:#fffffff5;backdrop-filter:blur(14px);padding:0 10px max(10px,env(safe-area-inset-bottom))}
+nav.tabs{background:#fffffffa;padding:0 10px max(10px,env(safe-area-inset-bottom))}
 nav.tabs button.on svg{color:var(--gold-d)}
 nav.tabs button.on:before{display:none}
 h2.title{margin:34px 0 22px}
