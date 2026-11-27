@@ -200,6 +200,7 @@ button.link{color:var(--gold-d);text-decoration:underline;font-size:14px}
 .splash .bdw{display:block;width:112px;animation:fly 1.7s cubic-bezier(.25,.7,.3,1) both}
 .splash .bd{width:112px;display:block;transform-origin:50% 60%;animation:flap .42s ease-in-out 4}
 @keyframes fly{0%{transform:translate(18px,120px) rotate(8deg) scale(.8);opacity:0}12%{opacity:1}100%{transform:none;opacity:1}}
+.miss{border-color:#C0563F!important;box-shadow:0 0 0 3px #C0563F33!important;animation:shake .3s}@keyframes shake{25%{transform:translateX(4px)}75%{transform:translateX(-4px)}}
 @keyframes flap{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.45) translateY(4px)}}.splash .wm{width:200px;animation:rise 1.2s .25s ease both}.splash .em{width:140px;opacity:.7;animation:rise 1.2s .5s ease both}.splash .of{width:84px;position:absolute;bottom:46px;opacity:.9}
 .splash .of{filter:brightness(0) invert(1)}.splash .bd,.splash .bdw{will-change:transform}
 .splash .wm{animation-delay:.9s!important}.splash .em{animation-delay:1.15s!important}
@@ -1016,7 +1017,7 @@ function renderMore(){
     <h3 class="sub">לוח הבניין</h3><div style="margin:-6px 0 8px"><span class="ltag">דורש אישור משפטי לפני העלייה לאוויר</span></div>
     <div class="card"><textarea class="input" id="postText" placeholder="כתבו הודעה לשכנים" aria-label="הודעה לשכנים" style="min-height:64px"></textarea><button class="btn block" style="margin-top:8px" id="postBtn">פרסום</button></div>
     ${S.posts.map(p=>`<div class="card"><div class="row between"><b>${esc(p.who)}</b><span class="small mut">${esc(p.time)}</span></div><p style="margin-top:6px;font-size:14.5px;line-height:1.5">${esc(p.text)}</p></div>`).join('')}`;
-  $('#postBtn').onclick=()=>{const t=$('#postText').value.trim();if(!t)return;S.posts.unshift({who:cur().name+', דירה '+cur().unit,text:t,time:'עכשיו'});save();renderMore();toast('ההודעה פורסמה בלוח הבניין')};
+  $('#postBtn').onclick=()=>{const t=$('#postText').value.trim();if(!t){need($('#postText'));return}S.posts.unshift({who:cur().name+', דירה '+cur().unit,text:t,time:'עכשיו'});save();renderMore();toast('ההודעה פורסמה בלוח הבניין')};
 }
 
 /* ---------- developer view ---------- */
@@ -1100,7 +1101,7 @@ function renderDev(){
     let nk='construction';
     $$('[data-nk]').forEach(b=>b.onclick=()=>{nk=b.dataset.nk;$$('[data-nk]').forEach(x=>x.classList.toggle('on',x===b))});
     $('#newsImg').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),k=Math.min(1,800/im.width);c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);newsImg=c.toDataURL('image/jpeg',.7);$('#newsPrev').src=newsImg;$('#newsPrev').style.display='block'};im.src=rd.result};rd.readAsDataURL(f)};
-    $('#newsSend').onclick=()=>{const t=$('#newsText').value.trim();if(!t){$('#newsText').focus();return}const item={id:Date.now(),kind:nk,t,img:newsImg};newsImg=null;
+    $('#newsSend').onclick=()=>{const t=$('#newsText').value.trim();if(!t){need($('#newsText'));return}const item={id:Date.now(),kind:nk,t,img:newsImg};newsImg=null;
       if(LEGALRX.test(t)){S.pending.unshift(item);save();renderAll();toast('העדכון מזכיר מועד או מסירה, ולכן נשלח לאישור סמנכ״ל לפני פרסום.')}
       else{S.news.unshift(item);save();renderAll();toast('פורסם. העדכון מופיע עכשיו אצל כל הדיירים.')}};
   }
@@ -1116,7 +1117,7 @@ function resSheet(id){
     <label class="f" for="pm">הודעה אישית ל${r.name}</label><textarea class="input" id="pm" placeholder="למשל: המעצבת פנויה לפגישה ביום שלישי"></textarea>
     <button class="btn block" style="margin-top:10px" id="pmSend">שליחה</button>
     <button class="btn gold block" style="margin-top:10px" data-dv="enter:${id}">כניסה לאפליקציה כ${r.name}</button>`,sh=>{
-    $('#pmSend',sh).onclick=()=>{const t=$('#pm',sh).value.trim();if(!t){$('#pm',sh).focus();return}sendMsg(id,t);closeSheet();toast('ההודעה נשלחה ל'+r.name)};
+    $('#pmSend',sh).onclick=()=>{const t=$('#pm',sh).value.trim();if(!t){need($('#pm',sh));return}sendMsg(id,t);closeSheet();toast('ההודעה נשלחה ל'+r.name)};
   });
 }
 function sendMsg(id,t){const o=D(id);(o.thread=o.thread||[]).push({me:false,t});(o.msgs=o.msgs||[]).unshift({id:Date.now()+Math.floor(Math.random()*999),t});save();renderAll()}
@@ -1127,10 +1128,10 @@ function devAct(a){
   else if(act==='legalok'){const i=S.pending.findIndex(n=>String(n.id)===id);if(i>=0){S.news.unshift(S.pending.splice(i,1)[0]);keep();toast('אושר ופורסם לכל הדיירים.')}}
   else if(act==='legalno'){S.pending=S.pending.filter(n=>String(n.id)!==id);keep()}
   else if(act==='reply'){const th=o.thread.slice(-4);
-    openSheet(`<h3>מענה ל${r.name}</h3><div class="chat" style="min-height:0;max-height:30vh">${th.map(m=>`<div class="msg ${m.me?'bot':'me'}">${esc(m.t)}</div>`).join('')}</div><textarea class="input" id="rp" placeholder="כתבו תשובה" aria-label="תשובה"></textarea><button class="btn gold block" style="margin-top:12px" id="rpSend">שליחה</button>`,sh=>{$('#rpSend',sh).onclick=()=>{const t=$('#rp',sh).value.trim();if(!t){$('#rp',sh).focus();return}closeSheet();sendMsg(id,t);toast('התשובה נשלחה ל'+r.name)}})}
+    openSheet(`<h3>מענה ל${r.name}</h3><div class="chat" style="min-height:0;max-height:30vh">${th.map(m=>`<div class="msg ${m.me?'bot':'me'}">${esc(m.t)}</div>`).join('')}</div><textarea class="input" id="rp" placeholder="כתבו תשובה" aria-label="תשובה"></textarea><button class="btn gold block" style="margin-top:12px" id="rpSend">שליחה</button>`,sh=>{$('#rpSend',sh).onclick=()=>{const t=$('#rp',sh).value.trim();if(!t){need($('#rp',sh));return}closeSheet();sendMsg(id,t);toast('התשובה נשלחה ל'+r.name)}})}
   else if(act==='open')resSheet(id);
   else if(act==='quote'){const c=o.changes.find(x=>x.id===arg);
-    openSheet(`<h3>הצעת מחיר ל${r.name}</h3><p class="mut">${esc(c.title)}</p><label class="f" for="qPrice">מחיר כולל מע״מ, בשקלים</label><input class="input" id="qPrice" type="number" inputmode="numeric" min="0" placeholder="2500"><button class="btn gold block" style="margin-top:20px" id="qSend">שליחה לאישור</button>`,sh=>{$('#qSend',sh).onclick=()=>{const v=+$('#qPrice',sh).value;if(!(v>0)){$('#qPrice',sh).focus();return}c.price=v;c.status='quote';closeSheet();keep();toast('ההצעה נשלחה ל'+r.name+' לאישור בחתימה דיגיטלית.')}})}
+    openSheet(`<h3>הצעת מחיר ל${r.name}</h3><p class="mut">${esc(c.title)}</p><label class="f" for="qPrice">מחיר כולל מע״מ, בשקלים</label><input class="input" id="qPrice" type="number" inputmode="numeric" min="0" placeholder="2500"><button class="btn gold block" style="margin-top:20px" id="qSend">שליחה לאישור</button>`,sh=>{$('#qSend',sh).onclick=()=>{const v=+$('#qPrice',sh).value;if(!(v>0)){need($('#qPrice',sh));return}c.price=v;c.status='quote';closeSheet();keep();toast('ההצעה נשלחה ל'+r.name+' לאישור בחתימה דיגיטלית.')}})}
   else if(act==='reject'){o.changes.find(x=>x.id===arg).status='rejected';sendMsg(id,'בקשת השינוי לא אושרה. נשמח להסביר ולהציע חלופה.');keep();toast('הבקשה נדחתה, ו'+r.name+' קיבל/ה הודעה.')}
   else if(act==='okreq'){o.requests[+arg].done=true;keep();toast('הבקשה אושרה, והעדכון נשלח ל'+r.name+'.')}
   else if(act==='adv'){const k=o.tickets.find(x=>x.id===arg);k.step=Math.min(3,k.step+1);keep();toast('סטטוס: '+STEPS[k.step])}
@@ -1140,7 +1141,7 @@ function devAct(a){
   else if(act==='enter'){closeSheet();switchRes(id);if(S.scope==='pilot')S.stage='build';S.role='res';setStage(S.stage);go('home');applyRole();toast('מחוברים כ'+cur().name)}
   else if(act==='pstage'){S.proj.stage=+id;keep();toast('השלב הנוכחי: '+MILESTONES[+id].t)}
   else if(act==='delnews'){S.news=S.news.filter(n=>String(n.id)!==id);keep()}
-  else if(act==='broadcast'){openSheet(`<h3>הודעה לכל הדיירים</h3><textarea class="input" id="bc" placeholder="למשל: ביום חמישי ייערך סיור דיירים באתר"></textarea><button class="btn gold block" style="margin-top:14px" id="bcSend">שליחה ל-${RES.length} דיירים</button>`,sh=>{$('#bcSend',sh).onclick=()=>{const t=$('#bc',sh).value.trim();if(!t){$('#bc',sh).focus();return}RES.forEach(x=>sendMsg(x.id,t));closeSheet();toast('ההודעה נשלחה לכל הדיירים')}})}
+  else if(act==='broadcast'){openSheet(`<h3>הודעה לכל הדיירים</h3><textarea class="input" id="bc" placeholder="למשל: ביום חמישי ייערך סיור דיירים באתר"></textarea><button class="btn gold block" style="margin-top:14px" id="bcSend">שליחה ל-${RES.length} דיירים</button>`,sh=>{$('#bcSend',sh).onclick=()=>{const t=$('#bc',sh).value.trim();if(!t){need($('#bc',sh));return}RES.forEach(x=>sendMsg(x.id,t));closeSheet();toast('ההודעה נשלחה לכל הדיירים')}})}
 }
 function applyScope(){const pl=S.scope==='pilot';$('#phone').dataset.scope=S.scope;$('#scopeBtn').textContent=pl?'החזון המלא':'תצוגת פיילוט';$('#moreLbl').textContent=pl?'בהמשך':'תיק הדירה';if(pl&&(pane==='handover'||pane==='guide'))pane='progress'}
 function applyRole(){$('#phone').dataset.role=S.role;$('#roleBtn').textContent=S.role==='dev'?'חזרה לתצוגת הדייר':'תצוגת יזם';$('#main').scrollTop=0}
@@ -1187,8 +1188,8 @@ function reqSheet(kind){
     $('#rqSend',sh).onclick=()=>{
       const v=id=>{const e=$('#rq-'+id,sh);return e?e.value.trim():''};
       const first=q.f[0]&&$('#rq-'+q.f[0][2],sh);
-      if(first&&!first.value){first.focus();return}
-      if(!q.f.length&&!v('note')){$('#rq-note',sh).focus();return}
+      if(first&&!first.value){need(first);return}
+      if(!q.f.length&&!v('note')){need($('#rq-note',sh));return}
       const d=v('date')?new Date(v('date')).toLocaleDateString(LOC,{day:'numeric',month:'long'}):'';
       const detail=[v('name'),opt,d,v('time'),v('note')].filter(Boolean).join(' · ');
       S.requests.unshift({kind,title:q.t,detail});save();closeSheet();renderService();toast(q.ok)};
@@ -1261,7 +1262,7 @@ const SHEETS={
     openSheet(`<h3>בקשת שינוי</h3><label class="f" for="chT">מה תרצו לשנות?</label><input class="input" id="chT" placeholder="למשל: הוספת נקודת חשמל בחדר השינה">
       <label class="f" for="chD">פרטים</label><textarea class="input" id="chD" placeholder="מיקום, מידות, העדפות"></textarea>
       <button class="btn gold block" style="margin-top:16px" id="chSend">שליחה לבדיקה</button>`,sh=>{
-      $('#chSend',sh).onclick=()=>{const t=$('#chT',sh).value.trim();if(!t){$('#chT',sh).focus();return}S.changes.unshift({id:'c'+Date.now(),title:t,price:0,status:'review',date:new Date().toISOString()});save();closeSheet();renderChanges();renderHome();toast('הבקשה נשלחה. הצעת מחיר תגיע לאפליקציה.')};
+      $('#chSend',sh).onclick=()=>{const t=$('#chT',sh).value.trim();if(!t){need($('#chT',sh));return}S.changes.unshift({id:'c'+Date.now(),title:t,price:0,status:'review',date:new Date().toISOString()});save();closeSheet();renderChanges();renderHome();toast('הבקשה נשלחה. הצעת מחיר תגיע לאפליקציה.')};
     });
   },
   slots(){
@@ -1292,7 +1293,7 @@ const SHEETS={
       $$('#chatTop [data-topic]',sh).forEach(b=>b.onclick=()=>{topic=b.dataset.topic;S.chatTopic=topic;$$('#chatTop .opt',sh).forEach(x=>x.classList.toggle('on',x===b));to()});
       const draw=()=>{box.innerHTML=S.thread.length?S.thread.map(m=>`<div class="msg ${m.me?'me':'bot'}">${esc(m.t)}</div>`).join(''):'<div class="empty">עוד אין הודעות. אפשר לשאול כל דבר על הדירה, התשלומים או הבנייה.</div>';box.scrollTop=box.scrollHeight};
       draw();
-      $('#chatForm',sh).onsubmit=e=>{e.preventDefault();const v=$('#chatIn',sh).value.trim();if(!v)return;$('#chatIn',sh).value='';S.thread.push({me:true,t:v,topic});save();draw();renderDev();toast('ההודעה נשלחה אל '+TOP.find(t=>t[0]===topic)[1])};
+      $('#chatForm',sh).onsubmit=e=>{e.preventDefault();const v=$('#chatIn',sh).value.trim();if(!v){need($('#chatIn',sh),'כתבו הודעה לפני השליחה');return}$('#chatIn',sh).value='';S.thread.push({me:true,t:v,topic});save();draw();renderDev();toast('ההודעה נשלחה אל '+TOP.find(t=>t[0]===topic)[1])};
     });
   },
 };
@@ -1444,6 +1445,7 @@ document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.tar
 const galImg=(k,cls='')=>`<img class="${cls}" data-g="${k}" src="${A[k]}" alt="${(GALLERY.find(g=>g[0]===k)||[0,'הדמיה'])[1]}" tabindex="0" role="button" loading="lazy">`;
 
 /* ---------- toast ---------- */
+function need(el,m){if(!el)return;el.classList.add('miss');el.focus();toast(m||(LANG==='en'?'Please fill in the highlighted field':'צריך למלא את השדה המסומן'));el.addEventListener('input',()=>el.classList.remove('miss'),{once:true})}
 let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2600)}
 
 /* ---------- navigation ---------- */
@@ -1484,7 +1486,7 @@ document.addEventListener('click',e=>{
   const d=t.dataset;
   if(d.res){switchRes(d.res);if(S.scope==='pilot')S.stage='build';closeSheet();const tab=S.tab;setStage(S.stage);go(S.role==='dev'?tab:'home');if(S.role!=='dev')toast('מחוברים כ'+cur().name+' · '+cur().apt);else $('#main').scrollTop=0}
   else if(d.quote){const c=S.changes.find(x=>x.id===d.quote);
-    openSheet(`<h3>הצעת מחיר</h3><p class="mut">${esc(c.title)}</p><label class="f" for="qPrice">מחיר כולל מע״מ, בשקלים</label><input class="input" id="qPrice" type="number" inputmode="numeric" min="0" placeholder="2500"><button class="btn gold block" style="margin-top:20px" id="qSend">שליחה לדייר</button>`,sh=>{$('#qSend',sh).onclick=()=>{const v=+$('#qPrice',sh).value;if(!(v>0)){$('#qPrice',sh).focus();return}c.price=v;c.status='quote';save();closeSheet();renderAll();toast('ההצעה נשלחה לאישור בחתימה דיגיטלית.')}})}
+    openSheet(`<h3>הצעת מחיר</h3><p class="mut">${esc(c.title)}</p><label class="f" for="qPrice">מחיר כולל מע״מ, בשקלים</label><input class="input" id="qPrice" type="number" inputmode="numeric" min="0" placeholder="2500"><button class="btn gold block" style="margin-top:20px" id="qSend">שליחה לדייר</button>`,sh=>{$('#qSend',sh).onclick=()=>{const v=+$('#qPrice',sh).value;if(!(v>0)){need($('#qPrice',sh));return}c.price=v;c.status='quote';save();closeSheet();renderAll();toast('ההצעה נשלחה לאישור בחתימה דיגיטלית.')}})}
   else if(d.okreq){S.requests[+d.okreq].done=true;save();renderAll();toast('הבקשה אושרה, והעדכון נשלח.')}
   else if(d.req)reqSheet(d.req);
   else if(d.parcel){S.parcel=false;save();renderAll();toast('תודה. החבילה סומנה כנאספה.')}

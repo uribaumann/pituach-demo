@@ -1,5 +1,5 @@
 // Network first and never from the HTTP cache, so every published update reaches the phone; the cached copy keeps the app working offline.
-const CACHE = 'pituach-app-v2';
+const CACHE = 'pituach-app-v3';
 const SHELL = ['./', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
 self.addEventListener('install', e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL))); });
 self.addEventListener('activate', e => e.waitUntil(
