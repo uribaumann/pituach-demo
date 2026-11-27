@@ -122,7 +122,7 @@ input[aria-invalid=true]{border-color:var(--bad)}
 .side .foot{margin-top:auto;padding:16px 10px 0;display:flex;flex-direction:column;gap:8px}
 .side .foot img{height:26px;align-self:flex-end}
 .main{min-width:0;display:flex;flex-direction:column}
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);display:flex;align-items:center;gap:14px;padding-block:12px;padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:28px;border-bottom:1px solid var(--line)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;align-items:center;gap:14px;padding-block:12px;padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:28px;border-bottom:1px solid var(--line)}
 .top .search{flex:1;max-width:440px;position:relative}
 .top .search svg{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--mut)}
 .top .search input{padding-right:40px;background:var(--panel)}
@@ -280,6 +280,7 @@ dialog form,dialog .dlg{display:flex;flex-direction:column;max-height:calc(100dv
  .tbl-wrap td.act{text-align:right;white-space:normal;padding-top:10px;margin-top:4px;border-top:1px solid var(--line)!important}
  .tbl-wrap td.act:empty{display:none}
 }
+dialog,.bellpop,.side{overscroll-behavior:contain}
 .bellpop .li{padding:10px 4px}.bellpop .li:hover{background:var(--hover);border-radius:8px}
 .confirm-bar{display:flex;gap:8px;align-items:center;background:var(--bad-bg);color:var(--bad);border-radius:8px;padding:6px 10px;font-size:.88em;flex-wrap:wrap}
 .log td{font-size:.92em}
@@ -604,6 +605,23 @@ const PEOPLE=[
 "email": ""
 }
 ];
+/* Public build: real names and emails ship only encrypted (AES-GCM, key from the team code via PBKDF2). The private build has VAULT=null. */
+const VAULT=null;let VAULT_OPEN=false;
+const b64u=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0)),u8b64=u=>btoa(String.fromCharCode(...new Uint8Array(u)));
+async function vaultKey(code){const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(code.trim()),'PBKDF2',false,['deriveKey']);
+ return crypto.subtle.deriveKey({name:'PBKDF2',salt:b64u(VAULT.s),iterations:VAULT.n,hash:'SHA-256'},base,{name:'AES-GCM',length:256},true,['decrypt'])}
+async function vaultOpen(key){const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64u(VAULT.iv)},key,b64u(VAULT.c));const d=JSON.parse(new TextDecoder().decode(pt));
+ PEOPLE.splice(0,PEOPLE.length,...d.people);const pub={box:CFG.box,me:CFG.me};Object.assign(CFG,d.cfg);
+ if(ST.mail&&ST.mail.box===pub.box)ST.mail.box=CFG.box;if(ST.mail&&ST.mail.me===pub.me)ST.mail.me=CFG.me;VAULT_OPEN=true}
+async function vaultAuto(){if(!VAULT||!window.crypto?.subtle)return;const raw=LS.get('pa-vk');if(!raw)return;
+ try{await vaultOpen(await crypto.subtle.importKey('raw',b64u(raw),{name:'AES-GCM'},true,['decrypt']))}catch(e){LS.del?LS.del('pa-vk'):localStorage.removeItem('pa-vk')}}
+async function vaultTry(code){try{const k=await vaultKey(code);await vaultOpen(k);LS.set('pa-vk',u8b64(await crypto.subtle.exportKey('raw',k)));return true}catch(e){return false}}
+function vaultDlg(){dialog(`<div class="dlg"><div class="dh"><div><div class="small mut">פעם אחת בכל מכשיר</div><h2>הצגת השמות של הצוות</h2></div><button class="ib" data-close aria-label="סגירה">${I('x')}</button></div>
+ <form id="vkForm" novalidate><div class="db"><p class="mut">השמות והמיילים של העובדים שמורים כאן מוצפנים. הזינו את קוד הצוות כדי לראות אותם. המכשיר יזכור את הקוד, ולא תצטרכו להזין אותו שוב.</p>
+ ${fld('vk','קוד צוות','','password',{req:1,attrs:'autocomplete="off" dir="ltr" spellcheck="false"'})}<div id="vkErr" class="small" role="alert" style="color:var(--bad);min-height:1.4em"></div></div>
+ <div class="df"><button class="btn pri" type="submit">${I('lock')}הצגת השמות</button><button class="btn" type="button" data-close>לא עכשיו</button></div></form></div>`);
+ $('#vkForm').onsubmit=async e=>{e.preventDefault();const v=$('#vk').value;if(!v.trim()){$('#vkErr').textContent='צריך להזין את קוד הצוות.';return}
+  $('#vkErr').textContent='בודק…';if(await vaultTry(v)){$('#dlg').close();save();render();toast('השמות של הצוות מוצגים עכשיו במכשיר הזה')}else $('#vkErr').textContent='הקוד לא נכון. נסו שוב.'}}
 const P=id=>PEOPLE.find(p=>p.id===id)||{id,name:id,title:'',dept:'',perm:''};
 const ALL_ROUTES=['overview','residents','docs','payments','reminders','messages','requests','changes','defects','suppliers','construction','broadcast','gallery','homebook','config','activity'];
 const PERMS={
@@ -781,7 +799,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#bellPop')){bell
 function topBar(){const c=CUR(),a=myAlerts();$('#meBox').innerHTML=`<button class="mebtn" id="meBtn" aria-haspopup="dialog" aria-expanded="false" aria-label="הפרטים שלי: ${esc(c.name)}"><div class="av" aria-hidden="true">${esc(c.name[0])}</div><div class="who"><b>${esc(c.name)}</b><div class="small mut">${esc(c.title)}</div></div></button>`;
  $('#meBtn').onclick=e=>{e.stopPropagation();mePop()};
  $('#bellBtn').innerHTML=I('bell')+(a.n?`<span class="dot">${a.n}</span>`:'');$('#bellBtn').setAttribute('aria-label',a.n?`${a.n} ${a.t}`:'אין התראות חדשות');
- document.querySelector('.asnote')?.remove();if(AS!=='uri')$('#content').insertAdjacentHTML('afterbegin',`<div class="asnote" role="status">${I('eye')}<span class="grow">תצוגה לדוגמה: כך תיראה המערכת אצל <b>${esc(c.name)}</b>, ${esc(c.title)}, כשהמשתמש ייפתח.</span><button class="btn sm" data-act="asBack">חזרה לתצוגה שלי</button></div>`)}
+ document.querySelector('.asnote')?.remove();document.querySelector('.vknote')?.remove();if(VAULT&&!VAULT_OPEN)$('#content').insertAdjacentHTML('afterbegin',`<div class="asnote vknote" role="status">${I('lock')}<span class="grow">השמות והמיילים של הצוות מוסתרים בגרסה הזו. להצגתם צריך את קוד הצוות.</span><button class="btn sm pri" data-act="vault">הזנת קוד</button></div>`);if(AS!=='uri')$('#content').insertAdjacentHTML('afterbegin',`<div class="asnote" role="status">${I('eye')}<span class="grow">תצוגה לדוגמה: כך תיראה המערכת אצל <b>${esc(c.name)}</b>, ${esc(c.title)}, כשהמשתמש ייפתח.</span><button class="btn sm" data-act="asBack">חזרה לתצוגה שלי</button></div>`)}
 function switchAs(id){AS=id;try{sessionStorage.setItem('pa-as',id)}catch(e){}ui={};if(!canSee(route))location.hash=ALL_ROUTES.find(canSee);render(true);if(id!=='uri')toast('צפייה בתור '+P(id).name);setTimeout(popAlerts,350)}
 function popAlerts(){if(!canApproveRem())return;const list=pendRem();if(!list.length||$('#dlg').open)return;
  dialog(`<div class="dlg"><div class="dh"><div><div class="small mut">${esc(CUR().name)}, יש משהו שמחכה לך</div><h2>${list.length} תזכורות תשלום ממתינות לאישורך</h2></div><button class="ib" data-close aria-label="סגירה">${I('x')}</button></div>
@@ -851,7 +869,7 @@ const RES_FIELDS=r=>[['f-name','שם הרוכש',r.name,'text',{req:1}],['f-co',
  ['f-apt','שם הדירה (כפי שמופיע באפליקציה)',r.apt,'text',{req:1,ltr:1}],['f-type','סוג',r.type,'select',{options:['דירת מגורים','דירת גן','מיני פנטהאוז','פנטהאוז']}],['f-unit','מספר דירה',r.unit,'number',{req:1}],['f-floor','קומה',r.floor,'number',{hint:'0 = קומת הגן'}],
  ['f-sqm','שטח (מ״ר)',r.sqm,'number',{req:1}],['f-out','שטח חוץ',r.out],['f-beds','חדרים',r.beds],['f-dir','כיוונים',r.dir],
  ['f-price','מחיר בחוזה (₪)',r.price,'number',{req:1,hint:'בסיס לחישוב לוח התשלומים וההצמדה'}],['f-signed','תאריך חתימה',r.signed,'date'],['f-stage','שלב שהדייר רואה באפליקציה',r.stage,'select',{options:Object.entries(APPSTAGE)}]];
-const readRes=()=>({name:$('#f-name').value.trim(),co:$('#f-co').value.trim(),phone:$('#f-phone').value.trim(),email:$('#f-email').value.trim(),apt:$('#f-apt').value.trim().toUpperCase(),type:$('#f-type').value,unit:+$('#f-unit').value,floor:+$('#f-floor').value||0,sqm:+$('#f-sqm').value,out:$('#f-out').value.trim(),beds:$('#f-beds').value.trim(),dir:$('#f-dir').value.trim(),price:+$('#f-price').value,signed:$('#f-signed').value,stage:$('#f-stage').value});
+const readRes=()=>({name:$('#f-name').value.trim(),co:$('#f-co').value.trim(),phone:$('#f-phone').value.trim(),apt:$('#f-apt').value.trim().toUpperCase(),type:$('#f-type').value,unit:+$('#f-unit').value,floor:+$('#f-floor').value||0,sqm:+$('#f-sqm').value,out:$('#f-out').value.trim(),beds:$('#f-beds').value.trim(),dir:$('#f-dir').value.trim(),price:+$('#f-price').value,signed:$('#f-signed').value,stage:$('#f-stage').value});
 function validate(scope){let bad=null;$$('[required]',scope).forEach(i=>{const ok=i.value.trim()!==''&&(i.type!=='email'||/^\S+@\S+\.\S+$/.test(i.value));i.setAttribute('aria-invalid',!ok);if(!ok&&!bad)bad=i});if(bad){bad.focus();toast('יש שדות חובה שלא מולאו: '+(bad.labels[0]?.textContent.replace('*','').trim()||''))}return !bad}
 const RTAB={
  info:r=>`<form id="resForm" novalidate><div class="grid3">${RES_FIELDS(r).map(f=>fld(...f)).join('')}</div>
@@ -1072,7 +1090,7 @@ VIEWS.config=()=>pageHead('SETTINGS','הגדרות והרשאות','מי נכנ�
   <div class="li"><span class="ic">${I('shield')}</span><div class="grow">נעילה ל-5 דקות אחרי 5 ניסיונות כניסה כושלים</div>${chip('פעיל','ok')}</div>
   <div class="li"><span class="ic">${I('key')}</span><div class="grow">אימות דו־שלבי בקוד לנייד<div class="small mut">יופעל בגרסת הייצור, יחד עם השרת</div></div>${chip('בשלב הפיתוח','plain')}</div></div>
   <div class="notice" style="margin-top:14px"><b>זה אב טיפוס.</b> הסיסמה והנתונים נשמרים בדפדפן במחשב הזה בלבד. בגרסה האמיתית הכניסה עוברת דרך שרת מאובטח, והקבצים נשמרים בענן של החברה.</div>
-  <div class="row" style="margin-top:14px"><button class="btn danger" data-act="reset">איפוס נתוני הדמו</button></div><div id="resetBox"></div></section></div>`;
+  <div class="row" style="margin-top:14px">${VAULT?(VAULT_OPEN?`<button class="btn" data-act="vaultLock">${I('lock')}הסתרת השמות במכשיר הזה</button>`:`<button class="btn" data-act="vault">${I('lock')}הזנת קוד צוות</button>`):''}<button class="btn danger" data-act="reset">איפוס נתוני הדמו</button></div><div id="resetBox"></div></section></div>`;
 
 /* ---- activity ---- */
 VIEWS.activity=()=>pageHead('ACTIVITY','יומן פעולות','כל פעולה במרכז הניהול נרשמת כאן, עם השעה ומי ביצע.')+
@@ -1167,6 +1185,8 @@ const ACT={
  reqMove:b=>{const q=ST.requests.find(x=>x.id===b.dataset.q);formDlg('העברה למחלקה',`<div class="notice"><b>${esc(rname(q.res))}</b> · ${esc(q.detail)}</div>${fld('mv-d','המחלקה שתטפל',deptOfReq(q),'select',{options:Object.entries(DEPTS)})}`,'העברה',()=>{q.dept=$('#mv-d').value;log(`פנייה הועברה ל${DEPTS[q.dept]} · ${rname(q.res)}`);toast('הפנייה הועברה ל'+DEPTS[q.dept])})},
  reinvite:b=>{const r=resOf(b.dataset.res);r.invite=r.invite||{};if(r.invite.st!=='joined')r.invite.st='invited';r.invite.at=today();log(`הזמנה לאפליקציה נשלחה${b.textContent.includes('שוב')?' שוב':''} · ${r.name}`);save();render();shareDlg({res:r.id,title:'הזמנה לאפליקציית הדיירים',text:hiTxt(r.id)+`מזמינים אותך לאפליקציית הדיירים של פיתוח על הים. כל מה שקשור לדירה שלך, במקום אחד:\n${APP_URL}`+signTxt()})},
  asBack:()=>switchAs('uri'),
+ vault:()=>vaultDlg(),
+ vaultLock:()=>{try{localStorage.removeItem('pa-vk')}catch(e){}if(ST.mail&&(ST.mail.box===CFG.box||ST.mail.me===CFG.me)){delete ST.mail;save()}location.reload()},
  asUser:b=>switchAs(b.dataset.u),
  remOk:b=>approveRem([b.dataset.r]),
  remBulk:()=>{const ids=$$('[data-remsel]:checked').map(c=>c.dataset.remsel);if(!ids.length){toast('לא סומנו תזכורות');return}approveRem(ids)},
@@ -1294,7 +1314,7 @@ $('#a11yBtn').onclick=()=>{const p=$('#a11yPop'),o=p.hidden;p.hidden=!o;$('#a11y
 document.head.insertAdjacentHTML('beforeend','<style>body.links a{text-decoration:underline!important;text-underline-offset:3px}</style>');
 
 /* ================= boot ================= */
-async function boot(){await FS.ready;await warmImages();ensureReminders();shell();render(true);setTimeout(popAlerts,600)}
+async function boot(){await vaultAuto();await FS.ready;await warmImages();ensureReminders();shell();render(true);setTimeout(popAlerts,600)}
 addEventListener('hashchange',()=>{if(session())render(true)});
 (function init(){const th=LS.get('pa-theme');if(th)document.documentElement.dataset.theme=th;applyA11y();if(ST.skipLogin&&!session())startSession(false);if(session())boot();else renderLogin()})();
 </script>
